@@ -9,7 +9,7 @@ A clickable, demo-ready prototype for a client pitch to PTPTN. It has no backend
 
 If this plan and the specs disagree, the specs win.
 
-**Status:** Plan approved. Phase 1a built; `/styleguide` is awaiting approval.
+**Status:** Phases 1a and 1b done. Next: Phase 2 (student onboarding, AI skill translation, skill profile).
 
 ---
 
@@ -18,8 +18,8 @@ If this plan and the specs disagree, the specs win.
 | Phase | Scope | Status |
 | --- | --- | --- |
 | 0 | Specs read, build plan | ✅ Approved |
-| 1a | Scaffold, PWA, tokens, `/styleguide` | ✅ Built, ⏳ awaiting styleguide approval |
-| 1b | Shells for both roles, role switcher, navigation, i18n | ⬜ |
+| 1a | Scaffold, PWA, tokens, `/styleguide` | ✅ Approved |
+| 1b | Shells for both roles, role switcher, navigation, i18n | ✅ Done |
 | 2 | Student onboarding, AI translation reveal, skill profile | ⬜ |
 | 3 | Student Home and Opportunities (Partner roles, Open jobs, Job search log) | ⬜ |
 | 4 | Student Learn, Repayment standing and tier states | ⬜ |
@@ -37,6 +37,15 @@ If this plan and the specs disagree, the specs win.
   - Built: Vite/React/TS/Tailwind 4, tokens (light + dark), fonts, PWA manifest, icons and service worker, i18n plumbing (EN + partial BM), domain types, UI primitives and signature student components.
   - `/styleguide` shows: type, colour, Sunrise, glass shell in a phone frame (collapsing top bar, floating tab bar), buttons, chips, inputs, cards, locked role, sheet, motion and agency density.
   - Checks: typecheck, lint and build all pass. No console errors. No horizontal overflow at 360px.
+- **1b (shells, role switching, i18n).**
+  - Student shell: collapsing glass top bar (avatar → Settings sheet, Demo, bell), floating tab bar on mobile, frosted left rail and centred 430px column at ≥1024px, demo controls panel in the margin at ≥1280px, Sunrise wash on Home only.
+  - Onboarding shell: back, 10-step progress, one primary action per step. All 10 steps are clickable placeholders.
+  - Agency shell: frosted sidebar filtered by officer role (the spec's navigation table), sticky header with search, officer-role picker, Student | Agency toggle, BM/EN and bell. Mobile drawer carries the workspace toggle. Gated sections show "Not available for your role".
+  - Demo state (`DemoProvider`): workspace, persona, officer role (saved as preferences), programme settings (in memory), Reset demo.
+  - `src/config/programmeSettings.ts` holds every open decision with its example value.
+  - Every route in §2 exists as a placeholder naming its phase. Each workspace loads in its own chunk.
+  - i18n: shell, navigation, roles, page titles and onboarding titles in EN and BM.
+  - Checks: typecheck, lint and build pass. 14 screenshots (390/360/1024/1440, both roles, EN/BM) with no console errors or overflow. `scripts/smoke.mjs` passes 8 navigation checks.
 
 ---
 

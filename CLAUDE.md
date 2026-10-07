@@ -31,10 +31,19 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - Motion comes from `motion/react`, with tokens in `src/lib/motion.ts`. Always honour `useReducedMotion()` (fade only).
 - `/styleguide` is a dev reference. Its explanatory copy is exempt from i18n; product components inside it still use `t()`.
 
+## Structure
+- `src/features/student/shell/`: `StudentShell` (layout; `chrome="none"` for onboarding), `StudentPage` (top bar + large title + content), Settings sheet, desktop rail. Pages open shell sheets via `useStudentShell()`.
+- `src/features/agency/shell/`: `AgencyShell` (sidebar, header, role gate), `AgencyPage` (page title frame). Section visibility per officer role lives in `src/features/agency/nav.ts`.
+- `src/state/DemoProvider.tsx`: workspace role, persona, officer role, programme settings, `seed` (bumps on Reset demo; stores should reseed from it).
+- Routes are declared in `src/router.tsx` with `lazy` imports so each workspace is its own chunk.
+- Translated strings may contain one `<em>…</em>` accent; render them with `<Rich text={t(key)} />`.
+
 ## Scripts
 - `npm run icons`: re-render the PWA PNGs from `public/icons/icon.svg`.
 - `node scripts/shoot.mjs <url> <out.png> [w] [h] [fullPage 1|0] [js]`: screenshot plus console-error report (needs `vite preview` running).
 - `node scripts/check-overflow.mjs <url> [width]`: reports page-level horizontal scroll and the offending elements.
+- `node scripts/shots.mjs <spec.json>`: batch screenshots with preferences (role, persona, officerRole, lang) and click scripts. Fails on console errors or overflow.
+- `node scripts/smoke.mjs`: click-through navigation checks. Extend it each phase.
 
 ## Workflow
 - After each phase: `npm run typecheck && npm run lint && npm run build`, screenshots at 390×844 and 1440×900, overflow check at 360, update `BUILD_PLAN.md` §0, commit, push to `claude/sleepy-gauss-350hmi`.

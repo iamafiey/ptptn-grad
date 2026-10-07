@@ -12,7 +12,6 @@ import {
   Play,
   Sparkles,
   Sun,
-  Type,
   UsersRound,
 } from 'lucide-react'
 import { Button, IconButton } from '@/components/ui/Button'
@@ -233,7 +232,6 @@ function SkillRevealDemo() {
 export default function Styleguide() {
   const { t, lang, setLang } = useT()
   const [dark, setDark] = useState(() => document.documentElement.classList.contains('dark'))
-  const [interOnly, setInterOnly] = useState(() => document.documentElement.dataset.font === 'inter')
   const [seg, setSeg] = useState<'partner' | 'open' | 'log'>('partner')
   const [visible, setVisible] = useState(true)
   const [sheet, setSheet] = useState(false)
@@ -243,10 +241,6 @@ export default function Styleguide() {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark)
   }, [dark])
-  useEffect(() => {
-    if (interOnly) document.documentElement.dataset.font = 'inter'
-    else delete document.documentElement.dataset.font
-  }, [interOnly])
 
   const nav = [
     ['type', 'Type'],
@@ -279,9 +273,6 @@ export default function Styleguide() {
             <Button variant="secondary" size="sm" onClick={() => setLang(lang === 'en' ? 'ms' : 'en')}>
               {lang === 'en' ? 'EN → BM' : 'BM → EN'}
             </Button>
-            <Button variant="secondary" size="sm" icon={<Type size={14} strokeWidth={1.5} />} onClick={() => setInterOnly((v) => !v)}>
-              {interOnly ? 'Inter only' : 'Geist'}
-            </Button>
             <IconButton label={dark ? 'Light mode' : 'Dark mode'} tone="surface" size={36} onClick={() => setDark((d) => !d)}>
               {dark ? <Sun size={16} strokeWidth={1.5} /> : <Moon size={16} strokeWidth={1.5} />}
             </IconButton>
@@ -296,8 +287,8 @@ export default function Styleguide() {
             Warm, calm, <em className="italic">quietly premium</em>
           </h1>
           <p className="mt-3 max-w-[62ch] t-body text-ink-2">
-            Tokens, type and signature components from docs/visual-direction.md. Toggle BM to test heading lengths, Inter-only to test
-            the fallback, and dark mode. Everything below is built from the shared token set.
+            Tokens, type and signature components from docs/visual-direction.md. Toggle BM to test heading lengths, and dark mode.
+            Two families only: Instrument Serif for display, Inter for everything else. Everything below is built from the shared token set.
           </p>
         </header>
 

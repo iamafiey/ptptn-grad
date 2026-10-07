@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 @config '../../tailwind.config.ts';
-@import '@fontsource-variable/geist/wght.css';
 @import './tokens.css';
 
 @custom-variant dark (&:where(.dark, .dark *));

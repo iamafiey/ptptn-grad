@@ -1,0 +1,66 @@
+@import 'tailwindcss';
+@config '../../tailwind.config.ts';
+@import '@fontsource-variable/geist/wght.css';
+@import './tokens.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------- Type scale (docs/visual-direction.md §Typography) ---------- */
+@utility t-display-xl { font-family: var(--font-display); font-size: 44px; line-height: 46px; font-weight: 400; letter-spacing: -0.01em; }
+@utility t-display-l  { font-family: var(--font-display); font-size: 34px; line-height: 38px; font-weight: 400; letter-spacing: -0.01em; }
+@utility t-title      { font-family: var(--font-display); font-size: 30px; line-height: 34px; font-weight: 400; letter-spacing: 0; }
+@utility t-heading    { font-family: var(--font-sans); font-size: 20px; line-height: 26px; font-weight: 600; letter-spacing: -0.015em; }
+@utility t-subheading { font-family: var(--font-sans); font-size: 17px; line-height: 24px; font-weight: 600; letter-spacing: -0.01em; }
+@utility t-body       { font-family: var(--font-sans); font-size: 15px; line-height: 22px; font-weight: 400; letter-spacing: -0.005em; }
+@utility t-body-strong{ font-family: var(--font-sans); font-size: 15px; line-height: 22px; font-weight: 500; letter-spacing: -0.005em; }
+@utility t-caption    { font-family: var(--font-sans); font-size: 13px; line-height: 18px; font-weight: 500; letter-spacing: 0; }
+@utility t-micro      { font-family: var(--font-sans); font-size: 11px; line-height: 14px; font-weight: 500; letter-spacing: 0.02em; }
+@utility t-label      { font-family: var(--font-sans); font-size: 11px; line-height: 14px; font-weight: 500; letter-spacing: 0.02em; text-transform: uppercase; }
+/* Agency body is denser (14px). */
+@utility t-body-sm    { font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 400; letter-spacing: -0.005em; }
+@utility tabular      { font-variant-numeric: tabular-nums; }
+
+/* ---------- Glass: chrome only ---------- */
+@utility glass {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--hairline);
+  box-shadow: inset 0 1px 0 var(--glass-edge), var(--shadow-2);
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .glass { background: color-mix(in srgb, var(--surface) 94%, transparent); }
+}
+/* Locked role card frost: glass at 40% with blur 8px. (Keep -webkit- first: the minifier keeps the last duplicate.) */
+@utility frost-lock {
+  background: color-mix(in srgb, var(--surface) 40%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* ---------- Base ---------- */
+@layer base {
+  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 22px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  :focus-visible { outline: 1.5px solid var(--ink); outline-offset: 2px; }
+  button { cursor: pointer; }
+  ::selection { background: var(--signal-pending); color: var(--signal-pending-ink); }
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+}

@@ -9,7 +9,7 @@ A clickable, demo-ready prototype for a client pitch to PTPTN. It has no backend
 
 If this plan and the specs disagree, the specs win.
 
-**Status:** Plan written and awaiting approval. No app code has been written yet.
+**Status:** Plan approved. Phase 1a built; `/styleguide` is awaiting approval.
 
 ---
 
@@ -17,8 +17,8 @@ If this plan and the specs disagree, the specs win.
 
 | Phase | Scope | Status |
 | --- | --- | --- |
-| 0 | Specs read, build plan | ✅ Done, awaiting approval |
-| 1a | Scaffold, PWA, tokens, `/styleguide` | ⏳ Stops for styleguide approval |
+| 0 | Specs read, build plan | ✅ Approved |
+| 1a | Scaffold, PWA, tokens, `/styleguide` | ✅ Built, ⏳ awaiting styleguide approval |
 | 1b | Shells for both roles, role switcher, navigation, i18n | ⬜ |
 | 2 | Student onboarding, AI translation reveal, skill profile | ⬜ |
 | 3 | Student Home and Opportunities (Partner roles, Open jobs, Job search log) | ⬜ |
@@ -27,15 +27,22 @@ If this plan and the specs disagree, the specs win.
 | 6 | Agency Partners, Students, AI governance, Tier rules (and Learn catalogue, see §9) | ⬜ |
 | 7 | Agency Reports, audit log, polish, demo walkthrough script | ⬜ |
 
+### Phase log
+
+- **1a (scaffold + styleguide).**
+  - Built: Vite/React/TS/Tailwind 4, tokens (light + dark), fonts (Instrument Serif + Geist, Inter fallback switch), PWA manifest, icons and service worker (Google Fonts cached for offline), i18n plumbing (EN + partial BM), domain types, UI primitives and signature student components.
+  - `/styleguide` shows: type, colour, Sunrise, glass shell in a phone frame (collapsing top bar, floating tab bar), buttons, chips, inputs, cards, locked role, sheet, motion and agency density.
+  - Checks: typecheck, lint and build all pass. No console errors. No horizontal overflow at 360px.
+
 ---
 
 ## 1. Stack and project structure
 
 | Concern | Choice | Why |
 | --- | --- | --- |
-| Build | Vite, React 18, TypeScript (strict) | As requested |
-| Styling | Tailwind CSS 3, with every token as a CSS variable on `:root` and `.dark`, mapped in `tailwind.config.ts` | Spec §Tailwind setup |
-| Routing | React Router 6 (`createBrowserRouter`, data-free) | As requested |
+| Build | Vite 8, React 19, TypeScript (strict) | As requested (current majors at build time) |
+| Styling | Tailwind CSS 4 (`@tailwindcss/vite`), loading `tailwind.config.ts` via `@config`. Every token is a CSS variable on `:root` and `.dark`, mapped in that config | Spec §Tailwind setup. Tailwind 3's toolchain had 7 open npm audit advisories; v4 has none |
+| Routing | React Router 8 (`react-router`, `createBrowserRouter`) | As requested |
 | Icons | `lucide-react` at 1.5 stroke, 20px | Spec §Iconography |
 | Motion | `motion` (Framer Motion), for sheet springs (380/34), staggered reveal and number tick-ups | Spec §Motion; also honours `prefers-reduced-motion` |
 | Charts (agency) | `recharts`, styled with the tokens | 6-month trends, monitors, fairness views |

@@ -1,0 +1,81 @@
+/* Design tokens — docs/visual-direction.md. Every value here is mapped in tailwind.config.ts. */
+:root {
+  --canvas: #f3f0ea;
+  --surface: #ffffff;
+  --surface-muted: #f8f6f2;
+  --ink: #17140f;
+  --ink-2: #6b645a;
+  --ink-3: #a39c91;
+  --on-ink: #fbfaf7; /* text on ink buttons — never pure #FFF on canvas */
+  --hairline: rgba(23, 20, 15, 0.08);
+  --glass: rgba(255, 255, 255, 0.62);
+  --glass-edge: rgba(255, 255, 255, 0.75);
+
+  --sunrise: radial-gradient(120% 90% at 85% 10%, #ffe9a8 0%, rgba(255, 233, 168, 0) 55%),
+    linear-gradient(140deg, #fff8e6 0%, #ffe08a 55%, #f6c453 100%);
+  --sunrise-wash: radial-gradient(120% 60% at 80% 0%, rgba(255, 224, 138, 0.55) 0%, rgba(255, 224, 138, 0) 70%);
+
+  --signal-done: #c5f25a;
+  --signal-done-ink: #1e2a05;
+  --signal-pending: #fbe3a2;
+  --signal-pending-ink: #5a4206;
+  --signal-attention: #f7c9bc;
+  --signal-attention-ink: #6a2414;
+  --signal-info: #dce6f2;
+  --signal-info-ink: #1d3550;
+
+  --shadow-1: 0 1px 2px rgba(23, 20, 15, 0.04), 0 2px 8px rgba(23, 20, 15, 0.04);
+  --shadow-2: 0 8px 24px rgba(23, 20, 15, 0.08);
+  --shadow-3: 0 24px 48px rgba(23, 20, 15, 0.14);
+
+  --radius-chip: 10px;
+  --radius-input: 14px;
+  --radius-card: 20px;
+  --radius-hero: 28px;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur: 220ms;
+
+  --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Geist Variable', 'Geist', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  color-scheme: light;
+}
+
+/* Spec: "Test with Inter only." Toggled from /styleguide. */
+:root[data-font='inter'] {
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+:root.dark {
+  --canvas: #0e0d0b;
+  --surface: #1a1815;
+  --surface-muted: #221f1b;
+  --ink: #f4f1ea;
+  --ink-2: #a8a196;
+  --ink-3: #6e685f;
+  --on-ink: #17140f;
+  --hairline: rgba(255, 255, 255, 0.08);
+  --glass: rgba(26, 24, 21, 0.58);
+  --glass-edge: rgba(255, 255, 255, 0.1);
+  --sunrise-wash: radial-gradient(120% 60% at 80% 0%, rgba(246, 196, 83, 0.16) 0%, rgba(246, 196, 83, 0) 70%);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-3: 0 24px 48px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+/* Content placed on a Sunrise surface stays dark in both themes (Sunrise is always light). */
+.on-sunrise {
+  --ink: #17140f;
+  --ink-2: #5c5245;
+  --ink-3: #8a7f6f;
+  --on-ink: #fbfaf7;
+  --hairline: rgba(23, 20, 15, 0.1);
+  --surface: #ffffff;
+  --surface-muted: rgba(255, 255, 255, 0.55);
+  color: var(--ink);
+}

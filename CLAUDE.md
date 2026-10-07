@@ -11,7 +11,7 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - AI is simulated deterministically: same input → same output; results carry `modelVersion`, `confidence`, rationale.
 - All UI strings go in `src/i18n/en.ts` (BM in `ms.ts`, falls back to EN). Student-facing data text uses `LocalizedText`.
 - Styling uses token classes only (no raw hex, no default Tailwind blue/indigo, no pure #000/#FFF text).
-- Glass only on chrome (top bar, tab bar, rail, sheet header). Sunrise at most once per screen. Serif max two elements per screen; never on buttons, chips, labels or numbers. One primary button per screen.
+- Glass only on chrome (top bar, tab bar, rail, sheet header). Sunrise at most once per screen. Display sizes (`t-display-*`, `t-title`) max two per screen; accent phrase via `<em>` (renders in ink-2, not italic). One primary button per screen.
 - Student secondary actions are bottom sheets, not routes.
 - localStorage only for role, language, demo persona/officer role. Demo state is in-memory; "Reset demo" reseeds.
 
@@ -23,7 +23,7 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 
 ## Stack notes
 - Corner radius is capped at 8px (client decision; overrides the spec's 10/14/20/28/999 scale). Use `rounded-chip` (4px), `rounded-control` (6px, buttons/inputs/tiles), `rounded-card` (8px). Tailwind's radius scale is replaced, so `rounded-full`/`rounded-xl` etc. don't exist. `rounded-circle` is only for true circles: avatars, status dots, rings, the sheet handle. No pill-shaped buttons.
-- Fonts: exactly two families — Instrument Serif (display, Google Fonts) and Inter (all UI, bundled via `@fontsource-variable/inter` as 'Inter Variable'). Geist was dropped by client decision; this overrides docs/visual-direction.md §Typography.
+- Fonts: Inter only, everywhere (client decision; no serif, no Geist). Bundled via `@fontsource-variable/inter` as 'Inter Variable'; no external font requests. Geist was dropped by client decision; this overrides docs/visual-direction.md §Typography.
 - Tailwind 4 with the JS config loaded via `@config` in `src/styles/globals.css`. `theme.colors` is *replaced*, so only token colours exist (no default blue/indigo).
 - Type scale is utilities: `t-display-xl`, `t-display-l`, `t-title`, `t-heading`, `t-subheading`, `t-body`, `t-body-strong`, `t-caption`, `t-micro`, `t-label` (uppercase section label), `t-body-sm` (agency), plus `tabular`.
 - `glass` (chrome only) and `frost-lock` (locked cards) are utilities. Put `-webkit-backdrop-filter` *before* `backdrop-filter`: the minifier keeps only the last duplicate.

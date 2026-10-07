@@ -3,7 +3,7 @@ import { SunriseCard } from '@/components/ui/Card'
 import { Chip } from '@/components/ui/Chip'
 import { IconTile } from '@/components/ui/Tiles'
 
-/** Home hero: Sunrise, state-driven serif headline, "Live" chip with icon tiles, one ink pill button. */
+/** Home hero: Sunrise, state-driven headline, "Live" chip with icon tiles, one ink button. */
 export function HeroCard({
   liveLabel,
   icons,
@@ -31,7 +31,7 @@ export function HeroCard({
           ))}
         </div>
       </div>
-      <h2 className="mt-6 t-display-l text-ink [&_em]:italic">{headline}</h2>
+      <h2 className="mt-6 t-display-l text-ink">{headline}</h2>
       {body && <p className="mt-2 max-w-[30ch] t-body text-ink-2">{body}</p>}
       <div className="mt-5">{action}</div>
     </SunriseCard>

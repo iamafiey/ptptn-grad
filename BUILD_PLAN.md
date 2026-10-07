@@ -30,11 +30,11 @@ If this plan and the specs disagree, the specs win.
 ### Phase log
 
 - **Client decisions after the 1a review** (these override `docs/visual-direction.md`):
-  - One sans family only: Inter, bundled with the app. Geist is dropped.
+  - Inter only, everywhere: no serif and no Geist. Display headlines are Inter 600 with tight tracking; the accent phrase renders in ink-2 instead of italic serif.
   - Corner radius max 8px: 4px chips, 6px controls, 8px cards, hero, sheets and tab bar. No pill buttons.
 
 - **1a (scaffold + styleguide).**
-  - Built: Vite/React/TS/Tailwind 4, tokens (light + dark), fonts (Instrument Serif + Inter), PWA manifest, icons and service worker (Google Fonts cached for offline), i18n plumbing (EN + partial BM), domain types, UI primitives and signature student components.
+  - Built: Vite/React/TS/Tailwind 4, tokens (light + dark), fonts, PWA manifest, icons and service worker, i18n plumbing (EN + partial BM), domain types, UI primitives and signature student components.
   - `/styleguide` shows: type, colour, Sunrise, glass shell in a phone frame (collapsing top bar, floating tab bar), buttons, chips, inputs, cards, locked role, sheet, motion and agency density.
   - Checks: typecheck, lint and build all pass. No console errors. No horizontal overflow at 360px.
 
@@ -51,7 +51,7 @@ If this plan and the specs disagree, the specs win.
 | Motion | `motion` (Framer Motion), for sheet springs (380/34), staggered reveal and number tick-ups | Spec §Motion; also honours `prefers-reduced-motion` |
 | Charts (agency) | `recharts`, styled with the tokens | 6-month trends, monitors, fairness views |
 | PWA | `vite-plugin-pwa`: manifest, icons, standalone display, theme colour `#F3F0EA`, offline shell | Spec §App shell |
-| Fonts | Instrument Serif (display) from Google Fonts; Inter (all UI) bundled via `@fontsource-variable/inter` so it never silently falls back to a system font. Geist dropped | Client decision after Phase 1a review: one sans family only (overrides spec §Typography) |
+| Fonts | Inter only, for everything including display headlines, bundled via `@fontsource-variable/inter`. No serif, no Geist, no external font requests | Client decision after Phase 1a review (overrides spec §Typography) |
 | State | React context and `useReducer` per domain, seeded from mocks and in memory only. A **Reset demo** action reseeds everything | No localStorage-critical flows |
 | localStorage | Only `role`, `lang` and the chosen demo persona/officer role (these count as preferences) | Constraint |
 | Exports | Skill CV and report "PDF" use a print stylesheet plus `window.print()`. "Excel" uses a CSV download | No heavy libraries |

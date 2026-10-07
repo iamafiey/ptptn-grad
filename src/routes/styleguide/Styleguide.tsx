@@ -89,7 +89,7 @@ function FontStatus() {
   const [state, setState] = useState<'checking' | 'ok' | 'fallback'>('checking')
   useEffect(() => {
     document.fonts.ready.then(() => {
-      const ok = document.fonts.check('500 15px "Inter Variable"') && document.fonts.check('400 34px "Instrument Serif"')
+      const ok = document.fonts.check('500 15px "Inter Variable"')
       setState(ok ? 'ok' : 'fallback')
     })
   }, [])
@@ -222,7 +222,7 @@ function SkillRevealDemo() {
         </div>
         <h3 className="mt-6 t-display-l text-ink">
           We found{' '}
-          <em className="italic">
+          <em>
             <AnimatedNumber key={run} from={0} value={14} /> skills
           </em>
         </h3>
@@ -302,23 +302,23 @@ export default function Styleguide() {
         <header className="py-14">
           <p className="t-label text-ink-2">PTPTN Graduate Platform · Phase 1a</p>
           <h1 className="mt-3 t-display-xl">
-            Warm, calm, <em className="italic">quietly premium</em>
+            Warm, calm, <em>quietly premium</em>
           </h1>
           <p className="mt-3 max-w-[62ch] t-body text-ink-2">
             Tokens, type and signature components from docs/visual-direction.md. Toggle BM to test heading lengths, and dark mode.
-            Two families only: Instrument Serif for display, Inter for everything else. Everything below is built from the shared token set.
+            One family only: Inter, from display headlines to captions. Everything below is built from the shared token set.
           </p>
         </header>
 
         {/* ------------------------------------------------------------ TYPE */}
-        <Section id="type" title="Typography" note="Serif for at most two elements per screen; never on buttons, chips, labels or numbers. One italic serif word allowed for warmth.">
-          <Spec name="Display XL" meta="Serif 44/46 · 400 · -0.01em">
+        <Section id="type" title="Typography" note="Inter only. Display sizes at most two per screen. One accent phrase per headline in softer ink (ink-2) for warmth.">
+          <Spec name="Display XL" meta="UI 44/48 · 600 · -0.035em">
             <p className="t-display-xl">{spec.displayXl}</p>
           </Spec>
-          <Spec name="Display L" meta="Serif 34/38 · 400 · -0.01em">
+          <Spec name="Display L" meta="UI 32/38 · 600 · -0.03em">
             <p className="t-display-l">{spec.displayL}</p>
           </Spec>
-          <Spec name="Title (app bar)" meta="Serif 30/34 · 400">
+          <Spec name="Title (app bar)" meta="UI 28/34 · 600 · -0.025em">
             <p className="t-title">{spec.title}</p>
           </Spec>
           <Spec name="Heading" meta="UI 20/26 · 600 · -0.015em">
@@ -600,7 +600,7 @@ export default function Styleguide() {
         </Section>
 
         {/* ---------------------------------------------------------- AGENCY */}
-        <Section id="agency" title="Agency density preview" note="Same tokens, desktop-first and denser: 14px body, tables allowed, serif only for page titles. Full shell in Phase 1b.">
+        <Section id="agency" title="Agency density preview" note="Same tokens, desktop-first and denser: 14px body, tables allowed, the title style only for page titles. Full shell in Phase 1b.">
           <div className="overflow-hidden rounded-card border border-hairline bg-surface shadow-1">
             <div className="flex items-center justify-between border-b border-hairline px-5 py-4">
               <h3 className="t-title">Job search evidence</h3>

@@ -3,7 +3,7 @@ import { cn } from '@/lib/cn'
 
 /**
  * Compact bar: avatar left (opens Settings), actions right (bell). Glass fades in as the
- * large serif title (rendered by <LargeTitle/> in the content) scrolls away.
+ * large title (rendered by <LargeTitle/> in the content) scrolls away.
  */
 export function TopAppBar({ title, progress, leading, trailing, className }: { title: string; progress: number; leading: ReactNode; trailing: ReactNode; className?: string }) {
   return (
@@ -24,12 +24,12 @@ export function TopAppBar({ title, progress, leading, trailing, className }: { t
   )
 }
 
-/** Large serif title that cross-fades into the compact bar. */
+/** Large title that cross-fades into the compact bar. */
 export function LargeTitle({ children, progress, eyebrow }: { children: ReactNode; progress: number; eyebrow?: ReactNode }) {
   return (
     <div className="px-5 pb-4 pt-1 transition-opacity duration-200" style={{ opacity: 1 - progress }}>
       {eyebrow && <div className="mb-1 t-caption text-ink-2">{eyebrow}</div>}
-      <h1 className="t-title text-ink [&_em]:italic">{children}</h1>
+      <h1 className="t-title text-ink">{children}</h1>
     </div>
   )
 }

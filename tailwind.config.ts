@@ -39,7 +39,6 @@ export default {
       circle: '9999px',
     },
     fontFamily: {
-      display: v('font-display'),
       sans: v('font-sans'),
     },
     extend: {

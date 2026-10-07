@@ -7,9 +7,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ---------- Type scale (docs/visual-direction.md §Typography) ---------- */
-@utility t-display-xl { font-family: var(--font-display); font-size: 44px; line-height: 46px; font-weight: 400; letter-spacing: -0.01em; }
-@utility t-display-l  { font-family: var(--font-display); font-size: 34px; line-height: 38px; font-weight: 400; letter-spacing: -0.01em; }
-@utility t-title      { font-family: var(--font-display); font-size: 30px; line-height: 34px; font-weight: 400; letter-spacing: 0; }
+/* All-sans (client decision): display sizes use Inter, heavier and tighter instead of a serif. */
+@utility t-display-xl { font-family: var(--font-sans); font-size: 44px; line-height: 48px; font-weight: 600; letter-spacing: -0.035em; }
+@utility t-display-l  { font-family: var(--font-sans); font-size: 32px; line-height: 38px; font-weight: 600; letter-spacing: -0.03em; }
+@utility t-title      { font-family: var(--font-sans); font-size: 28px; line-height: 34px; font-weight: 600; letter-spacing: -0.025em; }
 @utility t-heading    { font-family: var(--font-sans); font-size: 20px; line-height: 26px; font-weight: 600; letter-spacing: -0.015em; }
 @utility t-subheading { font-family: var(--font-sans); font-size: 17px; line-height: 24px; font-weight: 600; letter-spacing: -0.01em; }
 @utility t-body       { font-family: var(--font-sans); font-size: 15px; line-height: 22px; font-weight: 400; letter-spacing: -0.005em; }
@@ -41,6 +42,8 @@
 
 /* ---------- Base ---------- */
 @layer base {
+  /* Accent words in display headlines ("2 partners <em>want to talk</em>"): same weight, softer ink. */
+  :where(.t-display-xl, .t-display-l, .t-title) em { font-style: normal; color: var(--ink-2); }
   html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
   body {
     margin: 0;

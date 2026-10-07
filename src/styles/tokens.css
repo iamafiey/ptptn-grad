@@ -37,8 +37,7 @@
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --dur: 220ms;
 
-  --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
-  /* Single sans family (client decision): Inter, with system fallbacks. */
+  /* One family for everything (client decision): Inter, no serif. */
   --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --safe-top: env(safe-area-inset-top, 0px);

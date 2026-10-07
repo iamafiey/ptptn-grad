@@ -16,4 +16,6 @@ export default tseslint.config(
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
   },
+  // Route config module, not a component module.
+  { files: ['src/router.tsx'], rules: { 'react-refresh/only-export-components': 'off' } },
 )

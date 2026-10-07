@@ -84,6 +84,23 @@ const SIGNALS = [
 
 // ---------------------------------------------------------------------------
 
+/** Shows which families actually loaded, so a silent fallback to a system font is visible. */
+function FontStatus() {
+  const [state, setState] = useState<'checking' | 'ok' | 'fallback'>('checking')
+  useEffect(() => {
+    document.fonts.ready.then(() => {
+      const ok = document.fonts.check('500 15px "Inter Variable"') && document.fonts.check('400 34px "Instrument Serif"')
+      setState(ok ? 'ok' : 'fallback')
+    })
+  }, [])
+  if (state === 'checking') return null
+  return state === 'ok' ? (
+    <Chip tone="done" size="sm">Inter loaded</Chip>
+  ) : (
+    <Chip tone="attention" size="sm">Font fallback in use</Chip>
+  )
+}
+
 function Section({ id, title, note, children }: { id: string; title: string; note?: string; children: ReactNode }) {
   return (
     <section id={id} className="scroll-mt-24 border-t border-hairline py-12">
@@ -262,6 +279,7 @@ export default function Styleguide() {
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-5 py-3">
           <p className="t-subheading">Styleguide</p>
           <Chip tone="pending" size="sm">Awaiting approval</Chip>
+          <FontStatus />
           <nav className="hidden flex-1 justify-center gap-4 xl:flex">
             {nav.map(([id, label]) => (
               <a key={id} href={`#${id}`} className="whitespace-nowrap t-caption text-ink-2 hover:text-ink">

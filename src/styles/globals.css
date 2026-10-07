@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 @config '../../tailwind.config.ts';
+/* Inter is bundled (not fetched from Google) so it always loads, including offline. */
+@import '@fontsource-variable/inter/wght.css';
 @import './tokens.css';
 
 @custom-variant dark (&:where(.dark, .dark *));

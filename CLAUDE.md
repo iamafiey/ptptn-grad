@@ -22,7 +22,7 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - Fictional data only; masked ICs; no scraping or real portal calls.
 
 ## Stack notes
-- Fonts: exactly two families — Instrument Serif (display) and Inter (all UI). Geist was dropped by client decision; this overrides docs/visual-direction.md §Typography.
+- Fonts: exactly two families — Instrument Serif (display, Google Fonts) and Inter (all UI, bundled via `@fontsource-variable/inter` as 'Inter Variable'). Geist was dropped by client decision; this overrides docs/visual-direction.md §Typography.
 - Tailwind 4 with the JS config loaded via `@config` in `src/styles/globals.css`. `theme.colors` is *replaced*, so only token colours exist (no default blue/indigo).
 - Type scale is utilities: `t-display-xl`, `t-display-l`, `t-title`, `t-heading`, `t-subheading`, `t-body`, `t-body-strong`, `t-caption`, `t-micro`, `t-label` (uppercase section label), `t-body-sm` (agency), plus `tabular`.
 - `glass` (chrome only) and `frost-lock` (locked cards) are utilities. Put `-webkit-backdrop-filter` *before* `backdrop-filter`: the minifier keeps only the last duplicate.

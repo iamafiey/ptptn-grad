@@ -38,7 +38,7 @@
 
   --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
   /* Single sans family (client decision): Inter, with system fallbacks. */
-  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);

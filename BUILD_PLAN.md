@@ -47,7 +47,7 @@ If this plan and the specs disagree, the specs win.
 | Motion | `motion` (Framer Motion), for sheet springs (380/34), staggered reveal and number tick-ups | Spec §Motion; also honours `prefers-reduced-motion` |
 | Charts (agency) | `recharts`, styled with the tokens | 6-month trends, monitors, fairness views |
 | PWA | `vite-plugin-pwa`: manifest, icons, standalone display, theme colour `#F3F0EA`, offline shell | Spec §App shell |
-| Fonts | Instrument Serif (display) and Inter (all UI), both from Google Fonts. Geist dropped | Client decision after Phase 1a review: one sans family only (overrides spec §Typography) |
+| Fonts | Instrument Serif (display) from Google Fonts; Inter (all UI) bundled via `@fontsource-variable/inter` so it never silently falls back to a system font. Geist dropped | Client decision after Phase 1a review: one sans family only (overrides spec §Typography) |
 | State | React context and `useReducer` per domain, seeded from mocks and in memory only. A **Reset demo** action reseeds everything | No localStorage-critical flows |
 | localStorage | Only `role`, `lang` and the chosen demo persona/officer role (these count as preferences) | Constraint |
 | Exports | Skill CV and report "PDF" use a print stylesheet plus `window.print()`. "Excel" uses a CSV download | No heavy libraries |

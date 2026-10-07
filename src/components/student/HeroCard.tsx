@@ -20,7 +20,7 @@ export function HeroCard({
   return (
     <SunriseCard className="relative overflow-hidden">
       <div className="flex items-center gap-2">
-        <Chip tone="ink" size="md" icon={<span className="h-1.5 w-1.5 rounded-full bg-done" aria-hidden />}>
+        <Chip tone="ink" size="md" icon={<span className="h-1.5 w-1.5 rounded-circle bg-done" aria-hidden />}>
           {liveLabel}
         </Chip>
         <div className="flex -space-x-1.5">

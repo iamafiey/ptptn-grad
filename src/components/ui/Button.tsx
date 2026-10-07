@@ -17,9 +17,9 @@ const base =
   'inline-flex items-center justify-center gap-2 whitespace-nowrap select-none transition-[transform,background-color,opacity] duration-200 ease-app active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none'
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-ink text-on-ink rounded-full',
-  secondary: 'bg-surface text-ink border border-hairline rounded-full shadow-1',
-  tertiary: 'text-ink rounded-full hover:opacity-70',
+  primary: 'bg-ink text-on-ink rounded-control',
+  secondary: 'bg-surface text-ink border border-hairline rounded-control shadow-1',
+  tertiary: 'text-ink rounded-control hover:opacity-70',
 }
 
 const sizes: Record<Variant, Record<Size, string>> = {
@@ -28,7 +28,7 @@ const sizes: Record<Variant, Record<Size, string>> = {
   tertiary: { md: 'h-10 px-1 t-body-strong', sm: 'h-8 px-1 t-caption' },
 }
 
-/** Primary: ink pill (max one per screen). Secondary: white pill + hairline. Tertiary: text with arrow. */
+/** Primary: ink button (max one per screen). Secondary: white + hairline. Tertiary: text with arrow. Radius 6px. */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   { variant = 'primary', size = 'md', icon, loading, block, className, children, ...rest },
   ref,
@@ -53,7 +53,7 @@ interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: number
 }
 
-/** Round icon-only button. `label` is required for screen readers. */
+/** Square icon-only button (6px radius). `label` is required for screen readers. */
 export function IconButton({ label, tone = 'plain', size = 40, className, children, ...rest }: IconButtonProps) {
   return (
     <button
@@ -61,7 +61,7 @@ export function IconButton({ label, tone = 'plain', size = 40, className, childr
       title={label}
       style={{ width: size, height: size }}
       className={cn(
-        'inline-grid place-items-center rounded-full transition-[transform,opacity] duration-200 ease-app active:scale-95',
+        'inline-grid place-items-center rounded-control transition-[transform,opacity] duration-200 ease-app active:scale-95',
         tone === 'ink' && 'bg-ink text-on-ink',
         tone === 'surface' && 'bg-surface border border-hairline shadow-1 text-ink',
         tone === 'plain' && 'text-ink hover:bg-surface-muted',

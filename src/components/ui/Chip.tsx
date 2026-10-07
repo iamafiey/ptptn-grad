@@ -9,7 +9,7 @@ const tones: Record<ChipTone, string> = {
   attention: 'bg-attention text-attention-ink',
   info: 'bg-info text-info-ink',
   muted: 'bg-surface-muted text-ink-2',
-  ink: 'bg-ink text-on-ink rounded-full',
+  ink: 'bg-ink text-on-ink',
   outline: 'border border-hairline text-ink-2',
 }
 

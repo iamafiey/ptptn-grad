@@ -60,7 +60,7 @@ export function Sheet({ open, onClose, title, closeLabel, children, footer }: Sh
             aria-modal="true"
             aria-labelledby={titleId}
             tabIndex={-1}
-            className="absolute bottom-0 flex max-h-[92dvh] w-full max-w-app flex-col overflow-hidden rounded-t-hero bg-surface shadow-3 outline-none"
+            className="absolute bottom-0 flex max-h-[92dvh] w-full max-w-app flex-col overflow-hidden rounded-t-card bg-surface shadow-3 outline-none"
             initial={reduce ? { opacity: 0 } : { y: '100%' }}
             animate={reduce ? { opacity: 1 } : { y: 0 }}
             exit={reduce ? { opacity: 0 } : { y: '100%' }}
@@ -75,7 +75,7 @@ export function Sheet({ open, onClose, title, closeLabel, children, footer }: Sh
             }}
           >
             <div className="glass !rounded-none !border-x-0 !border-t-0 !shadow-none touch-none" onPointerDown={(e) => drag.start(e)}>
-              <div className="mx-auto mt-2 h-1 w-9 rounded-full bg-ink-3/50" aria-hidden />
+              <div className="mx-auto mt-2 h-1 w-9 rounded-circle bg-ink-3/50" aria-hidden />
               <div className="flex items-center justify-between gap-3 px-5 pb-3 pt-2">
                 <h2 id={titleId} className="t-heading text-ink">
                   {title}

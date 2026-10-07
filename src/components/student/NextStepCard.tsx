@@ -10,7 +10,7 @@ export function NextStepCard({ label, action, detail, onClick, actionLabel }: { 
         <p className="mt-1 t-body-strong text-ink">{action}</p>
         {detail && <p className="mt-0.5 t-caption text-ink-2">{detail}</p>}
       </div>
-      <button onClick={onClick} aria-label={actionLabel} className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-ink text-on-ink transition-transform active:scale-95">
+      <button onClick={onClick} aria-label={actionLabel} className="grid h-11 w-11 shrink-0 place-items-center rounded-control bg-ink text-on-ink transition-transform active:scale-95">
         <ArrowRight size={20} strokeWidth={1.5} />
       </button>
     </Card>

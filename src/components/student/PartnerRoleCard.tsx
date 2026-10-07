@@ -23,7 +23,7 @@ export interface PartnerRoleCardProps {
 
 /**
  * Premium partner role. When `access === 'locked'` the same card is frosted over with a
- * centred ink pill — the content shape stays visible so the reward feels real.
+ * centred ink button — the content shape stays visible so the reward feels real.
  * Repayment details are never passed in or shown here.
  */
 export function PartnerRoleCard({ title, partnerName, monogram, location, salary, matchPct, skills, access, onOpen, onUnlock }: PartnerRoleCardProps) {
@@ -62,7 +62,7 @@ export function PartnerRoleCard({ title, partnerName, monogram, location, salary
       </div>
       {locked && (
         <div className="frost-lock absolute inset-0 grid place-items-center">
-          <button onClick={onUnlock} className="inline-flex h-10 items-center gap-2 rounded-full bg-ink px-4 t-caption text-on-ink shadow-2">
+          <button onClick={onUnlock} className="inline-flex h-10 items-center gap-2 rounded-control bg-ink px-4 t-caption text-on-ink shadow-2">
             <Lock size={16} strokeWidth={1.5} aria-hidden />
             {t('role.unlockWithGoodStanding')}
           </button>

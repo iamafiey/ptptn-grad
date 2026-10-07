@@ -6,7 +6,7 @@ interface CardProps extends HTMLAttributes<HTMLElement> {
   as?: 'div' | 'section' | 'article'
 }
 
-/** Solid content card: hairline border + shadow-1, radius 20. Never glass, never nested card-in-card-in-card. */
+/** Solid content card: hairline border + shadow-1, radius 8. Never glass, never nested card-in-card-in-card. */
 export function Card({ padded = true, as: Tag = 'div', className, ...rest }: CardProps) {
   return <Tag className={cn('rounded-card border border-hairline bg-surface shadow-1', padded && 'p-4', className)} {...rest} />
 }

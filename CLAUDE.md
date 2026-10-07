@@ -22,6 +22,7 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - Fictional data only; masked ICs; no scraping or real portal calls.
 
 ## Stack notes
+- Corner radius is capped at 8px (client decision; overrides the spec's 10/14/20/28/999 scale). Use `rounded-chip` (4px), `rounded-control` (6px, buttons/inputs/tiles), `rounded-card` (8px). Tailwind's radius scale is replaced, so `rounded-full`/`rounded-xl` etc. don't exist. `rounded-circle` is only for true circles: avatars, status dots, rings, the sheet handle. No pill-shaped buttons.
 - Fonts: exactly two families — Instrument Serif (display, Google Fonts) and Inter (all UI, bundled via `@fontsource-variable/inter` as 'Inter Variable'). Geist was dropped by client decision; this overrides docs/visual-direction.md §Typography.
 - Tailwind 4 with the JS config loaded via `@config` in `src/styles/globals.css`. `theme.colors` is *replaced*, so only token colours exist (no default blue/indigo).
 - Type scale is utilities: `t-display-xl`, `t-display-l`, `t-title`, `t-heading`, `t-subheading`, `t-body`, `t-body-strong`, `t-caption`, `t-micro`, `t-label` (uppercase section label), `t-body-sm` (agency), plus `tabular`.

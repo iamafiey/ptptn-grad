@@ -13,7 +13,7 @@ export function EvidenceThumb({ src, status, alt }: { src?: string; status: LogR
       <span className="block h-full w-full overflow-hidden rounded-input border border-hairline bg-surface-muted">
         {src && <img src={src} alt={alt} className="h-full w-full object-cover object-top" />}
       </span>
-      <span className={cn('absolute -right-1 -top-1 h-4 w-4 rounded-full border-2 border-surface', dot[status])} aria-hidden />
+      <span className={cn('absolute -right-1 -top-1 h-4 w-4 rounded-circle border-2 border-surface', dot[status])} aria-hidden />
     </span>
   )
 }

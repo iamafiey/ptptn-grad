@@ -55,7 +55,7 @@ export function MatchRing({ pct, label }: { pct: number; label: string }) {
 export function Avatar({ initials, strength, size = 36, label }: { initials: string; strength?: number; size?: number; label?: string }) {
   const inner = (
     <span
-      className="inline-grid place-items-center rounded-full bg-surface-muted font-semibold text-ink"
+      className="inline-grid place-items-center rounded-circle bg-surface-muted font-semibold text-ink"
       style={{ width: size - (strength !== undefined ? 8 : 0), height: size - (strength !== undefined ? 8 : 0), fontSize: size * 0.32 }}
     >
       {initials}

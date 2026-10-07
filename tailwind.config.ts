@@ -25,17 +25,24 @@ export default {
       attention: { DEFAULT: v('signal-attention'), ink: v('signal-attention-ink') },
       info: { DEFAULT: v('signal-info'), ink: v('signal-info-ink') },
     },
+    // Replaces Tailwind's scale so nothing can exceed 8px. `circle` is only for true circles
+    // (avatars, status dots, progress rings, the sheet handle), never for buttons or cards.
+    borderRadius: {
+      none: '0',
+      sm: '2px',
+      DEFAULT: v('radius-control'),
+      chip: v('radius-chip'),
+      control: v('radius-control'),
+      input: v('radius-control'),
+      card: v('radius-card'),
+      hero: v('radius-hero'),
+      circle: '9999px',
+    },
     fontFamily: {
       display: v('font-display'),
       sans: v('font-sans'),
     },
     extend: {
-      borderRadius: {
-        chip: v('radius-chip'),
-        input: v('radius-input'),
-        card: v('radius-card'),
-        hero: v('radius-hero'),
-      },
       boxShadow: {
         1: v('shadow-1'),
         2: v('shadow-2'),

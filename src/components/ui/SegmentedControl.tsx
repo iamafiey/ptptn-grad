@@ -7,7 +7,7 @@ interface Option<T extends string> {
   label: string
 }
 
-/** In-screen tabs: muted pill track, selected segment white + shadow-1. */
+/** In-screen tabs: muted track, selected segment white + shadow-1. */
 export function SegmentedControl<T extends string>({
   options,
   value,
@@ -23,7 +23,7 @@ export function SegmentedControl<T extends string>({
 }) {
   const id = useId()
   return (
-    <div role="tablist" aria-label={ariaLabel} className={cn('flex rounded-full bg-surface-muted p-1 border border-hairline', className)}>
+    <div role="tablist" aria-label={ariaLabel} className={cn('flex rounded-control bg-surface-muted p-1 border border-hairline', className)}>
       {options.map((o) => {
         const active = o.value === value
         return (
@@ -32,12 +32,12 @@ export function SegmentedControl<T extends string>({
             role="tab"
             aria-selected={active}
             onClick={() => onChange(o.value)}
-            className={cn('relative h-9 flex-1 rounded-full px-3 t-caption transition-colors', active ? 'text-ink' : 'text-ink-2')}
+            className={cn('relative h-9 flex-1 rounded-chip px-3 t-caption transition-colors', active ? 'text-ink' : 'text-ink-2')}
           >
             {active && (
               <motion.span
                 layoutId={`seg-${id}`}
-                className="absolute inset-0 rounded-full bg-surface shadow-1"
+                className="absolute inset-0 rounded-chip bg-surface shadow-1"
                 transition={{ type: 'spring', stiffness: 380, damping: 34 }}
               />
             )}

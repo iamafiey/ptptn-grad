@@ -29,6 +29,10 @@ If this plan and the specs disagree, the specs win.
 
 ### Phase log
 
+- **Client decisions after the 1a review** (these override `docs/visual-direction.md`):
+  - One sans family only: Inter, bundled with the app. Geist is dropped.
+  - Corner radius max 8px: 4px chips, 6px controls, 8px cards, hero, sheets and tab bar. No pill buttons.
+
 - **1a (scaffold + styleguide).**
   - Built: Vite/React/TS/Tailwind 4, tokens (light + dark), fonts (Instrument Serif + Inter), PWA manifest, icons and service worker (Google Fonts cached for offline), i18n plumbing (EN + partial BM), domain types, UI primitives and signature student components.
   - `/styleguide` shows: type, colour, Sunrise, glass shell in a phone frame (collapsing top bar, floating tab bar), buttons, chips, inputs, cards, locked role, sheet, motion and agency density.

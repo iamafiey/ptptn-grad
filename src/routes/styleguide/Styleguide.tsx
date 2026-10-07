@@ -146,7 +146,7 @@ function PhonePreview() {
   const [tab, setTab] = useState<StudentTab>('home')
 
   return (
-    <div className="relative mx-auto h-[720px] w-[390px] max-w-full overflow-hidden rounded-[44px] border-[6px] border-ink bg-canvas shadow-3">
+    <div className="relative mx-auto h-[720px] w-[390px] max-w-full overflow-hidden rounded-card border-[6px] border-ink bg-canvas shadow-3">
       <div ref={scroller} className="h-full overflow-y-auto pb-28">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-sunrise-wash" aria-hidden />
         <TopAppBar
@@ -179,7 +179,7 @@ function PhonePreview() {
             <SectionLabel>Scroll — glass needs content beneath it</SectionLabel>
             <div className="mt-3 space-y-2">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-3 rounded-full bg-surface-muted" style={{ width: `${90 - i * 9}%` }} />
+                <div key={i} className="h-3 rounded-sm bg-surface-muted" style={{ width: `${90 - i * 9}%` }} />
               ))}
             </div>
           </Card>
@@ -390,8 +390,8 @@ export default function Styleguide() {
               <Card>
                 <SectionLabel>Tab bar spec</SectionLabel>
                 <ul className="mt-3 list-disc space-y-1 pl-5 t-body text-ink-2">
-                  <li>Floating glass pill, inset 12px from edges, 12px above the safe area.</li>
-                  <li>Active tab: ink pill behind icon and label. Inactive: icon + small label in ink-2.</li>
+                  <li>Floating glass bar (radius 8), inset 12px from edges, 12px above the safe area.</li>
+                  <li>Active tab: ink block behind icon and label. Inactive: icon + small label in ink-2.</li>
                   <li>Content scrolls beneath; a faint Sunrise wash at the top of Home gives the bar warmth to blur.</li>
                   <li>Desktop ≥1024px: centred 430px column with a frosted left rail replacing the tab bar (Phase 1b).</li>
                 </ul>
@@ -412,7 +412,7 @@ export default function Styleguide() {
         </Section>
 
         {/* --------------------------------------------------------- BUTTONS */}
-        <Section id="buttons" title="Buttons, chips, icons" note="Never more than one primary per screen.">
+        <Section id="buttons" title="Buttons, chips, icons" note="Never more than one primary per screen. Corner radius: 4px chips, 6px controls, 8px cards — never more than 8px.">
           <div className="flex flex-wrap items-center gap-4">
             <Button>{t('action.logApplication')}</Button>
             <Button variant="secondary">{t('action.useSample')}</Button>
@@ -451,7 +451,7 @@ export default function Styleguide() {
         </Section>
 
         {/* ---------------------------------------------------------- INPUTS */}
-        <Section id="inputs" title="Inputs & controls" note="52px tall, muted surface, radius 14, floating label, ink 1.5px focus ring with 2px offset.">
+        <Section id="inputs" title="Inputs & controls" note="52px tall, muted surface, radius 6, floating label, ink 1.5px focus ring with 2px offset.">
           <div className="grid max-w-3xl gap-6 md:grid-cols-2">
             <Field label="Role applied for" defaultValue="Supply Chain Analyst" />
             <Field label="Company" hint="As it appears on the portal" />
@@ -476,7 +476,7 @@ export default function Styleguide() {
         </Section>
 
         {/* ----------------------------------------------------------- CARDS */}
-        <Section id="cards" title="Cards" note="Solid surfaces, hairline + shadow-1, radius 20. Hero is the only gradient surface on a screen.">
+        <Section id="cards" title="Cards" note="Solid surfaces, hairline + shadow-1, radius 8. Hero is the only gradient surface on a screen.">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             <div className="max-w-app space-y-6">
               <SectionLabel>Hero card (Home)</SectionLabel>
@@ -519,7 +519,7 @@ export default function Styleguide() {
         </Section>
 
         {/* ---------------------------------------------------------- LOCKED */}
-        <Section id="locked" title="Locked role" note="Below Tier A. Same card frosted over (40% glass, blur 8px) with a centred ink pill. No amounts, no status, no tier words — job surfaces only ever receive access: 'locked'.">
+        <Section id="locked" title="Locked role" note="Below Tier A. Same card frosted over (40% glass, blur 8px) with a centred ink button. No amounts, no status, no tier words — job surfaces only ever receive access: 'locked'.">
           <div className="grid max-w-4xl gap-6 md:grid-cols-2">
             <PartnerRoleCard
               title="Graduate Engineer, Grid Systems"

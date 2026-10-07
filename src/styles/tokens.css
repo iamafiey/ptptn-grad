@@ -28,10 +28,11 @@
   --shadow-2: 0 8px 24px rgba(23, 20, 15, 0.08);
   --shadow-3: 0 24px 48px rgba(23, 20, 15, 0.14);
 
-  --radius-chip: 10px;
-  --radius-input: 14px;
-  --radius-card: 20px;
-  --radius-hero: 28px;
+  /* Corner radius is capped at 8px (client decision; overrides the spec's 10/14/20/28/999 scale). */
+  --radius-chip: 4px; /* chips, icon tiles, inner segments */
+  --radius-control: 6px; /* buttons, inputs, logo tiles, toggles */
+  --radius-card: 8px; /* cards, hero, sheets, tab bar */
+  --radius-hero: 8px;
 
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --dur: 220ms;

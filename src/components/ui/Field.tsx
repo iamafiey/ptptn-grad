@@ -8,7 +8,7 @@ interface FieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'placeh
   prefix?: string
 }
 
-/** 52px input on muted surface, radius 14, floating label, ink focus ring with 2px offset. */
+/** 52px input on muted surface, radius 6, floating label, ink focus ring with 2px offset. */
 export function Field({ label, hint, error, prefix, className, id, ...rest }: FieldProps) {
   const auto = useId()
   const fid = id ?? auto
@@ -65,11 +65,11 @@ export function Toggle({ checked, onChange, label, description }: { checked: boo
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        className={cn('relative h-[31px] w-[51px] shrink-0 rounded-full transition-colors duration-200', checked ? 'bg-ink' : 'bg-ink-3/40')}
+        className={cn('relative h-[31px] w-[51px] shrink-0 rounded-control transition-colors duration-200', checked ? 'bg-ink' : 'bg-ink-3/40')}
       >
         <span
           className={cn(
-            'absolute left-0 top-[2px] h-[27px] w-[27px] rounded-full bg-surface shadow-1 transition-transform duration-200 ease-app',
+            'absolute left-0 top-[2px] h-[27px] w-[27px] rounded-chip bg-surface shadow-1 transition-transform duration-200 ease-app',
             checked ? 'translate-x-[22px]' : 'translate-x-[2px]',
           )}
         />

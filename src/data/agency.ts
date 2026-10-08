@@ -1,4 +1,5 @@
 import type { Alert, AuditEntry, EvidenceCheckResult, JobLogEntry, LocalizedText, OfficerRole, Placement, QueueDef, QueueId } from '@/types/domain'
+import { asset } from '@/lib/asset'
 
 // Agency seed data. Synthetic rows are generated from a fixed seed, so every run is identical.
 // "Today" is Wed 7 Oct 2026. All people, ICs and companies are fictional.
@@ -62,11 +63,11 @@ const PORTALS = ['KerjaKini', 'LaluanKerjaya', 'Company website', 'LinkedIn', 'W
 
 type Reason = { key: 'companyNotFound' | 'edited' | 'oldDate' | 'lowConfidence' | 'duplicate'; preview: string; conf: number; text: LocalizedText; checks: Partial<EvidenceCheckResult['checks']> }
 const REASONS: Reason[] = [
-  { key: 'companyNotFound', preview: '/evidence/unknown-company.svg', conf: 0.62, text: { en: 'Company not found in the business registry', ms: 'Syarikat tiada dalam daftar perniagaan' }, checks: { companyExists: 'warn' } },
-  { key: 'edited', preview: '/evidence/edited-screenshot.svg', conf: 0.57, text: { en: 'Possible edited image', ms: 'Imej mungkin disunting' }, checks: { editedImage: 'warn' } },
-  { key: 'oldDate', preview: '/evidence/old-email.svg', conf: 0.66, text: { en: 'Date outside the application period', ms: 'Tarikh di luar tempoh permohonan' }, checks: { dateInPeriod: 'fail' } },
-  { key: 'lowConfidence', preview: '/evidence/portal-screenshot.svg', conf: 0.78, text: { en: 'Confidence below the auto-verify threshold', ms: 'Keyakinan di bawah ambang pengesahan automatik' }, checks: {} },
-  { key: 'duplicate', preview: '/evidence/confirmation-email.svg', conf: 0.52, text: { en: 'Same image used by another student', ms: 'Imej sama digunakan oleh pelajar lain' }, checks: { duplicateImage: 'fail' } },
+  { key: 'companyNotFound', preview: asset('evidence/unknown-company.svg'), conf: 0.62, text: { en: 'Company not found in the business registry', ms: 'Syarikat tiada dalam daftar perniagaan' }, checks: { companyExists: 'warn' } },
+  { key: 'edited', preview: asset('evidence/edited-screenshot.svg'), conf: 0.57, text: { en: 'Possible edited image', ms: 'Imej mungkin disunting' }, checks: { editedImage: 'warn' } },
+  { key: 'oldDate', preview: asset('evidence/old-email.svg'), conf: 0.66, text: { en: 'Date outside the application period', ms: 'Tarikh di luar tempoh permohonan' }, checks: { dateInPeriod: 'fail' } },
+  { key: 'lowConfidence', preview: asset('evidence/portal-screenshot.svg'), conf: 0.78, text: { en: 'Confidence below the auto-verify threshold', ms: 'Keyakinan di bawah ambang pengesahan automatik' }, checks: {} },
+  { key: 'duplicate', preview: asset('evidence/confirmation-email.svg'), conf: 0.52, text: { en: 'Same image used by another student', ms: 'Imej sama digunakan oleh pelajar lain' }, checks: { duplicateImage: 'fail' } },
 ]
 
 // 45 synthetic + 2 real (Hafiz, Kavitha) = 47 open. Ages spread to 4 working days; 6 are overdue (SLA 3).

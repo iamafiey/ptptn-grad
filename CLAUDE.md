@@ -47,6 +47,7 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - Shared chip tones for partner status and student stage live in `src/features/agency/tones.ts` (page files export only their component).
 - Reports: add or change one in `services/reports.ts` (`buildReport` returns kpis/chart/table with i18n keys); audiences live in `data/reports.ts`. Printable pages wrap in `.print-area` (the global print CSS prints only that).
 - Touch targets: every button, link, tab and switch gets at least a 44×44 hit area through an invisible `::after` (globals.css, components layer). Add `.no-hit` where that overlap would be wrong.
+- Deploy base: the GitHub Pages build sets `BASE_PATH=/ptptn-grad/` (`.github/workflows/pages.yml`, deploys on every push to `main`). Reference files in `public/` with `asset('evidence/x.svg')` (`src/lib/asset.ts`), never a root-absolute `/…` path. The router takes its basename from `import.meta.env.BASE_URL`.
 - Theme: `useDemo().theme` (`system`/`light`/`dark`, in memory) toggles `.dark` on `<html>`. Screenshot dark mode with `"dark": true` in a shots spec.
 - Charts: use `components/agency/Charts.tsx` (`ChartCard` with table view, `TrendChart`, `StackedBars`) and only `--series-1/2/3` (validated palette). Single series: no legend. Never dual axes. No tabular numerals on large standalone figures.
 

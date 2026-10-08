@@ -2,6 +2,7 @@ import type { ProgrammeSettings } from '@/config/programmeSettings'
 import { EVIDENCE_SAMPLES, type EvidenceSample } from '@/data/jobLog'
 import type { EvidenceCheckResult, JobLogEntry, LocalizedText } from '@/types/domain'
 import { delay } from './delay'
+import { asset } from '@/lib/asset'
 
 // Simulated AI evidence check (docs/admin-dashboard-flow.md §Evidence verification):
 // extract company, role, portal, date → confirm company exists → check the date → detect edited/reused images.
@@ -37,7 +38,7 @@ export function previewFor(input: EvidenceInput, objectUrl?: string) {
     const s = EVIDENCE_SAMPLES.find((x) => x.id === input.sampleId)!
     return { fileName: s.fileName, previewUrl: s.previewUrl }
   }
-  return { fileName: input.fileName, previewUrl: objectUrl ?? '/evidence/photo.svg' }
+  return { fileName: input.fileName, previewUrl: objectUrl ?? asset('evidence/photo.svg') }
 }
 
 export async function checkEvidence(

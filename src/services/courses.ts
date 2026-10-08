@@ -6,6 +6,7 @@ import { delay } from './delay'
 import { buildOpenJobs } from './jobs'
 import { matchJob, matchRole } from './matching'
 import { courseAccess } from './tiers'
+import { asset } from '@/lib/asset'
 
 // Learn: every course names the gap it closes and the roles it opens (docs §Learn).
 
@@ -117,7 +118,7 @@ export async function completeCourse(studentId: string, courseId: string): Promi
 
   writeDb((d) => {
     const r = d.students[studentId]
-    r.evidence.push({ id: evId, kind: 'certificate', fileName: `${course.title.en}.pdf`, previewUrl: '/evidence/certificate.svg', uploadedAt: '2026-10-07' })
+    r.evidence.push({ id: evId, kind: 'certificate', fileName: `${course.title.en}.pdf`, previewUrl: asset('evidence/certificate.svg'), uploadedAt: '2026-10-07' })
     r.skills ??= []
     const sk = r.skills.find((x) => x.skillId === skillId)
     if (sk) {

@@ -4,6 +4,7 @@ import { logAudit } from './audit'
 import { readDb, writeDb } from './db'
 import { delay } from './delay'
 import { slaStatus, studentCode, workingDaysSince, type Sla } from './agencyQueues'
+import { asset } from '@/lib/asset'
 
 // Evidence AI could not verify with confidence (docs §Evidence verification step 5):
 // officer sees evidence beside AI-extracted fields → Verify, Reject with reason, or Flag account.
@@ -38,7 +39,7 @@ export function listOpenEvidence(s: ProgrammeSettings): EvidenceQueueItem[] {
           studentId: sid,
           institution: d.students[sid]?.student.institution.match(/\(([^)]+)\)/)?.[1] ?? d.students[sid]?.student.institution ?? '',
           entry: e,
-          preview: e.evidenceId ? d.logEvidence[e.evidenceId]?.previewUrl ?? '/evidence/photo.svg' : '/evidence/photo.svg',
+          preview: e.evidenceId ? d.logEvidence[e.evidenceId]?.previewUrl ?? asset('evidence/photo.svg') : asset('evidence/photo.svg'),
           reason: e.check?.reasons[0] ?? { en: 'Needs officer review', ms: 'Perlu semakan pegawai' },
           createdAt,
           age,

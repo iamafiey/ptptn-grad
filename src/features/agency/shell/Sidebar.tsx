@@ -5,6 +5,7 @@ import { cn } from '@/lib/cn'
 import { getOfficerForRole } from '@/services/demo'
 import { useDemo } from '@/state/DemoProvider'
 import { AGENCY_SECTIONS, canSee, sectionForPath } from '../nav'
+import { asset } from '@/lib/asset'
 
 /** Frosted sidebar. Sections are filtered by the current officer role; the active section expands. */
 export function Sidebar({ onNavigate, footer }: { onNavigate?: () => void; footer?: ReactNode }) {
@@ -17,7 +18,7 @@ export function Sidebar({ onNavigate, footer }: { onNavigate?: () => void; foote
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2.5 px-2 pb-5 pt-1">
-        <img src="/icons/icon.svg" alt="" className="h-8 w-8 rounded-control" />
+        <img src={asset('icons/icon.svg')} alt="" className="h-8 w-8 rounded-control" />
         <span className="t-body-strong">{t('agency.name')}</span>
       </div>
       <nav aria-label={t('agency.name')} className="-mx-1 flex-1 overflow-y-auto px-1">

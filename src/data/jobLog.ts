@@ -1,4 +1,5 @@
 import type { AppNotification, EvidenceCheckResult, JobLogEntry, LocalizedText, RepaymentAccount } from '@/types/domain'
+import { asset } from '@/lib/asset'
 
 // Sample evidence files with known AI-check outcomes, so a presenter can trigger each result on cue.
 export interface EvidenceSample {
@@ -12,12 +13,12 @@ export interface EvidenceSample {
 }
 
 export const EVIDENCE_SAMPLES: EvidenceSample[] = [
-  { id: 'smp-email', label: { en: 'Confirmation email', ms: 'E-mel pengesahan' }, description: { en: 'Clear, matches the application', ms: 'Jelas, sepadan dengan permohonan' }, fileName: 'application-received.png', previewUrl: '/evidence/confirmation-email.svg', outcome: 'verified' },
-  { id: 'smp-blurry', label: { en: 'Blurry screenshot', ms: 'Tangkapan skrin kabur' }, description: { en: 'Too blurry to read', ms: 'Terlalu kabur untuk dibaca' }, fileName: 'screenshot-blur.jpg', previewUrl: '/evidence/blurry-screenshot.svg', outcome: 'unreadable' },
-  { id: 'smp-unknown', label: { en: 'Unfamiliar company', ms: 'Syarikat tidak dikenali' }, description: { en: 'Company not in the registry', ms: 'Syarikat tiada dalam daftar' }, fileName: 'offer-email.png', previewUrl: '/evidence/unknown-company.svg', outcome: 'companyNotFound' },
-  { id: 'smp-edited', label: { en: 'Edited screenshot', ms: 'Tangkapan skrin disunting' }, description: { en: 'Signs of image editing', ms: 'Tanda imej disunting' }, fileName: 'status-page.png', previewUrl: '/evidence/edited-screenshot.svg', outcome: 'edited' },
-  { id: 'smp-old', label: { en: 'Old email', ms: 'E-mel lama' }, description: { en: 'Dated outside this period', ms: 'Bertarikh di luar tempoh ini' }, fileName: 'email-2025.png', previewUrl: '/evidence/old-email.svg', outcome: 'oldDate' },
-  { id: 'smp-interview', label: { en: 'Interview invite', ms: 'Jemputan temu duga' }, description: { en: 'Clear interview invitation', ms: 'Jemputan temu duga yang jelas' }, fileName: 'interview-invite.png', previewUrl: '/evidence/interview-invite.svg', outcome: 'verified' },
+  { id: 'smp-email', label: { en: 'Confirmation email', ms: 'E-mel pengesahan' }, description: { en: 'Clear, matches the application', ms: 'Jelas, sepadan dengan permohonan' }, fileName: 'application-received.png', previewUrl: asset('evidence/confirmation-email.svg'), outcome: 'verified' },
+  { id: 'smp-blurry', label: { en: 'Blurry screenshot', ms: 'Tangkapan skrin kabur' }, description: { en: 'Too blurry to read', ms: 'Terlalu kabur untuk dibaca' }, fileName: 'screenshot-blur.jpg', previewUrl: asset('evidence/blurry-screenshot.svg'), outcome: 'unreadable' },
+  { id: 'smp-unknown', label: { en: 'Unfamiliar company', ms: 'Syarikat tidak dikenali' }, description: { en: 'Company not in the registry', ms: 'Syarikat tiada dalam daftar' }, fileName: 'offer-email.png', previewUrl: asset('evidence/unknown-company.svg'), outcome: 'companyNotFound' },
+  { id: 'smp-edited', label: { en: 'Edited screenshot', ms: 'Tangkapan skrin disunting' }, description: { en: 'Signs of image editing', ms: 'Tanda imej disunting' }, fileName: 'status-page.png', previewUrl: asset('evidence/edited-screenshot.svg'), outcome: 'edited' },
+  { id: 'smp-old', label: { en: 'Old email', ms: 'E-mel lama' }, description: { en: 'Dated outside this period', ms: 'Bertarikh di luar tempoh ini' }, fileName: 'email-2025.png', previewUrl: asset('evidence/old-email.svg'), outcome: 'oldDate' },
+  { id: 'smp-interview', label: { en: 'Interview invite', ms: 'Jemputan temu duga' }, description: { en: 'Clear interview invitation', ms: 'Jemputan temu duga yang jelas' }, fileName: 'interview-invite.png', previewUrl: asset('evidence/interview-invite.svg'), outcome: 'verified' },
 ]
 
 const ok = 'pass' as const
@@ -61,18 +62,18 @@ export const JOB_LOG_SEED: Record<string, JobLogEntry[]> = {
 
 /** Evidence previews for seeded log entries (id → image). */
 export const LOG_EVIDENCE_PREVIEW: Record<string, string> = {
-  'ev-h1': '/evidence/interview-invite.svg',
-  'ev-h2': '/evidence/confirmation-email.svg',
-  'ev-h3': '/evidence/unknown-company.svg',
-  'ev-h4': '/evidence/blurry-screenshot.svg',
-  'ev-h5': '/evidence/portal-screenshot.svg',
-  'ev-h6': '/evidence/portal-screenshot.svg',
-  'ev-h7': '/evidence/confirmation-email.svg',
-  'ev-k1': '/evidence/interview-invite.svg',
-  'ev-k2': '/evidence/portal-screenshot.svg',
-  'ev-k3': '/evidence/edited-screenshot.svg',
-  'ev-k4': '/evidence/confirmation-email.svg',
-  'ev-k5': '/evidence/portal-screenshot.svg',
+  'ev-h1': asset('evidence/interview-invite.svg'),
+  'ev-h2': asset('evidence/confirmation-email.svg'),
+  'ev-h3': asset('evidence/unknown-company.svg'),
+  'ev-h4': asset('evidence/blurry-screenshot.svg'),
+  'ev-h5': asset('evidence/portal-screenshot.svg'),
+  'ev-h6': asset('evidence/portal-screenshot.svg'),
+  'ev-h7': asset('evidence/confirmation-email.svg'),
+  'ev-k1': asset('evidence/interview-invite.svg'),
+  'ev-k2': asset('evidence/portal-screenshot.svg'),
+  'ev-k3': asset('evidence/edited-screenshot.svg'),
+  'ev-k4': asset('evidence/confirmation-email.svg'),
+  'ev-k5': asset('evidence/portal-screenshot.svg'),
 }
 
 // Repayment accounts: student-only; never passed to job or employer surfaces.

@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn'
 /** Dense agency table: muted header, hairline rows, horizontal scroll inside its card on small screens. */
 export function Table({ children, minWidth = 720, className }: { children: ReactNode; minWidth?: number; className?: string }) {
   return (
-    <div className={cn('overflow-x-auto', className)}>
+    <div className={cn('relative overflow-x-auto', className)}>
       <table className="w-full t-body-sm" style={{ minWidth }}>
         {children}
       </table>

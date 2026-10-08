@@ -295,6 +295,108 @@ await page.locator('button', { hasText: 'Junior Electrical Designer' }).first().
 await page.waitForTimeout(400)
 check(await page.getByText('Unreadable, please re-upload the original email').isVisible(), 'officer rejection reason shows to the student')
 await page.keyboard.press('Escape')
+
+// ---------------------------------------------------------------- Phase 6: partners, students, AI governance, tiers
+const asOfficer = async (role) => {
+  await page.getByLabel('Officer role').first().selectOption(role)
+  await page.waitForTimeout(500)
+}
+const nav = async (...names) => {
+  for (const n of names) {
+    await page.getByRole('link', { name: n, exact: true }).first().click()
+    await page.waitForTimeout(500)
+  }
+}
+const toast = (text) => page.getByText(text).first().isVisible()
+
+// Pausing a partner hides its roles from students
+await toAgency('partnershipManager')
+await nav('Partners')
+await page.locator('tbody tr', { hasText: 'Seri Mutiara' }).click()
+await page.waitForTimeout(500)
+await btn('Pause').click()
+await page.getByRole('button', { name: 'Behind on committed roles' }).click()
+await btn('Confirm').click()
+await page.waitForTimeout(500)
+check(await page.getByText('Paused: this partner’s roles are hidden from students.').isVisible(), 'paused partner shows the hidden-roles note')
+
+// Portal feed → link-out is a programme setting
+await nav('Portal feeds')
+await page.locator('tbody tr', { hasText: 'KerjaKini' }).getByRole('tab', { name: 'Link-out' }).click()
+await page.waitForTimeout(300)
+check(await toast('Students now see KerjaKini as Link-out'), 'portal switched to link-out')
+
+// Two-person rule on rubric changes
+await asOfficer('aiGovernanceLead')
+await nav('AI governance', 'Rubric changes')
+await btn('Impact preview').click()
+await page.waitForTimeout(300)
+check(await page.getByText('Sample of 500 profiles').isVisible(), 'rubric impact preview over a 500-profile sample')
+await btn('Submit for second approval').click()
+await page.waitForTimeout(500)
+check(await page.getByText('You drafted this change. Another officer must approve it').isVisible(), 'drafter cannot approve their own rubric change')
+await asOfficer('superAdmin')
+await btn('Approve and publish').click()
+await page.waitForTimeout(600)
+check((await page.getByText('Published', { exact: true }).count()) > 0, 'second officer approves and publishes')
+
+// Skill dispute correction reaches Hafiz
+await asOfficer('aiGovernanceLead')
+await nav('Students', 'Skill disputes')
+await page.locator('tbody tr', { hasText: 'Process improvement' }).filter({ hasText: 'demo' }).click()
+await page.waitForTimeout(500)
+await btn('Correct and re-score').click()
+await page.waitForTimeout(600)
+check((await page.locator('tbody tr', { hasText: 'Process improvement' }).filter({ hasText: 'demo' }).count()) === 0, 'resolved dispute leaves the list')
+
+// Student record: masked until revealed, reveal is logged, repayment gated
+await nav('Directory')
+await page.locator('tbody tr', { hasText: 'S-24087' }).click()
+await page.waitForTimeout(500)
+check(await page.getByText('Name hidden').first().isVisible(), 'student record is masked by default')
+check(await page.getByText('Repayment details are visible to the collection liaison and super admin only.').isVisible(), 'AI lead sees tier badge only (repayment gated)')
+await btn('Reveal name and IC').click()
+await page.getByRole('button', { name: 'Student called the helpline' }).click()
+await btn('Confirm').click()
+await page.waitForTimeout(400)
+check(await page.getByText('Kavitha', { exact: false }).first().isVisible(), 'reveal shows the name')
+
+// Tier rules: liaison drafts, super admin approves, settings apply
+await asOfficer('collectionLiaison')
+await nav('Repayment tiers')
+await btn('Propose a change').click()
+await page.waitForTimeout(400)
+await page.getByRole('switch', { name: 'Grace period counts as' }).click()
+check(await page.getByText('9,120').isVisible(), 'tier impact preview: 9,120 students A → B')
+await btn('Submit for second approval').click()
+await page.waitForTimeout(500)
+await asOfficer('superAdmin')
+await btn('Approve and publish').click()
+await page.waitForTimeout(600)
+check((await page.locator('tbody tr', { hasText: 'Grace period counts as' }).innerText()).includes('Tier B'), 'approved tier rule applies to settings')
+
+// Override restores Kavitha's benefits
+await asOfficer('collectionLiaison')
+await nav('Overrides')
+await page.locator('article', { hasText: 'OV-5101' }).getByRole('button', { name: /Grant 14 days/ }).click()
+await page.getByRole('button', { name: 'Bank receipt checked against reference' }).click()
+await btn('Confirm').click()
+await page.waitForTimeout(500)
+check((await page.locator('article', { hasText: 'OV-5101' }).innerText()).includes('Active'), 'override OV-5101 is active')
+
+await toStudent(/^KR Kavitha/)
+await page.getByRole('button', { name: /^Notifications/ }).first().click()
+await page.waitForTimeout(500)
+check(await page.getByText('Your benefits are back while your payment is confirmed.').isVisible(), 'Kavitha is notified of the override')
+await toStudent(/^MH Muhammad Hafiz/)
+await page.getByRole('button', { name: /^Notifications/ }).first().click()
+await page.waitForTimeout(500)
+check(await page.getByText('Your dispute was accepted').first().isVisible(), 'Hafiz is notified of the dispute correction')
+await page.getByRole('button', { name: 'Opportunities' }).first().click()
+await page.waitForTimeout(400)
+await page.getByRole('tab', { name: 'Partner roles' }).click()
+await page.waitForTimeout(400)
+check((await page.getByText('Logistics Executive (Graduate)').count()) === 0, 'paused partner’s roles are hidden from students')
 await page.setViewportSize({ width: 390, height: 844 })
 
 // Reset demo returns Nurul to step 5

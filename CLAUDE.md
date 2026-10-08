@@ -43,6 +43,8 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - Chips never wrap. Use `<Note>` for sentence-length signal messages.
 - Agency actions must call `logAudit()` (who, what, record, reason) and pass an undo closure when reversible. Gate actions with `canWorkQueue()` and `useOfficer().readOnly`.
 - Date maths on ISO dates: do it in UTC (`T00:00:00Z`, `getUTCDay`, `setUTCDate`) so results don't shift with the viewer's timezone. Display with `formatDate()` (Asia/Kuala_Lumpur).
+- Two-person rule (rubric, tier rules): `governance.proposeChange` / `approveChange` (throws if the drafter approves); `ChangeRequestList` renders the queue and hands the approved change back so the page can apply its settings patch. Officer names come from `services/demo` (`getOfficerById`).
+- Shared chip tones for partner status and student stage live in `src/features/agency/tones.ts` (page files export only their component).
 - Charts: use `components/agency/Charts.tsx` (`ChartCard` with table view, `TrendChart`, `StackedBars`) and only `--series-1/2/3` (validated palette). Single series: no legend. Never dual axes. No tabular numerals on large standalone figures.
 
 ## Scripts

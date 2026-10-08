@@ -21,6 +21,7 @@ const QUEUE_HREF: Partial<Record<string, string>> = {
   evidence: '/a/job-search/evidence',
   partnerRoleApprovals: '/a/partners/approvals',
   placements: '/a/job-search/placements',
+  skillDisputes: '/a/students/disputes',
 }
 
 /** Command centre: what needs my action today, and is the programme on track. Queues first. */

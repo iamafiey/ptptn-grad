@@ -149,12 +149,6 @@ function genericCases(): GenericCase[] {
       { subject: 'Listing KK-1184 (KerjaKini)', reason: { en: 'Listing reported: “commission only”', ms: 'Senarai dilaporkan: “komisen sahaja”' }, ai: { action: 'reject' as const, confidence: 0.81, rationale: 'Feed rule: salary must be shown; listing shows commission only.' }, detail: [{ label: 'Reports', value: '3 students' }] },
     ][i],
   )
-  add('skillDisputes', 8, [4, 3, 3, 2, 2, 1, 1, 0], (i) => ({
-    subject: `Student S-${24000 + i * 211}`,
-    reason: { en: `Disputes ${pick(r, ['Team leadership', 'Data analysis', 'Customer service', 'Event management', 'Report writing'])} level`, ms: 'Mempertikaikan tahap kemahiran' },
-    ai: { action: 'escalate', confidence: Number((0.6 + r() * 0.2).toFixed(2)), rationale: 'Student added evidence after scoring; re-score may change level.' },
-    detail: [{ label: 'Student comment', value: pick(r, ['I led the team for 14 months, not 6.', 'This was a group project, I was not the lead.', 'Certificate attached later.']) }],
-  }))
   add('lowConfidence', 21, [5, 4, 4, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], (i) => ({
     subject: `Student S-${25000 + i * 97}`,
     reason: { en: 'Profile confidence below threshold; held back from employers', ms: 'Keyakinan profil di bawah ambang; disembunyikan daripada majikan' },

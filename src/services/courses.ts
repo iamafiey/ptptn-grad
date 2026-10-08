@@ -1,5 +1,5 @@
 import type { ProgrammeSettings } from '@/config/programmeSettings'
-import { COURSES, PROVIDERS } from '@/data/courses'
+import { PROVIDERS } from '@/data/courses'
 import type { Course, Enrolment, Provider, RescoreResult, SkillLevel } from '@/types/domain'
 import { readDb, writeDb } from './db'
 import { delay } from './delay'
@@ -29,10 +29,11 @@ export const MODULES = 3
 export const PREVIEW_PCT = Math.round(100 / MODULES)
 
 const providerOf = (id: string) => PROVIDERS.find((p) => p.id === id)!
+const courses = () => readDb().courses
 
 export function buildEnrolments(studentId: string): EnrolmentView[] {
   return (readDb().enrolments[studentId] ?? []).map((e) => {
-    const course = COURSES.find((c) => c.id === e.courseId)!
+    const course = courses().find((c) => c.id === e.courseId)!
     return { ...e, course, provider: providerOf(course.providerId) }
   })
 }
@@ -44,14 +45,14 @@ export function listEnrolments(studentId: string) {
 /** Courses that close a given skill gap, free first. */
 export function coursesForSkill(skillId: string): (Course & { provider: Provider })[] {
   const order = { free: 0, subsidised: 1, paid: 2 }
-  return COURSES.filter((c) => c.status === 'live' && c.skillIds.includes(skillId))
+  return courses().filter((c) => c.status === 'live' && c.skillIds.includes(skillId))
     .sort((a, b) => order[a.cost] - order[b.cost])
     .map((c) => ({ ...c, provider: providerOf(c.providerId) }))
 }
 
 export function buildCatalogue(studentId: string, s: ProgrammeSettings): CourseView[] {
   const enr = readDb().enrolments[studentId] ?? []
-  return COURSES.filter((c) => c.status === 'live').map((c) => ({ ...c, provider: providerOf(c.providerId), access: courseAccess(studentId, c, s), enrolment: enr.find((e) => e.courseId === c.id) }))
+  return courses().filter((c) => c.status === 'live').map((c) => ({ ...c, provider: providerOf(c.providerId), access: courseAccess(studentId, c, s), enrolment: enr.find((e) => e.courseId === c.id) }))
 }
 
 export function getCourse(studentId: string, courseId: string, s: ProgrammeSettings) {
@@ -64,7 +65,7 @@ export function daysInactive(e: Enrolment) {
 }
 
 export async function enrol(studentId: string, courseId: string) {
-  const course = COURSES.find((c) => c.id === courseId)!
+  const course = courses().find((c) => c.id === courseId)!
   writeDb((d) => {
     const list = (d.enrolments[studentId] ??= [])
     if (list.some((e) => e.courseId === courseId)) return
@@ -101,7 +102,7 @@ function strongMatches(studentId: string) {
  * skill is re-scored (one level up, capped by the course's level cap). New matches are counted for real.
  */
 export async function completeCourse(studentId: string, courseId: string): Promise<RescoreResult> {
-  const course = COURSES.find((c) => c.id === courseId)!
+  const course = courses().find((c) => c.id === courseId)!
   const before = strongMatches(studentId)
   const rec = readDb().students[studentId]
   const skillId = course.skillIds.find((id) => {

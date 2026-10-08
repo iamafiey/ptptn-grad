@@ -9,7 +9,7 @@ A clickable, demo-ready prototype for a client pitch to PTPTN. It has no backend
 
 If this plan and the specs disagree, the specs win.
 
-**Status:** Phases 1–5 done. Next: Phase 6 (agency Partners, Students, AI governance, Tier rules, Learn catalogue).
+**Status:** Phases 1–6 done. Next: Phase 7 (Reports, audit log and settings, polish, demo walkthrough script).
 
 ---
 
@@ -24,7 +24,7 @@ If this plan and the specs disagree, the specs win.
 | 3 | Student Home and Opportunities (Partner roles, Open jobs, Job search log) | ✅ Done |
 | 4 | Student Learn, Repayment standing and tier states | ✅ Done |
 | 5 | Agency Home, queues, evidence verification, partner role approvals | ✅ Done |
-| 6 | Agency Partners, Students, AI governance, Tier rules (and Learn catalogue, see §9) | ⬜ |
+| 6 | Agency Partners, Students, AI governance, Tier rules (and Learn catalogue, see §9) | ✅ Done |
 | 7 | Agency Reports, audit log, polish, demo walkthrough script | ⬜ |
 
 ### Phase log
@@ -98,6 +98,18 @@ If this plan and the specs disagree, the specs win.
   - Roles: queues are workable by their owner role and super admin; Leadership viewer is read-only everywhere.
   - Charts: recharts with `--series-1/2/3`, validated with the dataviz palette validator (all checks pass in light and dark).
   - Checks: typecheck, lint and build pass. 13 screenshots with no console errors; no overflow at 390. Smoke test: 52 checks, including the student → officer → student round trip (escalation appears in the queue; verify and reject flow back; approved role goes live; undo; read-only leadership).
+- **6 (Partners, Students, Learn, AI governance, Repayment tiers).**
+  - Data (`data/agency6.ts`): 60 synthetic directory students, 4 account flags, 8 seeded skill disputes, weekly AI agreement (latest 88%, below the 90% threshold), sample reviews, fairness by institution type and state, 7 sync runs (latest failed), tier share by cohort, monthly recoveries, 5 override requests (OV-5101 is Kavitha's), matching per partner.
+  - Mock DB now also holds partners, courses, disputes, overrides, change requests, student notes and paused visibility, so agency actions change the student app.
+  - Services: `partnersAdmin`, `studentsAdmin`, `disputes` (single source for Home counts and the disputes screen), `governance` (two-person rule, rubric and tier impact previews), `tiersAdmin`, `coursesAdmin`, `quality`.
+  - Screens:
+    - Partners: directory with commitment tracker and "behind on roles" / "slow to respond" flags; record with onboarding stepper, verification checks, agreement, metrics, roles, notes, Pause / End / Renew (pausing hides the partner's roles from students); portal feeds with a feed ↔ link-out setting; matching monitor with funnel and unseen students.
+    - Students: masked directory with filters; record (opening and revealing are logged) with student and employer views, skills with explainability, timeline, notes, pause visibility, re-score, message; tier badge only, repayment detail behind `RepaymentGate`. Skill disputes side panel (Uphold / Correct and re-score / Request evidence, taxonomy flag) with `?case=` deep links. Flagged accounts.
+    - Learn: catalogue with status control, add course with AI-suggested skill mappings, providers (low completion flagged), gap insights.
+    - AI governance: taxonomy tree with rubric levels and evidence weights; rubric change → impact preview (by institution type and programme) → second approver → publish; evidence rules (threshold, period, accepted types; audited settings change); quality (agreement trend vs threshold, sample review, fairness tables with gap flags).
+    - Repayment tiers: current rules; propose → impact preview and student notice → second approver → settings patch applied; sync monitor with retry; overrides (grant restores Tier A for `overrideDays` and notifies the student; fast-forward expiry); distribution charts.
+  - Fix: agency tables contain absolutely positioned content (`sr-only` labels in cells no longer cause page overflow).
+  - Checks: typecheck, lint and build pass. 75 screenshots (1440, 390, 360 and BM) with no console errors or overflow. Smoke test: 66 checks, adding pause partner → roles hidden for Hafiz; portal to link-out; rubric two-person rule; dispute correction → Hafiz notified; masked record, reveal and repayment gate; tier rule approved → settings applied; override OV-5101 → Kavitha notified.
 
 ---
 

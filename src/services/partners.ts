@@ -1,5 +1,5 @@
 import type { ProgrammeSettings } from '@/config/programmeSettings'
-import { PARTNER_INTEREST, PARTNERS } from '@/data/partners'
+import { PARTNER_INTEREST } from '@/data/partners'
 import type { DeclineReason, Invitation, PartnerRole, RoleAccess, TalentPartner } from '@/types/domain'
 import { readDb, writeDb } from './db'
 import { delay } from './delay'
@@ -19,7 +19,7 @@ export interface PartnerRoleView {
 }
 
 const partnerOf = (id: string) => {
-  const p = PARTNERS.find((x) => x.id === id)!
+  const p = readDb().partners.find((x) => x.id === id)!
   return { id: p.id, name: p.name, monogram: p.monogram, sector: p.sector }
 }
 
@@ -27,7 +27,8 @@ export function buildRoleViews(studentId: string, s: ProgrammeSettings): Partner
   const d = readDb()
   const skills = d.students[studentId]?.skills ?? []
   return d.partnerRoles
-    .filter((r) => r.status === 'live')
+    // Roles from paused or ended partners are hidden from students.
+    .filter((r) => r.status === 'live' && ['active', 'onboarding'].includes(d.partners.find((p) => p.id === r.partnerId)?.status ?? 'active'))
     .map((role) => {
       const m = matchRole(role, skills)
       const invitation = d.invitations.find((i) => i.roleId === role.id && i.studentId === studentId)

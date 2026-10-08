@@ -1,5 +1,4 @@
 import type { ProgrammeSettings } from '@/config/programmeSettings'
-import { PARTNERS } from '@/data/partners'
 import type { Check, Officer, PartnerRole, TalentPartner } from '@/types/domain'
 import { logAudit } from './audit'
 import { readDb, writeDb } from './db'
@@ -31,7 +30,7 @@ export function listPendingRoles(s: ProgrammeSettings): PendingRole[] {
   return readDb()
     .partnerRoles.filter((r) => r.status === 'pendingApproval')
     .map((role) => {
-      const partner = PARTNERS.find((p) => p.id === role.partnerId)!
+      const partner = readDb().partners.find((p) => p.id === role.partnerId)!
       const criteria = criteriaFor(role, partner, s)
       const age = workingDaysSince(role.postedAt)
       return { role, partner, criteria, failing: (Object.keys(criteria) as (keyof typeof criteria)[]).filter((k) => criteria[k] === 'fail').map((k) => LABEL[k]), age, sla: slaStatus(age, s.sla.partnerRoleApprovals) }

@@ -4,6 +4,7 @@ import { readPref, writePref } from '@/lib/storage'
 import { resetDb } from '@/services/db'
 import { resetRepaymentDemo } from '@/services/repayment'
 import { resetAuditSession } from '@/services/audit'
+import { resetTiersAdmin } from '@/services/tiersAdmin'
 import type { OfficerRole } from '@/types/domain'
 import { OFFICER_ROLES, PERSONA_IDS, type AppRole, type PersonaId } from './demoConstants'
 
@@ -54,6 +55,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     setSettings(DEFAULT_SETTINGS)
     resetRepaymentDemo()
     resetAuditSession()
+    resetTiersAdmin()
     resetDb()
     setSeed((s) => s + 1)
   }, [])

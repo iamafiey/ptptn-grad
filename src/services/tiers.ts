@@ -16,6 +16,8 @@ function tierFor(status: RepaymentStatus, missed: number, restructured: boolean,
 }
 
 export function getTier(studentId: string, s: ProgrammeSettings): Tier {
+  // A liaison override restores Tier A for a fixed period while a payment awaits sync.
+  if (readDb().overrides.some((o) => o.studentId === studentId && o.status === 'active')) return 'A'
   const acct = readDb().repayment[studentId]
   if (!acct) return 'A'
   return tierFor(acct.status, acct.missedCount, acct.method === 'restructured', s)

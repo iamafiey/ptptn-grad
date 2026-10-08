@@ -16,3 +16,7 @@ export function getPersona(id: string): DemoPersona {
 export function getOfficerForRole(role: OfficerRole): Officer {
   return officers.find((o) => o.role === role) ?? officers[0]
 }
+
+export function getOfficerById(id: string): Officer | undefined {
+  return officers.find((o) => o.id === id)
+}

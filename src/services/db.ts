@@ -1,10 +1,11 @@
 import { useSyncExternalStore } from 'react'
 import { STUDENT_SEEDS, type StudentSeed } from '@/data/students'
-import { INVITATIONS, PARTNER_ROLES } from '@/data/partners'
+import { INVITATIONS, PARTNERS, PARTNER_ROLES } from '@/data/partners'
+import { DISPUTES_SEED, FLAGS_SEED, OVERRIDES_SEED, type DisputeCase, type OverrideRequest } from '@/data/agency6'
 import { JOB_LOG_SEED, LOG_EVIDENCE_PREVIEW, NOTIFICATIONS_SEED, REPAYMENT_SEED } from '@/data/jobLog'
-import { ENROLMENTS_SEED } from '@/data/courses'
+import { COURSES, ENROLMENTS_SEED } from '@/data/courses'
 import { AUDIT_SEED, GENERIC_CASES, PLACEMENTS, buildEvidenceCases, type EvidenceCase, type GenericCase } from '@/data/agency'
-import type { AccountFlag, AppNotification, AuditEntry, Enrolment, Invitation, JobLogEntry, PartnerRole, Placement, RepaymentAccount } from '@/types/domain'
+import type { AccountFlag, AppNotification, AuditEntry, Course, Enrolment, Invitation, JobLogEntry, PartnerRole, Placement, RepaymentAccount, TalentPartner } from '@/types/domain'
 
 // In-memory mock backend. Services read and write here; Reset demo reseeds it.
 // Swapping to a real API means replacing the service functions, not the UI.
@@ -28,6 +29,29 @@ interface Db {
   placements: Placement[]
   audit: AuditEntry[]
   flags: AccountFlag[]
+  partners: TalentPartner[]
+  courses: Course[]
+  disputes: DisputeCase[]
+  overrides: OverrideRequest[]
+  changeRequests: ChangeRequest[]
+  /** Officer notes and actions on student records. */
+  studentNotes: Record<string, { by: string; at: string; body: string }[]>
+  pausedVisibility: string[]
+}
+
+/** Two-person-rule change (rubric or tier rules): draft → pending approval → published. */
+export interface ChangeRequest {
+  id: string
+  kind: 'rubric' | 'tierRules'
+  title: string
+  detail: string
+  /** For tier rules: the settings patch to apply on publish. */
+  patch?: Record<string, unknown>
+  drafter: string
+  approver?: string
+  status: 'pendingApproval' | 'published' | 'rejected'
+  createdAt: string
+  effectiveAt?: string
 }
 
 const clone = <T,>(v: T): T => structuredClone(v)
@@ -46,7 +70,14 @@ function seed(): Db {
     genericCases: clone(GENERIC_CASES),
     placements: clone(PLACEMENTS),
     audit: clone(AUDIT_SEED),
-    flags: [],
+    flags: clone(FLAGS_SEED),
+    partners: clone(PARTNERS),
+    courses: clone(COURSES),
+    disputes: clone(DISPUTES_SEED),
+    overrides: clone(OVERRIDES_SEED),
+    changeRequests: [],
+    studentNotes: {},
+    pausedVisibility: [],
   }
 }
 

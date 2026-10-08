@@ -68,10 +68,10 @@ export function ChartCard({
 }
 
 /** Single-series trend (no legend: the card title names it). */
-export function TrendChart<T extends Record<string, unknown>>({ data, x, y, label, format = (v) => String(v), height = 200 }: { data: T[]; x: keyof T; y: keyof T; label: string; format?: (v: number) => string; height?: number }) {
+export function TrendChart<T extends Record<string, unknown>>({ data, x, y, label, format = (v) => String(v), height = 200, domain }: { data: T[]; x: keyof T; y: keyof T; label: string; format?: (v: number) => string; height?: number; domain?: [number, number] }) {
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -12 }}>
+      <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
         <defs>
           <linearGradient id={`fill-${String(y)}`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="var(--series-1)" stopOpacity={0.18} />
@@ -80,7 +80,7 @@ export function TrendChart<T extends Record<string, unknown>>({ data, x, y, labe
         </defs>
         <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
         <XAxis dataKey={x as string} tick={AXIS} tickLine={false} axisLine={false} interval="preserveStartEnd" minTickGap={24} />
-        <YAxis tick={AXIS} tickLine={false} axisLine={false} width={44} tickFormatter={(v) => format(Number(v))} />
+        <YAxis tick={AXIS} tickLine={false} axisLine={false} width={48} domain={domain} tickFormatter={(v) => format(Number(v))} />
         <Tooltip
           cursor={{ stroke: 'var(--ink-3)', strokeWidth: 1 }}
           content={({ active, payload, label: l }) =>

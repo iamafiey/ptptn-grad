@@ -5,6 +5,7 @@ import { cn } from '@/lib/cn'
 import { getPersona } from '@/services/demo'
 import { useDemo } from '@/state/DemoProvider'
 import { useStudent } from '../useStudent'
+import { asset } from '@/lib/asset'
 
 /** ≥1024px: frosted left rail replaces the floating tab bar. */
 export function DesktopRail({ active, onSelect, onOpenSettings }: { active: StudentTab | null; onSelect: (t: StudentTab) => void; onOpenSettings: () => void }) {
@@ -16,7 +17,7 @@ export function DesktopRail({ active, onSelect, onOpenSettings }: { active: Stud
   return (
     <aside className="glass fixed inset-y-3 left-3 z-40 hidden w-[232px] flex-col rounded-card p-3 lg:flex">
       <div className="flex items-center gap-2.5 px-2 pb-5 pt-2">
-        <img src="/icons/icon.svg" alt="" className="h-8 w-8 rounded-control" />
+        <img src={asset('icons/icon.svg')} alt="" className="h-8 w-8 rounded-control" />
         <span className="t-body-strong">{t('app.name')}</span>
       </div>
       <nav aria-label={t('app.name')} className="flex-1">

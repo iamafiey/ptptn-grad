@@ -1,4 +1,5 @@
 import type { AcademicRecord, Activity, EvidenceFile, ScoredSkill, Student } from '@/types/domain'
+import { asset } from '@/lib/asset'
 
 // Demo student records (BUILD_PLAN.md §7). All people, ICs and organisations are fictional.
 // "Today" in the demo world is 7 Oct 2026.
@@ -75,7 +76,7 @@ const nurul: StudentSeed = {
       skillIds: [],
     },
   ],
-  evidence: [{ id: 'nurul-e1', kind: 'letter', fileName: 'Surat-pengesahan-kelab.pdf', previewUrl: '/evidence/letter.svg', uploadedAt: '2026-10-05' }],
+  evidence: [{ id: 'nurul-e1', kind: 'letter', fileName: 'Surat-pengesahan-kelab.pdf', previewUrl: asset('evidence/letter.svg'), uploadedAt: '2026-10-05' }],
   skills: null,
 }
 
@@ -402,11 +403,11 @@ const hafiz: StudentSeed = {
   },
   activities: hafizActivities,
   evidence: [
-    { id: 'hafiz-e1', kind: 'certificate', fileName: 'Sijil-Penghargaan-Banjir-2024.pdf', previewUrl: '/evidence/certificate.svg', uploadedAt: '2026-03-18' },
-    { id: 'hafiz-e2', kind: 'letter', fileName: 'Internship-completion-letter.pdf', previewUrl: '/evidence/letter.svg', uploadedAt: '2026-03-18' },
-    { id: 'hafiz-e3', kind: 'certificate', fileName: 'NSCC2024-finalist.pdf', previewUrl: '/evidence/certificate.svg', uploadedAt: '2026-03-18' },
-    { id: 'hafiz-e4', kind: 'certificate', fileName: 'Excel-Business-Analytics.pdf', previewUrl: '/evidence/certificate.svg', uploadedAt: '2026-03-18' },
-    { id: 'hafiz-t', kind: 'transcript', fileName: 'Transkrip-UKM.pdf', previewUrl: '/evidence/transcript.svg', uploadedAt: '2026-03-18' },
+    { id: 'hafiz-e1', kind: 'certificate', fileName: 'Sijil-Penghargaan-Banjir-2024.pdf', previewUrl: asset('evidence/certificate.svg'), uploadedAt: '2026-03-18' },
+    { id: 'hafiz-e2', kind: 'letter', fileName: 'Internship-completion-letter.pdf', previewUrl: asset('evidence/letter.svg'), uploadedAt: '2026-03-18' },
+    { id: 'hafiz-e3', kind: 'certificate', fileName: 'NSCC2024-finalist.pdf', previewUrl: asset('evidence/certificate.svg'), uploadedAt: '2026-03-18' },
+    { id: 'hafiz-e4', kind: 'certificate', fileName: 'Excel-Business-Analytics.pdf', previewUrl: asset('evidence/certificate.svg'), uploadedAt: '2026-03-18' },
+    { id: 'hafiz-t', kind: 'transcript', fileName: 'Transkrip-UKM.pdf', previewUrl: asset('evidence/transcript.svg'), uploadedAt: '2026-03-18' },
   ],
   skills: hafizSkills,
 }
@@ -546,9 +547,9 @@ const kavitha: StudentSeed = {
   },
   activities: kavithaActivities,
   evidence: [
-    { id: 'kav-e1', kind: 'certificate', fileName: 'FYP-showcase-certificate.pdf', previewUrl: '/evidence/certificate.svg', uploadedAt: '2025-11-02' },
-    { id: 'kav-e2', kind: 'letter', fileName: 'Internship-letter-TSES.pdf', previewUrl: '/evidence/letter.svg', uploadedAt: '2025-11-02' },
-    { id: 'kav-t', kind: 'transcript', fileName: 'Transkrip-UTHM.pdf', previewUrl: '/evidence/transcript.svg', uploadedAt: '2025-11-02' },
+    { id: 'kav-e1', kind: 'certificate', fileName: 'FYP-showcase-certificate.pdf', previewUrl: asset('evidence/certificate.svg'), uploadedAt: '2025-11-02' },
+    { id: 'kav-e2', kind: 'letter', fileName: 'Internship-letter-TSES.pdf', previewUrl: asset('evidence/letter.svg'), uploadedAt: '2025-11-02' },
+    { id: 'kav-t', kind: 'transcript', fileName: 'Transkrip-UTHM.pdf', previewUrl: asset('evidence/transcript.svg'), uploadedAt: '2025-11-02' },
   ],
   skills: kavithaSkills,
 }

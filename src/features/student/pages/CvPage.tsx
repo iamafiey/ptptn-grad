@@ -85,7 +85,7 @@ export default function CvPage() {
           variant="secondary"
           icon={<Link2 size={18} strokeWidth={1.5} />}
           onClick={() => {
-            const link = `${window.location.origin}/cv/${s.id}-${mode === 'anon' ? 'a' : 'n'}`
+            const link = `${window.location.origin}${import.meta.env.BASE_URL}cv/${s.id}-${mode === 'anon' ? 'a' : 'n'}`
             navigator.clipboard?.writeText(link).catch(() => {})
             toast(t('cv.copied'))
           }}

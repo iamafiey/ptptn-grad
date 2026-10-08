@@ -9,7 +9,7 @@ A clickable, demo-ready prototype for a client pitch to PTPTN. It has no backend
 
 If this plan and the specs disagree, the specs win.
 
-**Status:** All phases done (1–7). The demo walkthrough is in [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md).
+**Status:** All phases done (1–7). The demo walkthrough is in [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md). The live demo deploys to GitHub Pages (https://iamafiey.github.io/ptptn-grad/) on every merge to `main`.
 
 ---
 

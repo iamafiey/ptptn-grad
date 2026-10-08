@@ -2,6 +2,7 @@ import type { AcademicRecord, Activity, ActivityKind, EvidenceFile, JobPreferenc
 import type { StudentSeed } from '@/data/students'
 import { readDb, writeDb } from './db'
 import { delay } from './delay'
+import { asset } from '@/lib/asset'
 
 export interface StudentState extends StudentSeed {
   strength: ProfileStrength
@@ -78,7 +79,7 @@ export async function uploadTranscript(id: string, fileName: string): Promise<Ac
   writeDb((d) => {
     d.students[id].academic = academic
     d.students[id].evidence = d.students[id].evidence.filter((e) => e.kind !== 'transcript')
-    d.students[id].evidence.push({ id: `${id}-t`, kind: 'transcript', fileName, previewUrl: '/evidence/transcript.svg', uploadedAt: '2026-10-07' })
+    d.students[id].evidence.push({ id: `${id}-t`, kind: 'transcript', fileName, previewUrl: asset('evidence/transcript.svg'), uploadedAt: '2026-10-07' })
   })
   return delay(structuredClone(academic), 2200)
 }
@@ -100,7 +101,7 @@ export async function addActivity(id: string, input: ActivityInput): Promise<Act
   const start = new Date(end)
   start.setMonth(start.getMonth() - Math.max(1, input.months))
   const evidence: EvidenceFile | null = input.evidence
-    ? { id: `${id}-ev${n}`, kind: input.evidence, fileName: `${input.evidence}.pdf`, previewUrl: `/evidence/${input.evidence}.svg`, uploadedAt: '2026-10-07' }
+    ? { id: `${id}-ev${n}`, kind: input.evidence, fileName: `${input.evidence}.pdf`, previewUrl: asset(`evidence/${input.evidence}.svg`), uploadedAt: '2026-10-07' }
     : null
   const activity: Activity = {
     id: `${id}-a${n}-${Date.now() % 100000}`,

@@ -13,6 +13,7 @@ import type {
 } from '@/types/domain'
 import { readDb, writeDb } from './db'
 import { delay } from './delay'
+import { asset } from '@/lib/asset'
 
 // Simulated AI skill translation (docs/student-dashboard-flow.md §Skill profile and AI translation):
 // 1 Extract facts → 2 Map to the fixed taxonomy → 3 Score with the visible rubric → 4 Explain.
@@ -316,7 +317,7 @@ export async function addEvidenceAndRescore(studentId: string, skillId: string, 
       id: evId,
       kind,
       fileName: kind === 'certificate' ? 'Certificate.pdf' : kind === 'letter' ? 'Reference-letter.pdf' : 'Photo.jpg',
-      previewUrl: `/evidence/${kind === 'photo' ? 'photo' : kind}.svg`,
+      previewUrl: asset(`evidence/${kind === 'photo' ? 'photo' : kind}.svg`),
       uploadedAt: '2026-10-07',
     })
     const sk = s.skills!.find((x) => x.skillId === skillId)!

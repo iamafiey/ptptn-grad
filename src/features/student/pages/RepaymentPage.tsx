@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { motion, useReducedMotion } from 'motion/react'
-import { ArrowRight, Briefcase, CalendarCheck, Check, Clock, CreditCard, ExternalLink, FileSignature, Inbox, MessageSquare, Minus, PauseCircle, Phone, RefreshCw, Sparkles, Wallet } from 'lucide-react'
+import { ArrowRight, Briefcase, CalendarCheck, Check, Clock, CreditCard, ExternalLink, FileSignature, GraduationCap, Handshake, Inbox, MessageSquare, MessagesSquare, Minus, PauseCircle, Phone, RefreshCw, Sparkles, TrendingUp, Wallet, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card, SunriseCard } from '@/components/ui/Card'
 import { Chip } from '@/components/ui/Chip'
@@ -10,6 +10,7 @@ import { Note } from '@/components/ui/Note'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { Sheet } from '@/components/ui/Sheet'
 import { IconTile } from '@/components/ui/Tiles'
+import { ProgressRing } from '@/components/ui/Rings'
 import { Textarea } from '@/components/ui/Textarea'
 import { useToast } from '@/components/ui/Toast'
 import { useAsync } from '@/hooks/useAsync'
@@ -23,7 +24,13 @@ import type { BenefitId } from '@/types/domain'
 import { StudentPage } from '../shell/StudentPage'
 import { useStudent } from '../useStudent'
 
-const BENEFITS: BenefitId[] = ['openJobs', 'partnerRoles', 'courses', 'profileBoost', 'coaching']
+const BENEFITS: { id: BenefitId; icon: React.ReactNode }[] = [
+  { id: 'openJobs', icon: <Briefcase size={18} strokeWidth={1.5} /> },
+  { id: 'partnerRoles', icon: <Handshake size={18} strokeWidth={1.5} /> },
+  { id: 'courses', icon: <GraduationCap size={18} strokeWidth={1.5} /> },
+  { id: 'profileBoost', icon: <TrendingUp size={18} strokeWidth={1.5} /> },
+  { id: 'coaching', icon: <MessagesSquare size={18} strokeWidth={1.5} /> },
+]
 const WAYS: { id: WayBack; icon: React.ReactNode }[] = [
   { id: 'payMissed', icon: <CreditCard size={20} strokeWidth={1.5} /> },
   { id: 'salaryDeduction', icon: <Briefcase size={20} strokeWidth={1.5} /> },
@@ -177,71 +184,80 @@ export default function RepaymentPage() {
               </Button>
             </Card>
           ) : (
-            WAYS.map((w) => (
-              <Card key={w.id} as="article">
-                <button onClick={() => setSheet(w.id)} className="flex w-full items-center gap-3 text-left">
-                  <IconTile>{w.icon}</IconTile>
-                  <span className="min-w-0 flex-1">
-                    <span className="block t-body-strong">{t(`rep.way.${w.id}`)}</span>
-                    <span className="block t-caption font-normal text-ink-2">{w.id === 'payMissed' ? t('rep.way.payMissedBody', { amount: formatRM(data.missedAmountRM) }) : t(`rep.way.${w.id}Body`)}</span>
-                  </span>
-                  <ArrowRight size={18} strokeWidth={1.5} className="text-ink-3" aria-hidden />
-                </button>
-              </Card>
-            ))
+            <Card padded={false} className="divide-y divide-hairline overflow-hidden">
+              {WAYS.map((w) => (
+                <article key={w.id}>
+                  <button onClick={() => setSheet(w.id)} className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-surface-muted">
+                    <IconTile>{w.icon}</IconTile>
+                    <span className="min-w-0 flex-1">
+                      <span className="block t-body-strong">{t(`rep.way.${w.id}`)}</span>
+                      <span className="block t-caption font-normal text-ink-2">{w.id === 'payMissed' ? t('rep.way.payMissedBody', { amount: formatRM(data.missedAmountRM) }) : t(`rep.way.${w.id}Short`)}</span>
+                    </span>
+                    <ArrowRight size={18} strokeWidth={1.5} className="text-ink-3" aria-hidden />
+                  </button>
+                </article>
+              ))}
+              {behind && !support?.promise && (
+                <article>
+                  <button onClick={() => setSheet('promise')} className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-surface-muted">
+                    <IconTile>
+                      <CalendarCheck size={20} strokeWidth={1.5} />
+                    </IconTile>
+                    <span className="min-w-0 flex-1">
+                      <span className="block t-body-strong">{t('rep.promise.title')}</span>
+                      <span className="block t-caption font-normal text-ink-2">{t('rep.promise.short')}</span>
+                    </span>
+                    <ArrowRight size={18} strokeWidth={1.5} className="text-ink-3" aria-hidden />
+                  </button>
+                </article>
+              )}
+            </Card>
           )}
-          {behind && !data.pendingWayBack &&
-            (support?.promise ? (
-              <Note tone="info" icon={<CalendarCheck size={14} strokeWidth={1.5} />}>
-                {t('rep.promise.set', { date: formatDate(support.promise.date, lang, 'long') })}
-              </Note>
-            ) : (
-              <Card as="article">
-                <button onClick={() => setSheet('promise')} className="flex w-full items-center gap-3 text-left">
-                  <IconTile>
-                    <CalendarCheck size={20} strokeWidth={1.5} />
-                  </IconTile>
-                  <span className="min-w-0 flex-1">
-                    <span className="block t-body-strong">{t('rep.promise.title')}</span>
-                    <span className="block t-caption font-normal text-ink-2">{t('rep.promise.body')}</span>
-                  </span>
-                  <ArrowRight size={18} strokeWidth={1.5} className="text-ink-3" aria-hidden />
-                </button>
-              </Card>
-            ))}
+          {behind && !data.pendingWayBack && support?.promise && (
+            <Note tone="info" icon={<CalendarCheck size={14} strokeWidth={1.5} />}>
+              {t('rep.promise.set', { date: formatDate(support.promise.date, lang, 'long') })}
+            </Note>
+          )}
         </section>
       )}
 
-      {/* Benefits */}
+      {/* Benefits: an icon grid, state shown by colour + icon + word */}
       <section className="space-y-3">
         <SectionLabel>{t('rep.benefits')}</SectionLabel>
-        <Card padded={false} className="divide-y divide-hairline">
-          {BENEFITS.map((b) => {
+        <div className="grid grid-cols-2 gap-3">
+          {BENEFITS.map(({ id: b, icon }) => {
             const state = tier.benefits.find((x) => x.id === b)?.state ?? 'unlocked'
             return (
-              <div key={b} className="flex items-center gap-3 px-4 py-3">
-                <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-control ${state === 'unlocked' ? 'bg-done text-done-ink' : state === 'preview' ? 'bg-info text-info-ink' : 'bg-attention text-attention-ink'}`}>
-                  {state === 'unlocked' ? <Check size={16} strokeWidth={2} /> : state === 'preview' ? <Minus size={16} strokeWidth={2} /> : <PauseCircle size={16} strokeWidth={1.5} />}
+              <div key={b} className="flex flex-col rounded-card border border-hairline bg-surface p-3 shadow-1">
+                <span className="flex items-start justify-between gap-2">
+                  <IconTile className={state === 'unlocked' ? 'bg-done text-done-ink' : state === 'preview' ? 'bg-info text-info-ink' : 'bg-attention text-attention-ink'}>{icon}</IconTile>
+                  <Chip tone={state === 'unlocked' ? 'done' : state === 'preview' ? 'info' : 'attention'} size="sm" icon={state === 'unlocked' ? <Check size={11} strokeWidth={2} /> : state === 'preview' ? <Minus size={11} strokeWidth={2} /> : <PauseCircle size={11} strokeWidth={1.5} />}>
+                    {t(state === 'preview' ? 'rep.benefit.state.previewShort' : `rep.benefit.state.${state}`)}
+                  </Chip>
                 </span>
-                <span className="flex-1 t-body">{t(`rep.benefit.${b}`)}</span>
-                <span className="t-caption text-ink-2">{t(`rep.benefit.state.${state}`)}</span>
+                <span className="mt-2 t-caption text-ink">{t(`rep.benefit.${b}`)}</span>
               </div>
             )
           })}
-        </Card>
+        </div>
       </section>
 
       {/* Job search counts too */}
       {settings.jobSeeking.supportsDeferment && (
-        <Card>
-          <SectionLabel>{t('rep.jobSearch')}</SectionLabel>
-          <p className="mt-2 t-body">{t('rep.jobSearchBody', { verified: data.jobSearch.verified, threshold: data.jobSearch.threshold })}</p>
-          <div className="mt-3 h-1.5 overflow-hidden rounded-sm bg-hairline">
-            <div className="h-full bg-ink" style={{ width: `${Math.min(100, (data.jobSearch.verified / data.jobSearch.threshold) * 100)}%` }} />
-          </div>
-          <Button variant="tertiary" size="sm" className="mt-2" onClick={() => navigate('/s/opportunities?tab=log')}>
-            {t('opp.tab.log')}
-          </Button>
+        <Card padded={false}>
+          <button onClick={() => navigate('/s/opportunities?tab=log')} className="flex w-full items-center gap-4 p-4 text-left">
+            <ProgressRing value={Math.min(100, (data.jobSearch.verified / data.jobSearch.threshold) * 100)} size={56} stroke={5} label={t('rep.jobSearchBody', { verified: data.jobSearch.verified, threshold: data.jobSearch.threshold })}>
+              <span className="t-caption font-semibold tabular">
+                {data.jobSearch.verified}
+                <span className="text-ink-3">/{data.jobSearch.threshold}</span>
+              </span>
+            </ProgressRing>
+            <span className="min-w-0 flex-1">
+              <span className="block t-body-strong">{t('rep.jobSearch')}</span>
+              <span className="block t-caption font-normal text-ink-2">{t('rep.jobSearchShort')}</span>
+            </span>
+            <ArrowRight size={18} strokeWidth={1.5} className="shrink-0 text-ink-3" aria-hidden />
+          </button>
         </Card>
       )}
 
@@ -282,24 +298,37 @@ export default function RepaymentPage() {
         </Card>
       </section>
 
-      {/* Payments */}
+      {/* Payments: six months at a glance */}
       <section className="space-y-3">
         <SectionLabel>{t('rep.payments')}</SectionLabel>
         {a.payments.length === 0 ? (
           <Note tone="muted">{t('rep.noPayments')}</Note>
         ) : (
-          <Card padded={false} className="divide-y divide-hairline">
-            {[...a.payments].reverse().map((p) => (
-              <div key={p.at} className="flex items-center justify-between gap-3 px-4 py-3">
-                <span className="t-body tabular">{formatDate(p.at, lang, 'long')}</span>
-                <span className="flex items-center gap-2">
-                  <span className="t-body tabular">{formatRM(p.amountRM)}</span>
-                  <Chip tone={p.status === 'paid' ? 'done' : 'attention'} size="sm">
-                    {t(p.status === 'paid' ? 'rep.paid' : 'rep.missed')}
-                  </Chip>
+          <Card>
+            <ol className="grid grid-cols-6 gap-1.5">
+              {a.payments.slice(-6).map((p) => (
+                <li key={p.at} className="min-w-0 text-center">
+                  <span className={`mx-auto grid h-9 w-full place-items-center rounded-control ${p.status === 'paid' ? 'bg-done text-done-ink' : 'bg-attention text-attention-ink'}`}>
+                    {p.status === 'paid' ? <Check size={16} strokeWidth={2} aria-hidden /> : <X size={16} strokeWidth={2} aria-hidden />}
+                  </span>
+                  <span className="mt-1 block truncate t-micro text-ink-2">{formatDate(p.at, lang, 'mon')}</span>
+                  <span className="sr-only">
+                    {formatDate(p.at, lang, 'long')} · {formatRM(p.amountRM)} · {t(p.status === 'paid' ? 'rep.paid' : 'rep.missed')}
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 t-caption text-ink-2">
+              <span className="tabular">{t('rep.perMonth', { amount: formatRM(a.payments[a.payments.length - 1].amountRM) })}</span>
+              <span className="inline-flex items-center gap-1">
+                <Check size={12} strokeWidth={2} aria-hidden /> {t('rep.paidCount', { count: a.payments.slice(-6).filter((p) => p.status === 'paid').length })}
+              </span>
+              {a.payments.slice(-6).some((p) => p.status === 'missed') && (
+                <span className="inline-flex items-center gap-1">
+                  <X size={12} strokeWidth={2} aria-hidden /> {t('rep.missedCount', { count: a.payments.slice(-6).filter((p) => p.status === 'missed').length })}
                 </span>
-              </div>
-            ))}
+              )}
+            </p>
           </Card>
         )}
       </section>

@@ -293,9 +293,12 @@ function SignalList({ title, signals, sign }: { title: string; signals: Borrower
       <p className="mb-2 t-caption text-ink-2">{title}</p>
       <ul className="space-y-1.5">
         {signals.map((x) => (
-          <li key={x.key} className="flex items-start justify-between gap-3 t-body-sm">
+          <li key={x.key} className="grid grid-cols-[minmax(0,1fr)_88px_32px] items-center gap-3 t-body-sm">
             <span>{lt(signalText(x))}</span>
-            <span className="shrink-0 tabular text-ink-2">
+            <span className="h-2 overflow-hidden rounded-sm bg-hairline" aria-hidden>
+              <span className={`block h-full ${sign ? 'bg-attention-ink' : 'bg-done-ink'}`} style={{ width: `${Math.min(100, (Math.abs(x.weight) / 40) * 100)}%` }} />
+            </span>
+            <span className="text-right tabular text-ink-2">
               {sign}
               {x.weight}
             </span>

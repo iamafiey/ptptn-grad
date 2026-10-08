@@ -5,6 +5,8 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Note } from '@/components/ui/Note'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { SegmentedControl } from '@/components/ui/SegmentedControl'
+import { Rail, RailItem } from '@/components/ui/Rail'
+import { ShowMore } from '@/components/ui/ShowMore'
 import { useAsync } from '@/hooks/useAsync'
 import { useT } from '@/i18n'
 import { formatDate } from '@/lib/format'
@@ -20,6 +22,8 @@ import { CourseSheet } from '../learn/CourseSheet'
 import { StudentPage } from '../shell/StudentPage'
 import { useStudent } from '../useStudent'
 
+const PAGE = 6
+
 /** Learn: In progress, Recommended for your gaps, Completed (with certificates), Browse all. */
 export default function LearnPage() {
   const { t, lt, lang } = useT()
@@ -27,6 +31,7 @@ export default function LearnPage() {
   const { id } = useStudent()
   const [filter, setFilter] = useState<'all' | 'free'>('all')
   const [open, setOpen] = useState<string | null>(null)
+  const [limit, setLimit] = useState(PAGE)
 
   const { data } = useAsync(() => {
     const d = readDb()
@@ -80,23 +85,31 @@ export default function LearnPage() {
       {(data?.recommended.length ?? 0) > 0 && (
         <section className="space-y-3">
           <SectionLabel>{t('learn.recommended')}</SectionLabel>
-          {data!.recommended.map(({ gap, course }) => (
-            <CourseCard
-              key={course!.id}
-              course={course!}
-              onOpen={() => setOpen(course!.id)}
-              note={`${t('learn.gapFor', { skill: lt(skillById(gap.skillId)?.name ?? { en: gap.skillId }) })} · ${t('learn.opensRoles', { count: gap.unlocksMatches })}`}
-            />
-          ))}
+          <Rail label={t('learn.recommended')}>
+            {data!.recommended.map(({ gap, course }) => (
+              <RailItem key={course!.id} width={200}>
+                <CourseCard
+                  course={course!}
+                  layout="tile"
+                  onOpen={() => setOpen(course!.id)}
+                  note={`${t('learn.gapFor', { skill: lt(skillById(gap.skillId)?.name ?? { en: gap.skillId }) })} · ${t('learn.opensRoles', { count: gap.unlocksMatches })}`}
+                />
+              </RailItem>
+            ))}
+          </Rail>
         </section>
       )}
 
       {completed.length > 0 && (
         <section className="space-y-3">
           <SectionLabel>{t('learn.completed')}</SectionLabel>
-          {completed.map((c) => (
-            <CourseCard key={c.id} course={c} onOpen={() => setOpen(c.id)} note={`${t('learn.certificate')} · ${formatDate(c.enrolment!.lastActivityAt, lang, 'long')}`} />
-          ))}
+          <Rail label={t('learn.completed')}>
+            {completed.map((c) => (
+              <RailItem key={c.id} width={200}>
+                <CourseCard course={c} layout="tile" onOpen={() => setOpen(c.id)} note={`${t('learn.certificate')} · ${formatDate(c.enrolment!.lastActivityAt, lang, 'long')}`} />
+              </RailItem>
+            ))}
+          </Rail>
         </section>
       )}
 
@@ -105,17 +118,21 @@ export default function LearnPage() {
         <SegmentedControl
           ariaLabel={t('learn.browse')}
           value={filter}
-          onChange={setFilter}
+          onChange={(v) => {
+            setFilter(v)
+            setLimit(PAGE)
+          }}
           options={[
             { value: 'all', label: t('learn.filter.all') },
             { value: 'free', label: t('learn.filter.free') },
           ]}
         />
         <div className="grid grid-cols-2 gap-3">
-          {browse.map((c) => (
+          {browse.slice(0, limit).map((c) => (
             <CourseCard key={c.id} course={c} layout="tile" onOpen={() => setOpen(c.id)} />
           ))}
         </div>
+        <ShowMore remaining={browse.length - limit} label={t('list.showMore', { count: Math.min(PAGE, browse.length - limit) })} onClick={() => setLimit((n) => n + PAGE)} />
       </section>
 
       <CourseSheet course={current} studentId={id} open={!!current} onClose={() => setOpen(null)} />

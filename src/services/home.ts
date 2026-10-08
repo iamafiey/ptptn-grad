@@ -74,7 +74,7 @@ export function buildHome(studentId: string, s: ProgrammeSettings) {
     next,
     interest: { ...partnerInterest(studentId), invitations: invitations.length },
     invitations,
-    roles: roles.slice(0, 3),
+    roles: roles.slice(0, 6),
     summary,
     jobs: jobs.slice(0, 4),
     topSkills,

@@ -17,6 +17,7 @@ import { useAsync } from '@/hooks/useAsync'
 import { useT } from '@/i18n'
 import { formatNumber } from '@/lib/format'
 import { addCourse, gapInsights, listCatalogueAdmin, setCourseStatus, suggestSkills, type CourseDraft } from '@/services/coursesAdmin'
+import { courseThumb } from '@/services/courses'
 import { skillById } from '@/services/taxonomy'
 import type { Course } from '@/types/domain'
 import { costLabel } from '@/features/student/learn/cost'
@@ -83,7 +84,12 @@ export default function AgencyLearnPage() {
             <tbody>
               {(data?.courses ?? []).map((c) => (
                 <Tr key={c.id}>
-                  <Td className="t-body-strong">{lt(c.title)}</Td>
+                  <Td>
+                    <span className="flex items-center gap-3">
+                      <img src={courseThumb(c)} alt="" loading="lazy" className="h-9 w-16 shrink-0 rounded-chip bg-surface-muted object-cover" />
+                      <span className="t-body-strong">{lt(c.title)}</span>
+                    </span>
+                  </Td>
                   <Td>{providerName(c.providerId)}</Td>
                   <Td className="max-w-[220px]">{c.skillIds.map(skillName).join(', ')}</Td>
                   <Td>{t(`skill.level.${c.levelCap}`)}</Td>

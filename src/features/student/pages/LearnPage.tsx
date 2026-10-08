@@ -111,9 +111,11 @@ export default function LearnPage() {
             { value: 'free', label: t('learn.filter.free') },
           ]}
         />
-        {browse.map((c) => (
-          <CourseCard key={c.id} course={c} onOpen={() => setOpen(c.id)} />
-        ))}
+        <div className="grid grid-cols-2 gap-3">
+          {browse.map((c) => (
+            <CourseCard key={c.id} course={c} layout="tile" onOpen={() => setOpen(c.id)} />
+          ))}
+        </div>
       </section>
 
       <CourseSheet course={current} studentId={id} open={!!current} onClose={() => setOpen(null)} />

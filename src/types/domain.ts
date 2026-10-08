@@ -146,6 +146,8 @@ export interface Course {
   cost: CostType; costRM?: number; format: 'selfPaced' | 'live' | 'blended'; hosted: boolean;
   certificate: string; tierAccess: CourseTierAccess; status: 'draft' | 'live' | 'paused' | 'retired';
   enrolments: number; completionRate: number;
+  /** Thumbnail image in public/, e.g. 'thumbnails/c-sql.svg'. */
+  thumbnail?: string;
 }
 export interface Enrolment { courseId: ID; studentId: ID; status: 'inProgress' | 'completed' | 'external'; progressPct: number; lastActivityAt: ISODate; certificateEvidenceId?: ID; }
 export interface SkillGap { skillId: ID; currentLevel: SkillLevel | null; targetLevel: SkillLevel; unlocksMatches: number; courseIds: ID[]; }

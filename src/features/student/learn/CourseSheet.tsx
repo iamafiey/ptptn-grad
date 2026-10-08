@@ -11,7 +11,7 @@ import { Note } from '@/components/ui/Note'
 import { Sheet } from '@/components/ui/Sheet'
 import { LogoTile } from '@/components/ui/Tiles'
 import { useT } from '@/i18n'
-import { completeCourse, continueCourse, enrol, MODULES, PREVIEW_PCT, type CourseView } from '@/services/courses'
+import { completeCourse, continueCourse, courseThumb, enrol, MODULES, PREVIEW_PCT, type CourseView } from '@/services/courses'
 import { skillById } from '@/services/taxonomy'
 import type { RescoreResult } from '@/types/domain'
 import { costLabel } from './cost'
@@ -95,6 +95,7 @@ export function CourseSheet({ course, studentId, open, onClose }: { course: Cour
     <Sheet open={open} onClose={close} title={lt(course.title)} closeLabel={t('action.close')} footer={footer}>
       {view === 'details' && (
         <div className="space-y-5">
+          <img src={courseThumb(course)} alt="" className="aspect-video w-full rounded-card bg-surface-muted object-cover" />
           <div className="flex items-center gap-3">
             <LogoTile monogram={course.provider.monogram} />
             <div>

@@ -1,3 +1,4 @@
+import { asset } from '@/lib/asset'
 import { CATEGORIES, MODEL_VERSION, RUBRIC_VERSION, SKILLS, TAXONOMY_VERSION } from '@/data/taxonomy'
 import type { SkillCategory, TaxonomySkill } from '@/types/domain'
 import { delay } from './delay'
@@ -22,3 +23,8 @@ export function getTaxonomy() {
 }
 
 export const AI_VERSIONS = { model: MODEL_VERSION, rubric: RUBRIC_VERSION, taxonomy: TAXONOMY_VERSION.version }
+
+/** Square illustration for a skill category (`public/skill-categories/<id>.svg`). */
+export function categoryThumb(categoryId: string) {
+  return asset(`skill-categories/${categoryId}.svg`)
+}

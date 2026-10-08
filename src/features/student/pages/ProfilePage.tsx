@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { Download, Eye, GraduationCap, Pencil } from 'lucide-react'
+import { Download, Eye, GraduationCap, Pencil, Search, X } from 'lucide-react'
 import { Button, IconButton } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Chip } from '@/components/ui/Chip'
@@ -8,15 +8,15 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Toggle } from '@/components/ui/Field'
 import { Avatar } from '@/components/ui/Rings'
 import { SectionLabel } from '@/components/ui/SectionLabel'
-import { SegmentedControl } from '@/components/ui/SegmentedControl'
 import { Sheet } from '@/components/ui/Sheet'
 import { Textarea } from '@/components/ui/Textarea'
 import { IconTile } from '@/components/ui/Tiles'
-import { SkillCard } from '@/components/student/SkillCard'
+import { SkillRow } from '@/components/student/SkillRow'
 import { useT } from '@/i18n'
 import { toEmployerView } from '@/services/profile'
 import { studentHomePath, updateStudent } from '@/services/students'
-import { AI_VERSIONS, listCategories, skillById } from '@/services/taxonomy'
+import { AI_VERSIONS, categoryThumb, listCategories, skillById } from '@/services/taxonomy'
+import { cn } from '@/lib/cn'
 import type { Activity, ScoredSkill, SkillLevel } from '@/types/domain'
 import { StudentPage } from '../shell/StudentPage'
 import { EmployerPreview } from '../skills/EmployerPreview'
@@ -30,24 +30,32 @@ function fmtMonth(d: string) {
   return new Date(d).toLocaleDateString('en-MY', { month: 'short', year: 'numeric' })
 }
 
-/** Skill profile: summary, skills by category or level, timeline linked to skills, See as employer, skill CV. */
+/** Skill profile: summary, skills (category tabs + search, compact rows), timeline linked to skills, See as employer, floating skill CV button. */
 export default function ProfilePage() {
   const { t, lt } = useT()
   const navigate = useNavigate()
   const { id, data } = useStudent()
   const [employer, setEmployer] = useState(false)
-  const [sort, setSort] = useState<'category' | 'level'>('category')
+  const [tab, setTab] = useState<string>('all')
+  const [query, setQuery] = useState('')
   const [openSkill, setOpenSkill] = useState<string | null>(null)
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState('')
 
   const skills = useMemo(() => data?.skills ?? [], [data])
+  // Category tabs (only categories the student has skills in), each with its count.
+  const categories = useMemo(
+    () =>
+      listCategories()
+        .map((c) => ({ id: c.id, label: lt(c.name), skills: skills.filter((s) => skillById(s.skillId)?.categoryId === c.id).sort((a, b) => LEVEL_ORDER.indexOf(a.level) - LEVEL_ORDER.indexOf(b.level)) }))
+        .filter((c) => c.skills.length),
+    [skills, lt],
+  )
   const groups = useMemo(() => {
-    if (sort === 'level') return LEVEL_ORDER.map((l) => ({ key: l, label: t(`skill.level.${l}`), skills: skills.filter((s) => s.level === l) })).filter((g) => g.skills.length)
-    return listCategories()
-      .map((c) => ({ key: c.id, label: lt(c.name), skills: skills.filter((s) => skillById(s.skillId)?.categoryId === c.id).sort((a, b) => LEVEL_ORDER.indexOf(a.level) - LEVEL_ORDER.indexOf(b.level)) }))
-      .filter((g) => g.skills.length)
-  }, [skills, sort, t, lt])
+    const q = query.trim().toLowerCase()
+    const match = (sk: ScoredSkill) => !q || `${lt(skillById(sk.skillId)?.name ?? { en: sk.skillId })} ${lt(sk.rationale)}`.toLowerCase().includes(q)
+    return categories.filter((c) => tab === 'all' || c.id === tab).map((c) => ({ ...c, skills: c.skills.filter(match) })).filter((c) => c.skills.length)
+  }, [categories, tab, query, lt])
 
   if (!data) return <StudentPage title={t('student.profile.title')}>{null}</StudentPage>
   const s = data.student
@@ -112,41 +120,71 @@ export default function ProfilePage() {
             <p className="mt-2 t-caption font-normal text-ink-3">{t('profile.summary.ai')}</p>
           </Card>
 
-          {/* Skills */}
+          {/* Skills: category tabs + search keep a long list short; rows open the skill sheet to edit. */}
           <section>
-            <SectionLabel className="mb-3">{t('profile.skills')}</SectionLabel>
-            <SegmentedControl
-              ariaLabel={t('profile.skills')}
-              value={sort}
-              onChange={setSort}
-              options={[
-                { value: 'category', label: t('profile.sort.category') },
-                { value: 'level', label: t('profile.sort.level') },
-              ]}
-            />
+            <SectionLabel className="mb-3">
+              {t('profile.skills')} · {skills.length}
+            </SectionLabel>
+            <label className="relative block">
+              <span className="sr-only">{t('profile.searchSkills')}</span>
+              <Search size={18} strokeWidth={1.5} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-3" aria-hidden />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t('profile.searchSkills')}
+                className="h-11 w-full rounded-control border border-hairline bg-surface pl-10 pr-10 t-body text-ink placeholder:text-ink-3"
+              />
+              {query && (
+                <button type="button" onClick={() => setQuery('')} aria-label={t('profile.clearSearch')} className="absolute right-1 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-control text-ink-2 hover:text-ink">
+                  <X size={16} strokeWidth={1.5} />
+                </button>
+              )}
+            </label>
+            <div role="tablist" aria-label={t('profile.skills')} className="-mx-5 mt-3 flex gap-2 overflow-x-auto px-5 py-1 [scrollbar-width:none]">
+              {[{ id: 'all', label: t('profile.tab.all'), count: skills.length }, ...categories.map((c) => ({ id: c.id, label: c.label, count: c.skills.length }))].map((c) => (
+                <button
+                  key={c.id}
+                  role="tab"
+                  aria-selected={tab === c.id}
+                  onClick={() => setTab(c.id)}
+                  className={cn(
+                    'h-9 shrink-0 whitespace-nowrap rounded-control border px-3 t-caption transition-colors',
+                    tab === c.id ? 'border-ink bg-ink text-on-ink' : 'border-hairline bg-surface text-ink-2 hover:text-ink',
+                  )}
+                >
+                  {c.label} <span className="tabular opacity-70">{c.count}</span>
+                </button>
+              ))}
+            </div>
             {hiddenCount > 0 && <p className="mt-3 t-caption font-normal text-ink-2">{t('profile.hiddenCount', { count: hiddenCount })}</p>}
-            <div className="mt-4 space-y-6">
+            <div className="mt-3 space-y-4">
+              {groups.length === 0 && (
+                <Card>
+                  <EmptyState title={t('profile.noSkillMatch', { query })} />
+                </Card>
+              )}
               {groups.map((g) => (
-                <div key={g.key}>
-                  <p className="mb-2 t-caption text-ink-2">{g.label}</p>
-                  <ul className="space-y-3">
+                <div key={g.id}>
+                  {tab === 'all' && <p className="mb-2 t-caption text-ink-2">{g.label}</p>}
+                  <Card padded={false} className="divide-y divide-hairline overflow-hidden">
                     {g.skills.map((sk) => {
                       const chip = statusChip(sk)
                       return (
-                        <li key={sk.skillId}>
-                          <SkillCard
-                            name={name(sk.skillId)}
-                            level={sk.level}
-                            evidenceCount={sk.evidenceIds.length}
-                            rationale={lt(sk.rationale)}
-                            muted={sk.status === 'hidden'}
-                            badge={chip && <Chip tone={chip.tone} size="sm">{t(chip.key)}</Chip>}
-                            onOpen={() => setOpenSkill(sk.skillId)}
-                          />
-                        </li>
+                        <SkillRow
+                          key={sk.skillId}
+                          name={name(sk.skillId)}
+                          level={sk.level}
+                          evidenceCount={sk.evidenceIds.length}
+                          rationale={lt(sk.rationale)}
+                          thumb={categoryThumb(g.id)}
+                          muted={sk.status === 'hidden'}
+                          badge={chip && <Chip tone={chip.tone} size="sm">{t(chip.key)}</Chip>}
+                          onOpen={() => setOpenSkill(sk.skillId)}
+                        />
                       )
                     })}
-                  </ul>
+                  </Card>
                 </div>
               ))}
             </div>
@@ -221,9 +259,12 @@ export default function ProfilePage() {
         </>
       )}
 
-      <Button block icon={<Download size={18} strokeWidth={1.5} />} onClick={() => navigate('/s/profile/cv')}>
-        {t('profile.downloadCv')}
-      </Button>
+      {/* Floats above the tab bar so it's always one tap away. */}
+      <div className="sticky bottom-[calc(88px+var(--safe-bottom))] z-30 lg:bottom-6">
+        <Button block className="shadow-2" icon={<Download size={18} strokeWidth={1.5} />} onClick={() => navigate('/s/profile/cv')}>
+          {t('profile.downloadCv')}
+        </Button>
+      </div>
 
       <SkillSheet state={data} skill={current} open={!!current} onClose={() => setOpenSkill(null)} />
       <Sheet

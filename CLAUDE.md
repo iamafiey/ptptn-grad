@@ -49,6 +49,7 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - Touch targets: every button, link, tab and switch gets at least a 44×44 hit area through an invisible `::after` (globals.css, components layer). Add `.no-hit` where that overlap would be wrong.
 - Deploy base: the GitHub Pages build sets `BASE_PATH=/ptptn-grad/` (`.github/workflows/pages.yml`, deploys on every push to `main`). Reference files in `public/` with `asset('evidence/x.svg')` (`src/lib/asset.ts`), never a root-absolute `/…` path. The router takes its basename from `import.meta.env.BASE_URL`.
 - Course thumbnails: 16:9 illustrations in `public/thumbnails/<courseId>.svg` (`default.svg` for new courses), resolved with `courseThumb()` from `services/courses`. `CourseCard` has `layout="full"` (sections) and `"tile"` (the Browse grid).
+- Profile skills: category tabs + search over compact `SkillRow`s (category illustration from `categoryThumb()`, `public/skill-categories/<categoryId>.svg`); tapping a row opens the skill sheet. The skill CV button is sticky above the tab bar.
 - Theme: `useDemo().theme` (`system`/`light`/`dark`, in memory) toggles `.dark` on `<html>`. Screenshot dark mode with `"dark": true` in a shots spec.
 - Charts: use `components/agency/Charts.tsx` (`ChartCard` with table view, `TrendChart`, `StackedBars`) and only `--series-1/2/3` (validated palette). Single series: no legend. Never dual axes. No tabular numerals on large standalone figures.
 
@@ -57,7 +58,7 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - `node scripts/shoot.mjs <url> <out.png> [w] [h] [fullPage 1|0] [js]`: screenshot plus console-error report (needs `vite preview` running).
 - `node scripts/check-overflow.mjs <url> [width]`: reports page-level horizontal scroll and the offending elements.
 - `node scripts/shots.mjs <spec.json>`: batch screenshots with preferences (role, persona, officerRole, lang) and click scripts. Fails on console errors or overflow.
-- `npm run smoke` (`node scripts/smoke.mjs`): click-through navigation checks (79). Extend it with new flows. CI (`.github/workflows/ci.yml`) runs typecheck, lint, build and smoke on every PR.
+- `npm run smoke` (`node scripts/smoke.mjs`): click-through navigation checks (81). Extend it with new flows. CI (`.github/workflows/ci.yml`) runs typecheck, lint, build and smoke on every PR.
 - `DEMO_SCRIPT.md`: the presenter walkthrough; keep its click labels in sync with `en.ts`.
 
 ## Workflow

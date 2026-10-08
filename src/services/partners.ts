@@ -106,3 +106,8 @@ export async function expressInterest(studentId: string, roleId: string) {
   })
   return delay(true, 400)
 }
+
+/** Safety kill switch from Agency → Settings → Safety. */
+export function isOutreachPaused() {
+  return readDb().outreachPaused
+}

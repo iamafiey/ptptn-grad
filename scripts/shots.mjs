@@ -1,7 +1,7 @@
 // Batch screenshots for phase checks.
 // Usage: node scripts/shots.mjs <spec.json> [baseUrl]
 // spec: [{ "name": "home-390", "path": "/s/home", "w": 390, "h": 844, "full": false,
-//          "prefs": { "role": "student", "persona": "hafiz" }, "js": ["…"], "wait": 600 }]
+//          "prefs": { "role": "student", "persona": "hafiz" }, "js": ["…"], "wait": 600, "dark": false }]
 import { chromium } from 'playwright'
 import { existsSync, mkdirSync, readFileSync } from 'node:fs'
 
@@ -13,7 +13,7 @@ const browser = await chromium.launch({ executablePath })
 let failed = false
 
 for (const s of shots) {
-  const ctx = await browser.newContext({ viewport: { width: s.w ?? 390, height: s.h ?? 844 } })
+  const ctx = await browser.newContext({ viewport: { width: s.w ?? 390, height: s.h ?? 844 }, colorScheme: s.dark ? 'dark' : 'light' })
   const prefs = s.prefs ?? {}
   await ctx.addInitScript((p) => {
     for (const [k, v] of Object.entries(p)) localStorage.setItem(`ptptn.${k}`, v)

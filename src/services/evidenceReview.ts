@@ -39,7 +39,7 @@ export function listOpenEvidence(s: ProgrammeSettings): EvidenceQueueItem[] {
           institution: d.students[sid]?.student.institution.match(/\(([^)]+)\)/)?.[1] ?? d.students[sid]?.student.institution ?? '',
           entry: e,
           preview: e.evidenceId ? d.logEvidence[e.evidenceId]?.previewUrl ?? '/evidence/photo.svg' : '/evidence/photo.svg',
-          reason: e.check?.reasons[0] ?? { en: 'Needs officer review' },
+          reason: e.check?.reasons[0] ?? { en: 'Needs officer review', ms: 'Perlu semakan pegawai' },
           createdAt,
           age,
           sla: slaStatus(age, s.sla.evidence),

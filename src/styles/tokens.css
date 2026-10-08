@@ -4,8 +4,8 @@
   --surface: #ffffff;
   --surface-muted: #f8f6f2;
   --ink: #17140f;
-  --ink-2: #6b645a;
-  --ink-3: #a39c91;
+  --ink-2: #57514a; /* 6.9:1 on canvas */
+  --ink-3: #736c62; /* 4.5:1 on canvas (WCAG AA for meta text) */
   --on-ink: #fbfaf7; /* text on ink buttons — never pure #FFF on canvas */
   --hairline: rgba(23, 20, 15, 0.08);
   --glass: rgba(255, 255, 255, 0.62);
@@ -52,7 +52,7 @@
   --surface-muted: #221f1b;
   --ink: #f4f1ea;
   --ink-2: #a8a196;
-  --ink-3: #6e685f;
+  --ink-3: #8c867c; /* 4.5:1 on surface-muted */
   --on-ink: #17140f;
   --hairline: rgba(255, 255, 255, 0.08);
   --glass: rgba(26, 24, 21, 0.58);
@@ -67,8 +67,8 @@
 /* Content placed on a Sunrise surface stays dark in both themes (Sunrise is always light). */
 .on-sunrise {
   --ink: #17140f;
-  --ink-2: #5c5245;
-  --ink-3: #8a7f6f;
+  --ink-2: #463e33;
+  --ink-3: #5c5245; /* 4.7:1 on the darkest Sunrise stop */
   --on-ink: #fbfaf7;
   --hairline: rgba(23, 20, 15, 0.1);
   --surface: #ffffff;

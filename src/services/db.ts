@@ -4,6 +4,7 @@ import { INVITATIONS, PARTNERS, PARTNER_ROLES } from '@/data/partners'
 import { DISPUTES_SEED, FLAGS_SEED, OVERRIDES_SEED, type DisputeCase, type OverrideRequest } from '@/data/agency6'
 import { JOB_LOG_SEED, LOG_EVIDENCE_PREVIEW, NOTIFICATIONS_SEED, REPAYMENT_SEED } from '@/data/jobLog'
 import { COURSES, ENROLMENTS_SEED } from '@/data/courses'
+import { CHAT_FLAGS_SEED, DATA_REQUESTS_SEED, type ChatFlag, type DataRequest } from '@/data/settingsAdmin'
 import { AUDIT_SEED, GENERIC_CASES, PLACEMENTS, buildEvidenceCases, type EvidenceCase, type GenericCase } from '@/data/agency'
 import type { AccountFlag, AppNotification, AuditEntry, Course, Enrolment, Invitation, JobLogEntry, PartnerRole, Placement, RepaymentAccount, TalentPartner } from '@/types/domain'
 
@@ -37,6 +38,10 @@ interface Db {
   /** Officer notes and actions on student records. */
   studentNotes: Record<string, { by: string; at: string; body: string }[]>
   pausedVisibility: string[]
+  dataRequests: DataRequest[]
+  chatFlags: ChatFlag[]
+  /** Safety kill switch: all partner outreach paused. */
+  outreachPaused: boolean
 }
 
 /** Two-person-rule change (rubric or tier rules): draft → pending approval → published. */
@@ -78,6 +83,9 @@ function seed(): Db {
     changeRequests: [],
     studentNotes: {},
     pausedVisibility: [],
+    dataRequests: clone(DATA_REQUESTS_SEED),
+    chatFlags: clone(CHAT_FLAGS_SEED),
+    outreachPaused: false,
   }
 }
 

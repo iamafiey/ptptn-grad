@@ -60,6 +60,21 @@
   ::selection { background: var(--signal-pending); color: var(--signal-pending-ink); }
 }
 
+/* ---------- Touch targets ----------
+   Controls keep their visual size but get at least a 44×44 hit area (invisible ::after).
+   In the components layer so positioning utilities (absolute, fixed, sticky) still win. */
+@layer components {
+  :is(button, a[href], [role='tab'], [role='switch'], summary):not(.no-hit) { position: relative; }
+  :is(button, a[href], [role='tab'], [role='switch'], summary):not(.no-hit)::after {
+    content: '';
+    position: absolute;
+    top: min(0px, calc((100% - 44px) / 2));
+    bottom: min(0px, calc((100% - 44px) / 2));
+    left: min(0px, calc((100% - 44px) / 2));
+    right: min(0px, calc((100% - 44px) / 2));
+  }
+}
+
 @keyframes shimmer {
   0% { background-position: 0% 50%; }
   100% { background-position: 200% 50%; }

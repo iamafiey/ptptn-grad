@@ -7,7 +7,7 @@ import { useT } from '@/i18n'
 import { cn } from '@/lib/cn'
 import { listPersonas } from '@/services/demo'
 import { studentHomePath } from '@/services/students'
-import { OFFICER_ROLES, useDemo, type AppRole, type PersonaId } from '@/state/DemoProvider'
+import { OFFICER_ROLES, useDemo, type AppRole, type PersonaId, type Theme } from '@/state/DemoProvider'
 import type { Lang } from '@/types/domain'
 
 /**
@@ -16,7 +16,7 @@ import type { Lang } from '@/types/domain'
  */
 export function DemoControls({ onDone, compact }: { onDone?: () => void; compact?: boolean }) {
   const { t, lt, lang, setLang } = useT()
-  const { role, setRole, personaId, setPersonaId, officerRole, setOfficerRole, resetDemo } = useDemo()
+  const { role, setRole, personaId, setPersonaId, officerRole, setOfficerRole, resetDemo, theme, setTheme } = useDemo()
   const navigate = useNavigate()
 
   const switchRole = (r: AppRole) => {
@@ -90,6 +90,20 @@ export function DemoControls({ onDone, compact }: { onDone?: () => void; compact
           options={[
             { value: 'en', label: t('settings.language.en') },
             { value: 'ms', label: t('settings.language.ms') },
+          ]}
+        />
+      </div>
+
+      <div>
+        <p className="mb-2 t-caption text-ink-2">{t('demo.theme')}</p>
+        <SegmentedControl<Theme>
+          ariaLabel={t('demo.theme')}
+          value={theme}
+          onChange={setTheme}
+          options={[
+            { value: 'system', label: t('demo.theme.system') },
+            { value: 'light', label: t('demo.theme.light') },
+            { value: 'dark', label: t('demo.theme.dark') },
           ]}
         />
       </div>

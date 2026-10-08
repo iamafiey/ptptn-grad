@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, type RouteObject } from 'react-router'
+import { createBrowserRouter, Navigate } from 'react-router'
 import { readPref } from '@/lib/storage'
 import { studentHomePath } from '@/services/students'
 import { PERSONA_IDS } from '@/state/demoConstants'
@@ -7,14 +7,6 @@ import { PERSONA_IDS } from '@/state/demoConstants'
 const studentShell = () => import('@/features/student/shell/StudentShell')
 const onboarding = () => import('@/features/student/onboarding/OnboardingStep')
 const agencyShell = () => import('@/features/agency/shell/AgencyShell')
-const agencyPages = () => import('@/features/agency/pages/AgencyPlaceholders')
-
-
-type AgencyPageId = import('@/features/agency/pages/AgencyPlaceholders').AgencyPageId
-const ap = (page: AgencyPageId): RouteObject['lazy'] => async () => {
-  const { AgencyPlaceholder } = await agencyPages()
-  return { Component: () => <AgencyPlaceholder page={page} /> }
-}
 
 function RootRedirect() {
   const role = readPref('role', ['student', 'agency'] as const, 'student')
@@ -87,10 +79,10 @@ export const router = createBrowserRouter([
       { path: 'tiers/sync', lazy: async () => ({ Component: (await import('@/features/agency/pages/SyncPage')).default }) },
       { path: 'tiers/overrides', lazy: async () => ({ Component: (await import('@/features/agency/pages/OverridesPage')).default }) },
       { path: 'tiers/distribution', lazy: async () => ({ Component: (await import('@/features/agency/pages/DistributionPage')).default }) },
-      { path: 'reports', lazy: ap('reports') },
-      { path: 'reports/cohort', lazy: ap('cohort') },
-      { path: 'reports/:reportId', lazy: ap('report') },
-      { path: 'settings', lazy: ap('settings') },
+      { path: 'reports', lazy: async () => ({ Component: (await import('@/features/agency/pages/ReportsPage')).default }) },
+      { path: 'reports/cohort', lazy: async () => ({ Component: (await import('@/features/agency/pages/CohortPage')).default }) },
+      { path: 'reports/:reportId', lazy: async () => ({ Component: (await import('@/features/agency/pages/ReportPage')).default }) },
+      { path: 'settings', lazy: async () => ({ Component: (await import('@/features/agency/pages/SettingsPage')).default }) },
     ],
   },
 

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router'
-import { Bell, Menu, Search } from 'lucide-react'
+import { Bell, Menu, Moon, Search, Sun } from 'lucide-react'
 import { Button, IconButton } from '@/components/ui/Button'
 import { Chip } from '@/components/ui/Chip'
 import { SegmentedControl } from '@/components/ui/SegmentedControl'
@@ -11,7 +11,7 @@ import { OFFICER_ROLES, useDemo, type AppRole } from '@/state/DemoProvider'
 /** Role badge + picker, global search, notifications, BM/EN, and the Student | Agency toggle. */
 export function AgencyHeader({ onMenu }: { onMenu: () => void }) {
   const { t, lang, setLang } = useT()
-  const { setRole, personaId, officerRole, setOfficerRole } = useDemo()
+  const { setRole, personaId, officerRole, setOfficerRole, setTheme } = useDemo()
   const navigate = useNavigate()
 
   const switchRole = (r: AppRole) => {
@@ -20,7 +20,7 @@ export function AgencyHeader({ onMenu }: { onMenu: () => void }) {
   }
 
   return (
-    <header className="glass sticky top-0 z-30 !rounded-none !border-x-0 !border-t-0 !shadow-none">
+    <header className="glass sticky top-0 z-30 print:hidden !rounded-none !border-x-0 !border-t-0 !shadow-none">
       <div className="flex h-16 items-center gap-3 px-4 lg:px-8">
         <IconButton label={t('agency.name')} className="lg:hidden" onClick={onMenu}>
           <Menu size={20} strokeWidth={1.5} />
@@ -37,7 +37,13 @@ export function AgencyHeader({ onMenu }: { onMenu: () => void }) {
         </label>
 
         <div className="ml-auto flex items-center gap-2">
-          {officerRole === 'leadershipViewer' && <Chip tone="info" size="sm">{t('agency.readOnly')}</Chip>}
+          {officerRole === 'leadershipViewer' && (
+            <span className="hidden sm:contents">
+              <Chip tone="info" size="sm">
+                {t('agency.readOnly')}
+              </Chip>
+            </span>
+          )}
           <Select
             label={t('demo.officerRole')}
             hideLabel
@@ -60,6 +66,12 @@ export function AgencyHeader({ onMenu }: { onMenu: () => void }) {
           <Button variant="secondary" size="sm" onClick={() => setLang(lang === 'en' ? 'ms' : 'en')} aria-label={t('settings.language')}>
             {lang === 'en' ? 'BM' : 'EN'}
           </Button>
+          <span className="hidden sm:contents">
+            <IconButton label={t('demo.theme')} tone="surface" size={36} onClick={() => setTheme(document.documentElement.classList.contains('dark') ? 'light' : 'dark')}>
+              <Sun size={18} strokeWidth={1.5} className="hidden dark:block" />
+              <Moon size={18} strokeWidth={1.5} className="dark:hidden" />
+            </IconButton>
+          </span>
           <IconButton label={t('nav.notifications')} tone="surface" size={36}>
             <Bell size={18} strokeWidth={1.5} />
           </IconButton>

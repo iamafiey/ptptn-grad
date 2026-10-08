@@ -18,7 +18,7 @@ import { useT } from '@/i18n'
 import { formatDate, formatRMRange } from '@/lib/format'
 import { buildOpenJobs, listLinkOutPortals, type OpenJobView } from '@/services/jobs'
 import { buildLog, buildSummary, CURRENT_MONTH } from '@/services/jobLog'
-import { buildRoleViews, hiddenRoleCount, type PartnerRoleView } from '@/services/partners'
+import { buildRoleViews, hiddenRoleCount, isOutreachPaused, type PartnerRoleView } from '@/services/partners'
 import { employerVisibleSkills } from '@/services/profile'
 import { skillById } from '@/services/taxonomy'
 import { getTier } from '@/services/tiers'
@@ -156,6 +156,7 @@ export default function OpportunitiesPage() {
             ) : (
               <>
                 <p className="t-body text-ink-2">{t('opp.partner.lead')}</p>
+                {isOutreachPaused() && <Note tone="pending">{t('opp.partner.outreachPaused')}</Note>}
                 {invitations.length > 0 && (
                   <section className="space-y-3">
                     <SectionLabel>{t('opp.partner.invitations')}</SectionLabel>

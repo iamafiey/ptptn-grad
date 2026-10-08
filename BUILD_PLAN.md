@@ -9,7 +9,7 @@ A clickable, demo-ready prototype for a client pitch to PTPTN. It has no backend
 
 If this plan and the specs disagree, the specs win.
 
-**Status:** Phases 1–6 done. Next: Phase 7 (Reports, audit log and settings, polish, demo walkthrough script).
+**Status:** All phases done (1–7). The demo walkthrough is in [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md).
 
 ---
 
@@ -25,7 +25,7 @@ If this plan and the specs disagree, the specs win.
 | 4 | Student Learn, Repayment standing and tier states | ✅ Done |
 | 5 | Agency Home, queues, evidence verification, partner role approvals | ✅ Done |
 | 6 | Agency Partners, Students, AI governance, Tier rules (and Learn catalogue, see §9) | ✅ Done |
-| 7 | Agency Reports, audit log, polish, demo walkthrough script | ⬜ |
+| 7 | Agency Reports, audit log, polish, demo walkthrough script | ✅ Done |
 
 ### Phase log
 
@@ -110,6 +110,23 @@ If this plan and the specs disagree, the specs win.
     - Repayment tiers: current rules; propose → impact preview and student notice → second approver → settings patch applied; sync monitor with retry; overrides (grant restores Tier A for `overrideDays` and notifies the student; fast-forward expiry); distribution charts.
   - Fix: agency tables contain absolutely positioned content (`sr-only` labels in cells no longer cause page overflow).
   - Checks: typecheck, lint and build pass. 75 screenshots (1440, 390, 360 and BM) with no console errors or overflow. Smoke test: 66 checks, adding pause partner → roles hidden for Hafiz; portal to link-out; rubric two-person rule; dispute correction → Hafiz notified; masked record, reveal and repayment gate; tier rule approved → settings applied; override OV-5101 → Kavitha notified.
+- **7 (Reports, Settings, polish, demo script).**
+  - Reports (`data/reports.ts`, `services/reports.ts`): the 7 spec reports, scoped by role (super admin sees all). Each has headline numbers with change, one main chart, a breakdown table, and filters (cohort, institution type, state, period) that scale figures deterministically. Partner health and Operations use live data. Export CSV (download) and PDF (print layout); both are audited. Cohort view: visible → hired → repaying, month by month, for 2023–2026.
+  - Settings (super admin; `?tab=`):
+    - Programme settings: every open decision as a live, audited setting (SLAs, partner criteria, placements → repayment, job-seeking threshold, data sources, retention, AI thresholds), with links to tier and evidence rules.
+    - Roles and access: officers, the sections each role sees, and the access policy.
+    - Audit log: searchable, filterable, CSV export.
+    - PDPA: data requests with deadlines, a two-step deletion flow (remove from search, then delete and anonymise), consent versions, retention.
+    - Integrations: status of each connection.
+    - Safety: outreach kill switch (students see a notice on Partner roles), bulk scam warning to every student, keyword monitor on partner chats.
+  - Polish:
+    - BM complete for every UI key.
+    - Appearance (Device / Light / Dark) in Demo controls plus a header toggle; in memory only, no new localStorage.
+    - Accessibility: `ink-2` and `ink-3` darkened so all text tokens pass WCAG AA (4.5:1) in light, dark and on Sunrise. Every control gets at least a 44×44 hit area through an invisible `::after` in the components layer (opt out with `.no-hit`). Focus ring and reduced motion were already in place.
+    - Leadership header no longer overflows on phones.
+    - Placeholder pages removed: every route is real.
+  - `DEMO_SCRIPT.md`: a 12-minute walkthrough (Nurul → Hafiz → Kavitha → agency queues → governance and tiers → round trip → leadership reports).
+  - Checks: typecheck, lint and build pass. Screenshot sets for phases 2–7 plus a dark-mode set all pass (no console errors, no overflow at 390 or 360). Smoke test: 79 checks, adding report scoping, filters, logged export, cohort view, audited settings save, audit log search, the PDPA deletion flow, the kill switch notice for students and the scam warning.
 
 ---
 

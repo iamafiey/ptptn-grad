@@ -45,6 +45,9 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - Date maths on ISO dates: do it in UTC (`T00:00:00Z`, `getUTCDay`, `setUTCDate`) so results don't shift with the viewer's timezone. Display with `formatDate()` (Asia/Kuala_Lumpur).
 - Two-person rule (rubric, tier rules): `governance.proposeChange` / `approveChange` (throws if the drafter approves); `ChangeRequestList` renders the queue and hands the approved change back so the page can apply its settings patch. Officer names come from `services/demo` (`getOfficerById`).
 - Shared chip tones for partner status and student stage live in `src/features/agency/tones.ts` (page files export only their component).
+- Reports: add or change one in `services/reports.ts` (`buildReport` returns kpis/chart/table with i18n keys); audiences live in `data/reports.ts`. Printable pages wrap in `.print-area` (the global print CSS prints only that).
+- Touch targets: every button, link, tab and switch gets at least a 44×44 hit area through an invisible `::after` (globals.css, components layer). Add `.no-hit` where that overlap would be wrong.
+- Theme: `useDemo().theme` (`system`/`light`/`dark`, in memory) toggles `.dark` on `<html>`. Screenshot dark mode with `"dark": true` in a shots spec.
 - Charts: use `components/agency/Charts.tsx` (`ChartCard` with table view, `TrendChart`, `StackedBars`) and only `--series-1/2/3` (validated palette). Single series: no legend. Never dual axes. No tabular numerals on large standalone figures.
 
 ## Scripts
@@ -52,7 +55,8 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - `node scripts/shoot.mjs <url> <out.png> [w] [h] [fullPage 1|0] [js]`: screenshot plus console-error report (needs `vite preview` running).
 - `node scripts/check-overflow.mjs <url> [width]`: reports page-level horizontal scroll and the offending elements.
 - `node scripts/shots.mjs <spec.json>`: batch screenshots with preferences (role, persona, officerRole, lang) and click scripts. Fails on console errors or overflow.
-- `node scripts/smoke.mjs`: click-through navigation checks. Extend it each phase.
+- `node scripts/smoke.mjs`: click-through navigation checks (79). Extend it with new flows.
+- `DEMO_SCRIPT.md`: the presenter walkthrough; keep its click labels in sync with `en.ts`.
 
 ## Workflow
 - After each phase: `npm run typecheck && npm run lint && npm run build`, screenshots at 390×844 and 1440×900, overflow check at 360, update `BUILD_PLAN.md` §0, commit, push to `claude/sleepy-gauss-350hmi`.

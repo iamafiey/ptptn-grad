@@ -39,7 +39,7 @@ export default function AgencyShell() {
 
   return (
     <div className="min-h-dvh bg-canvas t-body-sm">
-      <aside className="glass fixed inset-y-3 left-3 z-40 hidden w-[248px] rounded-card p-3 lg:block">
+      <aside className="glass fixed inset-y-3 left-3 z-40 hidden w-[248px] rounded-card p-3 lg:block print:!hidden">
         <Sidebar />
       </aside>
 
@@ -77,7 +77,7 @@ export default function AgencyShell() {
         )}
       </AnimatePresence>
 
-      <div className="lg:pl-[264px]">
+      <div className="lg:pl-[264px] print:!pl-0">
         <AgencyHeader onMenu={() => setDrawer(true)} />
         <main className="mx-auto max-w-[1320px] px-4 py-8 lg:px-8">{allowed ? <Outlet /> : <NoAccess />}</main>
       </div>

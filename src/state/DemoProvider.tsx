@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { DEFAULT_SETTINGS, type ProgrammeSettings } from '@/config/programmeSettings'
 import { readPref, writePref } from '@/lib/storage'
 import { resetDb } from '@/services/db'
@@ -23,7 +23,12 @@ interface DemoValue {
   /** Increments on Reset demo; stores key their seeded state off it. */
   seed: number
   resetDemo: () => void
+  /** Appearance for the presenter (in memory; follows the device by default). */
+  theme: Theme
+  setTheme: (t: Theme) => void
 }
+
+export type Theme = 'system' | 'light' | 'dark'
 
 const DemoContext = createContext<DemoValue | null>(null)
 
@@ -37,6 +42,15 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   const [officerRole, setOfficerState] = useState<OfficerRole>(() => readPref('officerRole', OFFICER_ROLES, 'programmeOfficer'))
   const [settings, setSettings] = useState<ProgrammeSettings>(DEFAULT_SETTINGS)
   const [seed, setSeed] = useState(0)
+  const [theme, setTheme] = useState<Theme>('system')
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const apply = () => document.documentElement.classList.toggle('dark', theme === 'dark' || (theme === 'system' && mq.matches))
+    apply()
+    mq.addEventListener('change', apply)
+    return () => mq.removeEventListener('change', apply)
+  }, [theme])
 
   const setRole = useCallback((r: AppRole) => {
     setRoleState(r)
@@ -61,8 +75,8 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo(
-    () => ({ role, setRole, personaId, setPersonaId, officerRole, setOfficerRole, settings, updateSettings, seed, resetDemo }),
-    [role, setRole, personaId, setPersonaId, officerRole, setOfficerRole, settings, updateSettings, seed, resetDemo],
+    () => ({ role, setRole, personaId, setPersonaId, officerRole, setOfficerRole, settings, updateSettings, seed, resetDemo, theme, setTheme }),
+    [role, setRole, personaId, setPersonaId, officerRole, setOfficerRole, settings, updateSettings, seed, resetDemo, theme],
   )
   return <DemoContext.Provider value={value}>{children}</DemoContext.Provider>
 }

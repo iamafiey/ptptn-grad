@@ -9,14 +9,8 @@ type Meta = { title: I18nKey; phase: number; plan: LocalizedText[] }
 
 // Phase 1b stand-ins for every agency screen (docs/admin-dashboard-flow.md), replaced phase by phase.
 const PAGES = {
-  home: { title: 'agency.page.home', phase: 5, plan: [{ en: 'My queues with counts, oldest age and SLA status.' }, { en: 'Programme pulse (5 numbers vs last month), alerts, recent activity with undo.' }] },
-  queue: { title: 'agency.page.queue', phase: 5, plan: [{ en: 'Case ID, anonymised subject, reason, AI recommendation + confidence, age, SLA.' }, { en: 'Side panel case view: Approve, Reject with reason, Escalate.' }] },
-  evidence: { title: 'agency.nav.evidenceQueue', phase: 5, plan: [{ en: 'Evidence beside AI-extracted fields and check results; Verify, Reject with reason, Flag account.' }] },
-  monitor: { title: 'agency.nav.evidenceMonitor', phase: 5, plan: [{ en: 'Daily volume, auto-verified share, escalation rate, decision time, by portal.' }] },
-  placements: { title: 'agency.nav.placements', phase: 5, plan: [{ en: 'Partner and open-market placements; confirmation queue.' }] },
   partners: { title: 'agency.nav.talentPartners', phase: 6, plan: [{ en: 'Directory with commitment tracker; Pause, End, Renew, Add note.' }] },
   partner: { title: 'agency.page.partner', phase: 6, plan: [{ en: 'Onboarding stages, verification chips, commitments, roles, reports.' }] },
-  approvals: { title: 'agency.nav.roleApprovals', phase: 5, plan: [{ en: 'Criteria checklist (salary floor, contract type, partner standing); approve or return with reason.' }] },
   portals: { title: 'agency.nav.portalFeeds', phase: 6, plan: [{ en: 'Feed agreements, last sync, listings imported, feed rules, curated portal list.' }] },
   matching: { title: 'agency.nav.matching', phase: 6, plan: [{ en: 'Views, invitations, acceptances, hires; “unseen students” in 60 days.' }] },
   students: { title: 'agency.nav.directory', phase: 6, plan: [{ en: 'Masked directory with filters; opening a record is logged.' }] },

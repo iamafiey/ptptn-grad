@@ -9,7 +9,7 @@ A clickable, demo-ready prototype for a client pitch to PTPTN. It has no backend
 
 If this plan and the specs disagree, the specs win.
 
-**Status:** Phases 1–4 done (student workspace complete). Next: Phase 5 (agency Home, queues, evidence verification, partner role approvals).
+**Status:** Phases 1–5 done. Next: Phase 6 (agency Partners, Students, AI governance, Tier rules, Learn catalogue).
 
 ---
 
@@ -23,7 +23,7 @@ If this plan and the specs disagree, the specs win.
 | 2 | Student onboarding, AI translation reveal, skill profile | ✅ Done |
 | 3 | Student Home and Opportunities (Partner roles, Open jobs, Job search log) | ✅ Done |
 | 4 | Student Learn, Repayment standing and tier states | ✅ Done |
-| 5 | Agency Home, queues, evidence verification, partner role approvals | ⬜ |
+| 5 | Agency Home, queues, evidence verification, partner role approvals | ✅ Done |
 | 6 | Agency Partners, Students, AI governance, Tier rules (and Learn catalogue, see §9) | ⬜ |
 | 7 | Agency Reports, audit log, polish, demo walkthrough script | ⬜ |
 
@@ -82,6 +82,22 @@ If this plan and the specs disagree, the specs win.
     - Ways back (pay missed, salary deduction, restructure) → pending until sync → demo "simulate sync confirmed" → Tier A restore with the Sunrise celebration and notification.
   - Tier B paused count: partner roles, profile boost and coaching (courses are partly available) = "3 benefits are paused", per spec.
   - Checks: typecheck, lint and build pass. 12 screenshots with no console errors or overflow. Smoke test: 42 checks (Tier B preview cap, way back → restore → roles unlocked, gap → course → certificate → re-score).
+- **5 (agency Home, queues, evidence, approvals).**
+  - Data (`data/agency.ts`, fixed seed): 9 queue definitions with spec counts and ages. Evidence 47 (45 synthetic + Hafiz + Kavitha), oldest 4 working days, 6 overdue. Synthetic items for every other queue; 18 placements; pulse KPIs; role-scoped alerts; 14-day evidence monitor series; an 80-entry audit log seed.
+  - Services:
+    - `agencyQueues.ts`: working-day SLA from `settings.sla`; queue rows, including real disputes from students.
+    - `evidenceReview.ts`: real escalations plus synthetic ones. Verify, reject with reason or flag; real students get the decision in their log and notifications.
+    - `roleApprovals.ts`: criteria checked against live settings; approve makes the role live for students.
+    - `audit.ts`: every action logged; undo for this session's actions.
+  - Screens:
+    - Command centre: queues first with SLA chips; pulse on the Sunrise header; role-scoped alerts; recent activity with undo.
+    - Generic queue screen with side-panel case view (approve / reject with reason / escalate).
+    - Evidence queue: filters, evidence image beside the student's entry and the AI's extraction, checks, confidence, model version.
+    - Evidence monitor: KPIs, stacked daily outcomes, escalation trend, by-portal table, table view for every chart.
+    - Placements (the repayment-setup note follows its setting) and partner role approvals (pass/warn/fail criteria and the tier rule preview).
+  - Roles: queues are workable by their owner role and super admin; Leadership viewer is read-only everywhere.
+  - Charts: recharts with `--series-1/2/3`, validated with the dataviz palette validator (all checks pass in light and dark).
+  - Checks: typecheck, lint and build pass. 13 screenshots with no console errors; no overflow at 390. Smoke test: 52 checks, including the student → officer → student round trip (escalation appears in the queue; verify and reject flow back; approved role goes live; undo; read-only leadership).
 
 ---
 

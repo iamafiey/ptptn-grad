@@ -41,6 +41,9 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - A full page reload reseeds the demo data (by design; nothing critical is in localStorage). Tests and demos should navigate in-app.
 - When logic must act on just-written data (e.g. guards right after a write), read the store synchronously via a service (e.g. `hasSkills(id)`) instead of hook data, which may be one fetch behind.
 - Chips never wrap. Use `<Note>` for sentence-length signal messages.
+- Agency actions must call `logAudit()` (who, what, record, reason) and pass an undo closure when reversible. Gate actions with `canWorkQueue()` and `useOfficer().readOnly`.
+- Date maths on ISO dates: do it in UTC (`T00:00:00Z`, `getUTCDay`, `setUTCDate`) so results don't shift with the viewer's timezone. Display with `formatDate()` (Asia/Kuala_Lumpur).
+- Charts: use `components/agency/Charts.tsx` (`ChartCard` with table view, `TrendChart`, `StackedBars`) and only `--series-1/2/3` (validated palette). Single series: no legend. Never dual axes. No tabular numerals on large standalone figures.
 
 ## Scripts
 - `npm run icons`: re-render the PWA PNGs from `public/icons/icon.svg`.

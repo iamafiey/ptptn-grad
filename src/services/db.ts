@@ -3,7 +3,8 @@ import { STUDENT_SEEDS, type StudentSeed } from '@/data/students'
 import { INVITATIONS, PARTNER_ROLES } from '@/data/partners'
 import { JOB_LOG_SEED, LOG_EVIDENCE_PREVIEW, NOTIFICATIONS_SEED, REPAYMENT_SEED } from '@/data/jobLog'
 import { ENROLMENTS_SEED } from '@/data/courses'
-import type { AppNotification, Enrolment, Invitation, JobLogEntry, PartnerRole, RepaymentAccount } from '@/types/domain'
+import { AUDIT_SEED, GENERIC_CASES, PLACEMENTS, buildEvidenceCases, type EvidenceCase, type GenericCase } from '@/data/agency'
+import type { AccountFlag, AppNotification, AuditEntry, Enrolment, Invitation, JobLogEntry, PartnerRole, Placement, RepaymentAccount } from '@/types/domain'
 
 // In-memory mock backend. Services read and write here; Reset demo reseeds it.
 // Swapping to a real API means replacing the service functions, not the UI.
@@ -22,6 +23,11 @@ interface Db {
   repayment: Record<string, RepaymentAccount>
   notifications: AppNotification[]
   enrolments: Record<string, Enrolment[]>
+  evidenceCases: EvidenceCase[]
+  genericCases: GenericCase[]
+  placements: Placement[]
+  audit: AuditEntry[]
+  flags: AccountFlag[]
 }
 
 const clone = <T,>(v: T): T => structuredClone(v)
@@ -36,6 +42,11 @@ function seed(): Db {
     repayment: clone(REPAYMENT_SEED),
     notifications: clone(NOTIFICATIONS_SEED),
     enrolments: clone(ENROLMENTS_SEED),
+    evidenceCases: buildEvidenceCases(),
+    genericCases: clone(GENERIC_CASES),
+    placements: clone(PLACEMENTS),
+    audit: clone(AUDIT_SEED),
+    flags: [],
   }
 }
 

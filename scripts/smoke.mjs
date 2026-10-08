@@ -205,6 +205,98 @@ await btn('See it on your profile').click()
 await page.waitForTimeout(600)
 check((await page.getByText('Report writing').locator('visible=true').count()) > 0, 'skill appears on profile with certificate')
 
+// ---------------------------------------------------------------- Phase 5: agency queues ↔ student app
+const toAgency = async (role) => {
+  await page.getByRole('button', { name: 'Demo' }).click()
+  const sheet = page.getByRole('dialog', { name: 'Demo controls' })
+  await sheet.getByLabel('Officer role').selectOption(role)
+  await sheet.getByRole('tab', { name: 'Agency' }).click()
+  await page.waitForTimeout(700)
+}
+const toStudent = async (who) => {
+  if (new URL(page.url()).pathname.startsWith('/a/')) {
+    await page.getByRole('tab', { name: 'Student' }).first().click()
+    await page.waitForTimeout(500)
+  }
+  await page.getByRole('button', { name: 'Demo' }).click()
+  await page.getByRole('button', { name: who }).click()
+  await page.waitForTimeout(600)
+}
+await page.setViewportSize({ width: 1100, height: 900 })
+await toStudent(/^MH Muhammad Hafiz/)
+// Hafiz logs a new application that the AI escalates → it should reach the officer queue.
+await page.getByRole('link', { name: 'Opportunities' }).or(page.getByRole('button', { name: 'Opportunities' })).first().click()
+await page.waitForTimeout(500)
+await page.getByRole('tab', { name: 'My job search log' }).click()
+await page.getByRole('button', { name: 'Log an application', exact: true }).click()
+await page.getByLabel('Role', { exact: true }).fill('Graduate Analyst')
+await page.getByLabel('Company', { exact: true }).fill('Mega Jaya Ventures')
+await btn('Next: add evidence').click()
+await page.getByRole('button', { name: /Unfamiliar company/ }).click()
+await page.waitForTimeout(3300)
+check(await page.getByText('Sent to an officer').isVisible(), 'student escalation: sent to an officer')
+await btn('Done').click()
+await page.waitForTimeout(300)
+
+await toAgency('programmeOfficer')
+check((await page.getByText('48', { exact: true }).count()) > 0, 'agency home: evidence queue now shows 48 (47 + new escalation)')
+await page.getByRole('button', { name: /Job search evidence/ }).click()
+await page.waitForTimeout(600)
+await page.getByRole('tab', { name: /Demo students/ }).click()
+await page.waitForTimeout(300)
+const demoRows = await page.locator('tbody tr').count()
+check(demoRows === 3, `demo-student filter shows Hafiz ×2 + Kavitha (${demoRows})`)
+await page.locator('tbody tr', { hasText: 'Syarikat Cahaya Timur Logistik' }).click()
+await page.waitForTimeout(500)
+await btn('Verify').click()
+await page.waitForTimeout(600)
+await page.locator('tbody tr', { hasText: 'Rekabina Elektrik' }).click()
+await page.waitForTimeout(500)
+await page.getByRole('button', { name: 'Reject with reason' }).last().click()
+await page.getByRole('button', { name: 'Unreadable, please re-upload the original email' }).click()
+await btn('Confirm').click()
+await page.waitForTimeout(600)
+check((await page.locator('tbody tr').count()) === 1, 'decided cases leave the queue')
+
+// Partner role approval → live for students
+await page.getByRole('link', { name: 'Partners' }).click()
+await page.getByRole('link', { name: 'Role approvals' }).click()
+await page.waitForTimeout(600)
+await page.locator('article', { hasText: 'Planning Engineer' }).getByRole('button', { name: 'Approve role' }).click()
+await page.waitForTimeout(600)
+check((await page.locator('article', { hasText: 'Planning Engineer' }).count()) === 0, 'approved role leaves the approvals list')
+
+// Undo from recent activity
+await page.getByRole('link', { name: 'Home' }).click()
+await page.waitForTimeout(600)
+check((await page.getByRole('button', { name: 'Undo' }).count()) >= 3, 'session actions appear in recent activity with Undo')
+
+// Leadership viewer is read-only
+await page.getByLabel('Officer role').first().selectOption('leadershipViewer')
+await page.waitForTimeout(400)
+check((await page.getByRole('button', { name: 'Undo' }).count()) === 0, 'leadership viewer cannot undo')
+
+// Back to the student app: decisions flowed back
+await toStudent(/^MH Muhammad Hafiz/)
+await page.getByRole('button', { name: 'Opportunities' }).first().click()
+await page.waitForTimeout(400)
+await page.getByRole('tab', { name: 'Partner roles' }).click()
+await page.waitForTimeout(400)
+check((await page.getByText('Planning Engineer').count()) > 0, 'approved partner role is live for students')
+await page.getByRole('tab', { name: 'My job search log' }).click()
+await page.waitForTimeout(400)
+const cahaya = page.locator('button', { hasText: 'Graduate Planner' }).first()
+check((await cahaya.innerText()).includes('Verified'), 'officer verification shows on the student log')
+await toStudent(/^KR Kavitha/)
+await page.getByRole('button', { name: 'Opportunities' }).first().click()
+await page.getByRole('tab', { name: 'My job search log' }).click()
+await page.waitForTimeout(400)
+await page.locator('button', { hasText: 'Junior Electrical Designer' }).first().click()
+await page.waitForTimeout(400)
+check(await page.getByText('Unreadable, please re-upload the original email').isVisible(), 'officer rejection reason shows to the student')
+await page.keyboard.press('Escape')
+await page.setViewportSize({ width: 390, height: 844 })
+
 // Reset demo returns Nurul to step 5
 await page.getByRole('button', { name: 'Demo' }).click()
 await btn('Reset demo').click()

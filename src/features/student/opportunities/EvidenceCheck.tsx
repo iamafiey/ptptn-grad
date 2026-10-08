@@ -37,7 +37,7 @@ const ICON: Record<CheckState, React.ReactNode> = {
 const TONE: Record<CheckState, string> = { pass: 'bg-done text-done-ink', warn: 'bg-pending text-pending-ink', fail: 'bg-attention text-attention-ink', pending: 'bg-surface-muted text-ink-2' }
 
 /** Explainability: what the AI extracted, each check, confidence and model version. */
-export function CheckDetails({ result }: { result: EvidenceCheckResult }) {
+export function CheckDetails({ result, officer }: { result: EvidenceCheckResult; officer?: boolean }) {
   const { t, lt, lang } = useT()
   const ex = result.extracted
   const rows: [string, string | undefined][] = [
@@ -79,7 +79,7 @@ export function CheckDetails({ result }: { result: EvidenceCheckResult }) {
           {(Object.entries(result.checks) as [keyof EvidenceCheckResult['checks'], CheckState][]).map(([k, v]) => (
             <li key={k} className="flex items-center gap-2 t-caption">
               <span className={cn('grid h-6 w-6 shrink-0 place-items-center rounded-chip', TONE[v])}>{ICON[v]}</span>
-              {t(`log.check.${k}`)}
+              {officer && k === 'matchesEntry' ? t('ag.check.matchesEntry') : t(`log.check.${k}`)}
             </li>
           ))}
         </ul>

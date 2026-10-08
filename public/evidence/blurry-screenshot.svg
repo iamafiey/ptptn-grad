@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 640">
+  <defs><filter id="b"><feGaussianBlur stdDeviation="6"/></filter></defs>
+  <g filter="url(#b)">
+    <rect width="360" height="640" fill="#f6f7f4"/>
+    <rect width="360" height="64" fill="#1f4d3a"/>
+    <rect x="20" y="96" width="320" height="200" rx="14" fill="#ffffff"/>
+    <rect x="80" y="180" width="200" height="12" rx="6" fill="#cfd3ca"/>
+    <rect x="100" y="210" width="160" height="9" rx="4" fill="#dfe2da"/>
+    <rect x="20" y="316" width="320" height="64" rx="14" fill="#ffffff"/>
+  </g>
+  <text x="20" y="620" font-family="Inter, Arial, sans-serif" font-size="9" fill="#a39c91">Sample evidence · fictional · prototype only</text>
+</svg>

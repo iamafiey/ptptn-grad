@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 480" font-family="Inter, Arial, sans-serif">
+  <rect width="360" height="480" fill="#ffffff"/>
+  <rect x="24" y="24" width="44" height="44" rx="6" fill="#e6dfd1"/>
+  <rect x="80" y="30" width="140" height="9" rx="4.5" fill="#bdb5a6"/>
+  <rect x="80" y="46" width="90" height="7" rx="3.5" fill="#d9d3c7"/>
+  <line x1="24" y1="84" x2="336" y2="84" stroke="#ece8e0"/>
+  <text x="24" y="112" font-size="13" font-weight="600" fill="#17140f">TO WHOM IT MAY CONCERN</text>
+  <rect x="24" y="130" width="300" height="7" rx="3.5" fill="#ece8e0"/>
+  <rect x="24" y="146" width="280" height="7" rx="3.5" fill="#ece8e0"/>
+  <rect x="24" y="162" width="296" height="7" rx="3.5" fill="#ece8e0"/>
+  <rect x="24" y="178" width="220" height="7" rx="3.5" fill="#ece8e0"/>
+  <rect x="24" y="206" width="300" height="7" rx="3.5" fill="#ece8e0"/>
+  <rect x="24" y="222" width="260" height="7" rx="3.5" fill="#ece8e0"/>
+  <path d="M30 330c20-18 34 10 52-6s30-8 40 2" stroke="#17140f" stroke-width="1.6" fill="none"/>
+  <rect x="24" y="346" width="120" height="7" rx="3.5" fill="#d9d3c7"/>
+  <rect x="24" y="360" width="90" height="6" rx="3" fill="#ece8e0"/>
+  <text x="24" y="460" font-size="9" fill="#a39c91">Sample evidence · fictional organisation · prototype only</text>
+</svg>

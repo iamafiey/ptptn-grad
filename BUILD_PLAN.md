@@ -9,7 +9,7 @@ A clickable, demo-ready prototype for a client pitch to PTPTN. It has no backend
 
 If this plan and the specs disagree, the specs win.
 
-**Status:** Plan written and awaiting approval. No app code has been written yet.
+**Status:** All phases done (1–7). The demo walkthrough is in [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md).
 
 ---
 
@@ -17,15 +17,116 @@ If this plan and the specs disagree, the specs win.
 
 | Phase | Scope | Status |
 | --- | --- | --- |
-| 0 | Specs read, build plan | ✅ Done, awaiting approval |
-| 1a | Scaffold, PWA, tokens, `/styleguide` | ⏳ Stops for styleguide approval |
-| 1b | Shells for both roles, role switcher, navigation, i18n | ⬜ |
-| 2 | Student onboarding, AI translation reveal, skill profile | ⬜ |
-| 3 | Student Home and Opportunities (Partner roles, Open jobs, Job search log) | ⬜ |
-| 4 | Student Learn, Repayment standing and tier states | ⬜ |
-| 5 | Agency Home, queues, evidence verification, partner role approvals | ⬜ |
-| 6 | Agency Partners, Students, AI governance, Tier rules (and Learn catalogue, see §9) | ⬜ |
-| 7 | Agency Reports, audit log, polish, demo walkthrough script | ⬜ |
+| 0 | Specs read, build plan | ✅ Approved |
+| 1a | Scaffold, PWA, tokens, `/styleguide` | ✅ Approved |
+| 1b | Shells for both roles, role switcher, navigation, i18n | ✅ Done |
+| 2 | Student onboarding, AI translation reveal, skill profile | ✅ Done |
+| 3 | Student Home and Opportunities (Partner roles, Open jobs, Job search log) | ✅ Done |
+| 4 | Student Learn, Repayment standing and tier states | ✅ Done |
+| 5 | Agency Home, queues, evidence verification, partner role approvals | ✅ Done |
+| 6 | Agency Partners, Students, AI governance, Tier rules (and Learn catalogue, see §9) | ✅ Done |
+| 7 | Agency Reports, audit log, polish, demo walkthrough script | ✅ Done |
+
+### Phase log
+
+- **Client decisions after the 1a review** (these override `docs/visual-direction.md`):
+  - Inter only, everywhere: no serif and no Geist. Display headlines are Inter 600 with tight tracking; the accent phrase renders in ink-2 instead of italic serif.
+  - Corner radius max 8px: 4px chips, 6px controls, 8px cards, hero, sheets and tab bar. No pill buttons.
+
+- **1a (scaffold + styleguide).**
+  - Built: Vite/React/TS/Tailwind 4, tokens (light + dark), fonts, PWA manifest, icons and service worker, i18n plumbing (EN + partial BM), domain types, UI primitives and signature student components.
+  - `/styleguide` shows: type, colour, Sunrise, glass shell in a phone frame (collapsing top bar, floating tab bar), buttons, chips, inputs, cards, locked role, sheet, motion and agency density.
+  - Checks: typecheck, lint and build all pass. No console errors. No horizontal overflow at 360px.
+- **1b (shells, role switching, i18n).**
+  - Student shell: collapsing glass top bar (avatar → Settings sheet, Demo, bell), floating tab bar on mobile, frosted left rail and centred 430px column at ≥1024px, demo controls panel in the margin at ≥1280px, Sunrise wash on Home only.
+  - Onboarding shell: back, 10-step progress, one primary action per step. All 10 steps are clickable placeholders.
+  - Agency shell: frosted sidebar filtered by officer role (the spec's navigation table), sticky header with search, officer-role picker, Student | Agency toggle, BM/EN and bell. Mobile drawer carries the workspace toggle. Gated sections show "Not available for your role".
+  - Demo state (`DemoProvider`): workspace, persona, officer role (saved as preferences), programme settings (in memory), Reset demo.
+  - `src/config/programmeSettings.ts` holds every open decision with its example value.
+  - Every route in §2 exists as a placeholder naming its phase. Each workspace loads in its own chunk.
+  - i18n: shell, navigation, roles, page titles and onboarding titles in EN and BM.
+  - Checks: typecheck, lint and build pass. 14 screenshots (390/360/1024/1440, both roles, EN/BM) with no console errors or overflow. `scripts/smoke.mjs` passes 8 navigation checks.
+- **2 (onboarding, AI translation, skill profile).**
+  - Data: 40-skill taxonomy in 6 categories with rubrics and BM names (`data/taxonomy.ts`); full records for the three personas (`data/students.ts`); evidence placeholders (certificate, letter, transcript, photo).
+  - Mock backend: `services/db.ts` (in-memory, reseeded by Reset demo) and `hooks/useAsync` (refetches after writes).
+  - AI (`services/skillTranslation.ts`): deterministic extract → map (34-rule table) → score (rubric gates) → explain, with staged progress and a presenter "Skip". It reproduces the spec's worked example. Add evidence → re-score (certificate or letter lifts one level; a photo raises confidence only).
+  - Onboarding: all 10 steps built. Sign-in (MyDigital ID or IC + account + OTP sheet), PDPA consent with terms sheet, record confirm/edit, transcript upload/sample/university pull (setting-driven), guided activity composer with example fill and strength cost, preferences, translating, reveal, review (hide, lower, dispute, add missing at Foundation), go visible with employer preview. Progress is saved as the student moves.
+  - Profile: strength ring, editable AI summary, skills by category or level, skill sheet (evidence, rubric checks, confidence, lower, hide, dispute, add evidence → re-score), timeline linked to skills, how-it-works with model/rubric/taxonomy versions, See as employer (`toEmployerView`), skill CV (named or anonymised, print to PDF, copy link).
+  - Checks: typecheck, lint and build pass. 17 screenshots at 390/360/1440 in EN and BM with no console errors or overflow. Smoke test: 23 checks covering Nurul's full onboarding, a Hafiz re-score and Reset demo.
+- **3 (Home and Opportunities).**
+  - Data: 10 Talent Partners, 15 partner roles (3 pending approval for Phase 5), 2 invitations for Hafiz, 3 portals (2 feeds, 1 stale; 1 link-out), 30 open jobs, job search logs in every status, 6 sample evidence files with known AI outcomes, repayment accounts, notifications, a 14-course catalogue from 5 providers.
+  - Services:
+    - `tiers.ts`: tier from repayment status plus settings. Job surfaces only get `RoleAccess`; Tier B sees roles older than the early-access window, newer ones locked, or none when the setting is "hidden".
+    - `matching.ts`: role/job match %, why-you-match, top gap counted only across listings that fit 50%+.
+    - `partners.ts`: accept and share, ask with name hidden (simulated reply), decline with reasons, express interest.
+    - `jobs.ts`: feed versus link-out per the portal setting; apply creates a pending log entry.
+    - `evidenceCheck.ts`: 5 staged checks; auto-verify only when all pass and confidence clears the threshold setting.
+    - `jobLog.ts`, `notifications.ts`, `courses.ts`, and `home.ts` (one call for the feed, with next-step priority).
+  - Home: Sunrise hero by state, one next step, partner interest (tips only with no interest), partner roles (locked below Tier A), job search this month versus threshold, open jobs, skill snapshot plus gap ("Unlocks N more matches"), keep learning, repayment standing (dates only, never amounts). New-user state swaps modules 3–5 for the setup checklist.
+  - Opportunities: three tabs with deep links (`?tab=`, `&invite=`, `&entry=`).
+    - Role sheet: pipeline, why you match with Close this gap, messages, accept/ask/decline/express interest; locked roles open an unlock explainer with no repayment details.
+    - Job sheet: apply on portal; link-out portals show search shortcuts by top skills.
+    - Log: monthly summary, log sheet with evidence upload or sample and live AI check, entry sheet with extracted fields, checks, confidence, model version, outcome updates and re-upload.
+  - Notifications page with an unread dot on the bell.
+  - Checks: typecheck, lint and build pass. 20 screenshots with no console errors or overflow. Smoke test: 33 checks, including a hard-constraint check that Kavitha's Home and Opportunities show no repayment amount or "arrears".
+- **4 (Learn and Repayment).**
+  - Learn: in progress (with a 5-day inactivity nudge), recommended for your top 3 gaps (one distinct course each), completed with certificates, browse all (All/Free).
+  - Course sheet: enrol (hosted) or track (external) → module-by-module progress → complete → certificate attached to the skill as verified evidence → re-score. "N new roles now match you" is counted from real before/after matches.
+  - Tier B course access follows each course's `tierAccess` and the `tierB.courses` setting: free stays full, premium is a first-module preview, Tier-A-only is locked.
+  - Gap view: current → target level, "Unlocks N more matches", 2–4 courses (added a free Report writing course so Hafiz's top gap has an option).
+  - Repayment (the only student screen with amounts):
+    - Status with a plain-language meaning; next payment or grace end; method.
+    - Pay now hands off to the official PTPTN channel.
+    - Benefits per tier state: unlocked / free + previews / paused.
+    - Job search counts toward deferment or restructuring; last 6 payments.
+    - Ways back (pay missed, salary deduction, restructure) → pending until sync → demo "simulate sync confirmed" → Tier A restore with the Sunrise celebration and notification.
+  - Tier B paused count: partner roles, profile boost and coaching (courses are partly available) = "3 benefits are paused", per spec.
+  - Checks: typecheck, lint and build pass. 12 screenshots with no console errors or overflow. Smoke test: 42 checks (Tier B preview cap, way back → restore → roles unlocked, gap → course → certificate → re-score).
+- **5 (agency Home, queues, evidence, approvals).**
+  - Data (`data/agency.ts`, fixed seed): 9 queue definitions with spec counts and ages. Evidence 47 (45 synthetic + Hafiz + Kavitha), oldest 4 working days, 6 overdue. Synthetic items for every other queue; 18 placements; pulse KPIs; role-scoped alerts; 14-day evidence monitor series; an 80-entry audit log seed.
+  - Services:
+    - `agencyQueues.ts`: working-day SLA from `settings.sla`; queue rows, including real disputes from students.
+    - `evidenceReview.ts`: real escalations plus synthetic ones. Verify, reject with reason or flag; real students get the decision in their log and notifications.
+    - `roleApprovals.ts`: criteria checked against live settings; approve makes the role live for students.
+    - `audit.ts`: every action logged; undo for this session's actions.
+  - Screens:
+    - Command centre: queues first with SLA chips; pulse on the Sunrise header; role-scoped alerts; recent activity with undo.
+    - Generic queue screen with side-panel case view (approve / reject with reason / escalate).
+    - Evidence queue: filters, evidence image beside the student's entry and the AI's extraction, checks, confidence, model version.
+    - Evidence monitor: KPIs, stacked daily outcomes, escalation trend, by-portal table, table view for every chart.
+    - Placements (the repayment-setup note follows its setting) and partner role approvals (pass/warn/fail criteria and the tier rule preview).
+  - Roles: queues are workable by their owner role and super admin; Leadership viewer is read-only everywhere.
+  - Charts: recharts with `--series-1/2/3`, validated with the dataviz palette validator (all checks pass in light and dark).
+  - Checks: typecheck, lint and build pass. 13 screenshots with no console errors; no overflow at 390. Smoke test: 52 checks, including the student → officer → student round trip (escalation appears in the queue; verify and reject flow back; approved role goes live; undo; read-only leadership).
+- **6 (Partners, Students, Learn, AI governance, Repayment tiers).**
+  - Data (`data/agency6.ts`): 60 synthetic directory students, 4 account flags, 8 seeded skill disputes, weekly AI agreement (latest 88%, below the 90% threshold), sample reviews, fairness by institution type and state, 7 sync runs (latest failed), tier share by cohort, monthly recoveries, 5 override requests (OV-5101 is Kavitha's), matching per partner.
+  - Mock DB now also holds partners, courses, disputes, overrides, change requests, student notes and paused visibility, so agency actions change the student app.
+  - Services: `partnersAdmin`, `studentsAdmin`, `disputes` (single source for Home counts and the disputes screen), `governance` (two-person rule, rubric and tier impact previews), `tiersAdmin`, `coursesAdmin`, `quality`.
+  - Screens:
+    - Partners: directory with commitment tracker and "behind on roles" / "slow to respond" flags; record with onboarding stepper, verification checks, agreement, metrics, roles, notes, Pause / End / Renew (pausing hides the partner's roles from students); portal feeds with a feed ↔ link-out setting; matching monitor with funnel and unseen students.
+    - Students: masked directory with filters; record (opening and revealing are logged) with student and employer views, skills with explainability, timeline, notes, pause visibility, re-score, message; tier badge only, repayment detail behind `RepaymentGate`. Skill disputes side panel (Uphold / Correct and re-score / Request evidence, taxonomy flag) with `?case=` deep links. Flagged accounts.
+    - Learn: catalogue with status control, add course with AI-suggested skill mappings, providers (low completion flagged), gap insights.
+    - AI governance: taxonomy tree with rubric levels and evidence weights; rubric change → impact preview (by institution type and programme) → second approver → publish; evidence rules (threshold, period, accepted types; audited settings change); quality (agreement trend vs threshold, sample review, fairness tables with gap flags).
+    - Repayment tiers: current rules; propose → impact preview and student notice → second approver → settings patch applied; sync monitor with retry; overrides (grant restores Tier A for `overrideDays` and notifies the student; fast-forward expiry); distribution charts.
+  - Fix: agency tables contain absolutely positioned content (`sr-only` labels in cells no longer cause page overflow).
+  - Checks: typecheck, lint and build pass. 75 screenshots (1440, 390, 360 and BM) with no console errors or overflow. Smoke test: 66 checks, adding pause partner → roles hidden for Hafiz; portal to link-out; rubric two-person rule; dispute correction → Hafiz notified; masked record, reveal and repayment gate; tier rule approved → settings applied; override OV-5101 → Kavitha notified.
+- **7 (Reports, Settings, polish, demo script).**
+  - Reports (`data/reports.ts`, `services/reports.ts`): the 7 spec reports, scoped by role (super admin sees all). Each has headline numbers with change, one main chart, a breakdown table, and filters (cohort, institution type, state, period) that scale figures deterministically. Partner health and Operations use live data. Export CSV (download) and PDF (print layout); both are audited. Cohort view: visible → hired → repaying, month by month, for 2023–2026.
+  - Settings (super admin; `?tab=`):
+    - Programme settings: every open decision as a live, audited setting (SLAs, partner criteria, placements → repayment, job-seeking threshold, data sources, retention, AI thresholds), with links to tier and evidence rules.
+    - Roles and access: officers, the sections each role sees, and the access policy.
+    - Audit log: searchable, filterable, CSV export.
+    - PDPA: data requests with deadlines, a two-step deletion flow (remove from search, then delete and anonymise), consent versions, retention.
+    - Integrations: status of each connection.
+    - Safety: outreach kill switch (students see a notice on Partner roles), bulk scam warning to every student, keyword monitor on partner chats.
+  - Polish:
+    - BM complete for every UI key.
+    - Appearance (Device / Light / Dark) in Demo controls plus a header toggle; in memory only, no new localStorage.
+    - Accessibility: `ink-2` and `ink-3` darkened so all text tokens pass WCAG AA (4.5:1) in light, dark and on Sunrise. Every control gets at least a 44×44 hit area through an invisible `::after` in the components layer (opt out with `.no-hit`). Focus ring and reduced motion were already in place.
+    - Leadership header no longer overflows on phones.
+    - Placeholder pages removed: every route is real.
+  - `DEMO_SCRIPT.md`: a 12-minute walkthrough (Nurul → Hafiz → Kavitha → agency queues → governance and tiers → round trip → leadership reports).
+  - Checks: typecheck, lint and build pass. Screenshot sets for phases 2–7 plus a dark-mode set all pass (no console errors, no overflow at 390 or 360). Smoke test: 79 checks, adding report scoping, filters, logged export, cohort view, audited settings save, audit log search, the PDPA deletion flow, the kill switch notice for students and the scam warning.
 
 ---
 
@@ -33,14 +134,14 @@ If this plan and the specs disagree, the specs win.
 
 | Concern | Choice | Why |
 | --- | --- | --- |
-| Build | Vite, React 18, TypeScript (strict) | As requested |
-| Styling | Tailwind CSS 3, with every token as a CSS variable on `:root` and `.dark`, mapped in `tailwind.config.ts` | Spec §Tailwind setup |
-| Routing | React Router 6 (`createBrowserRouter`, data-free) | As requested |
+| Build | Vite 8, React 19, TypeScript (strict) | As requested (current majors at build time) |
+| Styling | Tailwind CSS 4 (`@tailwindcss/vite`), loading `tailwind.config.ts` via `@config`. Every token is a CSS variable on `:root` and `.dark`, mapped in that config | Spec §Tailwind setup. Tailwind 3's toolchain had 7 open npm audit advisories; v4 has none |
+| Routing | React Router 8 (`react-router`, `createBrowserRouter`) | As requested |
 | Icons | `lucide-react` at 1.5 stroke, 20px | Spec §Iconography |
 | Motion | `motion` (Framer Motion), for sheet springs (380/34), staggered reveal and number tick-ups | Spec §Motion; also honours `prefers-reduced-motion` |
 | Charts (agency) | `recharts`, styled with the tokens | 6-month trends, monitors, fairness views |
 | PWA | `vite-plugin-pwa`: manifest, icons, standalone display, theme colour `#F3F0EA`, offline shell | Spec §App shell |
-| Fonts | Instrument Serif and Inter from Google Fonts; Geist from `@fontsource-variable/geist`. Inter is the declared fallback, and there's a `?font=inter` styleguide switch to test with Inter only | Spec §Typography |
+| Fonts | Inter only, for everything including display headlines, bundled via `@fontsource-variable/inter`. No serif, no Geist, no external font requests | Client decision after Phase 1a review (overrides spec §Typography) |
 | State | React context and `useReducer` per domain, seeded from mocks and in memory only. A **Reset demo** action reseeds everything | No localStorage-critical flows |
 | localStorage | Only `role`, `lang` and the chosen demo persona/officer role (these count as preferences) | Constraint |
 | Exports | Skill CV and report "PDF" use a print stylesheet plus `window.print()`. "Excel" uses a CSV download | No heavy libraries |

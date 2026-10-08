@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360">
+  <rect width="480" height="360" fill="#e9e4da"/>
+  <path d="M0 270l120-90 90 60 110-110 160 140v90H0z" fill="#d6cfc1"/>
+  <circle cx="370" cy="90" r="34" fill="#f6c453" opacity="0.7"/>
+  <text x="16" y="344" font-family="Inter, Arial, sans-serif" font-size="11" fill="#8a8275">Sample photo · placeholder · prototype only</text>
+</svg>

@@ -1,0 +1,91 @@
+/* Design tokens — docs/visual-direction.md. Every value here is mapped in tailwind.config.ts. */
+:root {
+  --canvas: #f3f0ea;
+  --surface: #ffffff;
+  --surface-muted: #f8f6f2;
+  --ink: #17140f;
+  --ink-2: #57514a; /* 6.9:1 on canvas */
+  --ink-3: #736c62; /* 4.5:1 on canvas (WCAG AA for meta text) */
+  --on-ink: #fbfaf7; /* text on ink buttons — never pure #FFF on canvas */
+  --hairline: rgba(23, 20, 15, 0.08);
+  --glass: rgba(255, 255, 255, 0.62);
+  --glass-edge: rgba(255, 255, 255, 0.75);
+
+  --sunrise: radial-gradient(120% 90% at 85% 10%, #ffe9a8 0%, rgba(255, 233, 168, 0) 55%),
+    linear-gradient(140deg, #fff8e6 0%, #ffe08a 55%, #f6c453 100%);
+  --sunrise-wash: radial-gradient(120% 60% at 80% 0%, rgba(255, 224, 138, 0.55) 0%, rgba(255, 224, 138, 0) 70%);
+
+  --signal-done: #c5f25a;
+  --signal-done-ink: #1e2a05;
+  --signal-pending: #fbe3a2;
+  --signal-pending-ink: #5a4206;
+  --signal-attention: #f7c9bc;
+  --signal-attention-ink: #6a2414;
+  --signal-info: #dce6f2;
+  --signal-info-ink: #1d3550;
+
+  --shadow-1: 0 1px 2px rgba(23, 20, 15, 0.04), 0 2px 8px rgba(23, 20, 15, 0.04);
+  --shadow-2: 0 8px 24px rgba(23, 20, 15, 0.08);
+  --shadow-3: 0 24px 48px rgba(23, 20, 15, 0.14);
+
+  /* Corner radius is capped at 8px (client decision; overrides the spec's 10/14/20/28/999 scale). */
+  --radius-chip: 4px; /* chips, icon tiles, inner segments */
+  --radius-control: 6px; /* buttons, inputs, logo tiles, toggles */
+  --radius-card: 8px; /* cards, hero, sheets, tab bar */
+  --radius-hero: 8px;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur: 220ms;
+
+  /* One family for everything (client decision): Inter, no serif. */
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  color-scheme: light;
+}
+
+:root.dark {
+  --canvas: #0e0d0b;
+  --surface: #1a1815;
+  --surface-muted: #221f1b;
+  --ink: #f4f1ea;
+  --ink-2: #a8a196;
+  --ink-3: #8c867c; /* 4.5:1 on surface-muted */
+  --on-ink: #17140f;
+  --hairline: rgba(255, 255, 255, 0.08);
+  --glass: rgba(26, 24, 21, 0.58);
+  --glass-edge: rgba(255, 255, 255, 0.1);
+  --sunrise-wash: radial-gradient(120% 60% at 80% 0%, rgba(246, 196, 83, 0.16) 0%, rgba(246, 196, 83, 0) 70%);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-3: 0 24px 48px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+/* Content placed on a Sunrise surface stays dark in both themes (Sunrise is always light). */
+.on-sunrise {
+  --ink: #17140f;
+  --ink-2: #463e33;
+  --ink-3: #5c5245; /* 4.7:1 on the darkest Sunrise stop */
+  --on-ink: #fbfaf7;
+  --hairline: rgba(23, 20, 15, 0.1);
+  --surface: #ffffff;
+  --surface-muted: rgba(255, 255, 255, 0.55);
+  color: var(--ink);
+}
+
+/* Chart series (validated with the dataviz palette validator: lightness, chroma, CVD, contrast — light and dark). */
+:root {
+  --series-1: #b8661d; /* amber */
+  --series-2: #00866b; /* teal */
+  --series-3: #7b5ea7; /* violet */
+  --chart-grid: rgba(23, 20, 15, 0.07);
+}
+:root.dark {
+  --series-1: #c26f22;
+  --series-2: #009579;
+  --series-3: #8a72cc;
+  --chart-grid: rgba(255, 255, 255, 0.07);
+}

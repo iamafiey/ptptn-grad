@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Lock, MapPin } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { Chip } from '@/components/ui/Chip'
@@ -19,6 +20,8 @@ export interface PartnerRoleCardProps {
   access: RoleAccess
   onOpen?: () => void
   onUnlock?: () => void
+  /** Optional status chip, e.g. an invitation waiting. */
+  badge?: ReactNode
 }
 
 /**
@@ -26,7 +29,7 @@ export interface PartnerRoleCardProps {
  * centred ink button — the content shape stays visible so the reward feels real.
  * Repayment details are never passed in or shown here.
  */
-export function PartnerRoleCard({ title, partnerName, monogram, location, salary, matchPct, skills, access, onOpen, onUnlock }: PartnerRoleCardProps) {
+export function PartnerRoleCard({ title, partnerName, monogram, location, salary, matchPct, skills, access, onOpen, onUnlock, badge }: PartnerRoleCardProps) {
   const { t } = useT()
   if (access === 'hidden') return null
   const locked = access === 'locked'
@@ -51,7 +54,7 @@ export function PartnerRoleCard({ title, partnerName, monogram, location, salary
             </span>
           </div>
           <div className="mt-3 flex flex-wrap gap-1.5">
-            <Chip tone="ink" size="sm">{t('status.talentPartner')}</Chip>
+            {badge ?? <Chip tone="ink" size="sm">{t('status.talentPartner')}</Chip>}
             {skills.slice(0, 3).map((s) => (
               <Chip key={s} tone="muted" size="sm">
                 {s}

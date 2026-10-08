@@ -10,6 +10,8 @@ import { cn } from '@/lib/cn'
 import { getPersona } from '@/services/demo'
 import { useDemo } from '@/state/DemoProvider'
 import { useStudent } from '../useStudent'
+import { unreadCount } from '@/services/notifications'
+import { useDbVersion } from '@/services/db'
 import { useStudentShell } from './context'
 
 /**
@@ -24,6 +26,8 @@ export function StudentPage({ title, heading, eyebrow, wash, children }: { title
   const progress = useCollapseProgress(null)
   const persona = getPersona(personaId)
   const strength = useStudent().data?.strength.pct ?? 0
+  useDbVersion()
+  const unread = unreadCount(personaId)
 
   return (
     <div className={cn('relative pb-32 lg:pb-16')}>
@@ -41,8 +45,9 @@ export function StudentPage({ title, heading, eyebrow, wash, children }: { title
             <button onClick={openDemo} className="h-8 rounded-control border border-hairline bg-surface px-2.5 t-caption text-ink-2 shadow-1 hover:text-ink xl:hidden">
               {t('demo.button')}
             </button>
-            <IconButton label={t('nav.notifications')} onClick={() => navigate('/s/notifications')}>
+            <IconButton label={unread ? `${t('nav.notifications')} · ${t('notif.unread', { count: unread })}` : t('nav.notifications')} onClick={() => navigate('/s/notifications')} className="relative">
               <Bell size={20} strokeWidth={1.5} />
+              {unread > 0 && <span className="absolute right-2 top-2 h-2 w-2 rounded-circle bg-attention-ink" aria-hidden />}
             </IconButton>
           </>
         }

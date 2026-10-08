@@ -9,7 +9,7 @@ A clickable, demo-ready prototype for a client pitch to PTPTN. It has no backend
 
 If this plan and the specs disagree, the specs win.
 
-**Status:** Phases 1–2 done. Next: Phase 3 (student Home and Opportunities).
+**Status:** Phases 1–3 done. Next: Phase 4 (student Learn and Repayment).
 
 ---
 
@@ -21,7 +21,7 @@ If this plan and the specs disagree, the specs win.
 | 1a | Scaffold, PWA, tokens, `/styleguide` | ✅ Approved |
 | 1b | Shells for both roles, role switcher, navigation, i18n | ✅ Done |
 | 2 | Student onboarding, AI translation reveal, skill profile | ✅ Done |
-| 3 | Student Home and Opportunities (Partner roles, Open jobs, Job search log) | ⬜ |
+| 3 | Student Home and Opportunities (Partner roles, Open jobs, Job search log) | ✅ Done |
 | 4 | Student Learn, Repayment standing and tier states | ⬜ |
 | 5 | Agency Home, queues, evidence verification, partner role approvals | ⬜ |
 | 6 | Agency Partners, Students, AI governance, Tier rules (and Learn catalogue, see §9) | ⬜ |
@@ -53,6 +53,22 @@ If this plan and the specs disagree, the specs win.
   - Onboarding: all 10 steps built. Sign-in (MyDigital ID or IC + account + OTP sheet), PDPA consent with terms sheet, record confirm/edit, transcript upload/sample/university pull (setting-driven), guided activity composer with example fill and strength cost, preferences, translating, reveal, review (hide, lower, dispute, add missing at Foundation), go visible with employer preview. Progress is saved as the student moves.
   - Profile: strength ring, editable AI summary, skills by category or level, skill sheet (evidence, rubric checks, confidence, lower, hide, dispute, add evidence → re-score), timeline linked to skills, how-it-works with model/rubric/taxonomy versions, See as employer (`toEmployerView`), skill CV (named or anonymised, print to PDF, copy link).
   - Checks: typecheck, lint and build pass. 17 screenshots at 390/360/1440 in EN and BM with no console errors or overflow. Smoke test: 23 checks covering Nurul's full onboarding, a Hafiz re-score and Reset demo.
+- **3 (Home and Opportunities).**
+  - Data: 10 Talent Partners, 15 partner roles (3 pending approval for Phase 5), 2 invitations for Hafiz, 3 portals (2 feeds, 1 stale; 1 link-out), 30 open jobs, job search logs in every status, 6 sample evidence files with known AI outcomes, repayment accounts, notifications, a 14-course catalogue from 5 providers.
+  - Services:
+    - `tiers.ts`: tier from repayment status plus settings. Job surfaces only get `RoleAccess`; Tier B sees roles older than the early-access window, newer ones locked, or none when the setting is "hidden".
+    - `matching.ts`: role/job match %, why-you-match, top gap counted only across listings that fit 50%+.
+    - `partners.ts`: accept and share, ask with name hidden (simulated reply), decline with reasons, express interest.
+    - `jobs.ts`: feed versus link-out per the portal setting; apply creates a pending log entry.
+    - `evidenceCheck.ts`: 5 staged checks; auto-verify only when all pass and confidence clears the threshold setting.
+    - `jobLog.ts`, `notifications.ts`, `courses.ts`, and `home.ts` (one call for the feed, with next-step priority).
+  - Home: Sunrise hero by state, one next step, partner interest (tips only with no interest), partner roles (locked below Tier A), job search this month versus threshold, open jobs, skill snapshot plus gap ("Unlocks N more matches"), keep learning, repayment standing (dates only, never amounts). New-user state swaps modules 3–5 for the setup checklist.
+  - Opportunities: three tabs with deep links (`?tab=`, `&invite=`, `&entry=`).
+    - Role sheet: pipeline, why you match with Close this gap, messages, accept/ask/decline/express interest; locked roles open an unlock explainer with no repayment details.
+    - Job sheet: apply on portal; link-out portals show search shortcuts by top skills.
+    - Log: monthly summary, log sheet with evidence upload or sample and live AI check, entry sheet with extracted fields, checks, confidence, model version, outcome updates and re-upload.
+  - Notifications page with an unread dot on the bell.
+  - Checks: typecheck, lint and build pass. 20 screenshots with no console errors or overflow. Smoke test: 33 checks, including a hard-constraint check that Kavitha's Home and Opportunities show no repayment amount or "arrears".
 
 ---
 

@@ -111,6 +111,8 @@ export interface Invitation {
   messages: { from: 'partner' | 'student'; body: string; at: ISODate; identityHidden: boolean }[];
   declineReasons?: DeclineReason[];
   interview?: { at: string; mode: 'video' | 'inPerson'; location?: string };
+  /** Who started it: a partner invitation, or the student expressing interest. */
+  origin?: 'partner' | 'student';
 }
 export type DeclineReason = 'salary' | 'location' | 'roleFit' | 'timing' | 'skillGap' | 'other';
 

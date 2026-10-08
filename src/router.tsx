@@ -48,14 +48,14 @@ export const router = createBrowserRouter([
     lazy: async () => ({ Component: (await studentShell()).default }),
     children: [
       { index: true, element: <Navigate to="home" replace /> },
-      { path: 'home', lazy: sp('HomePage') },
+      { path: 'home', lazy: async () => ({ Component: (await import('@/features/student/pages/HomePage')).default }) },
       { path: 'profile', lazy: async () => ({ Component: (await import('@/features/student/pages/ProfilePage')).default }) },
       { path: 'profile/cv', lazy: async () => ({ Component: (await import('@/features/student/pages/CvPage')).default }) },
-      { path: 'opportunities', lazy: sp('OpportunitiesPage') },
+      { path: 'opportunities', lazy: async () => ({ Component: (await import('@/features/student/pages/OpportunitiesPage')).default }) },
       { path: 'learn', lazy: sp('LearnPage') },
       { path: 'learn/gap/:skillId', lazy: sp('GapPage') },
       { path: 'repayment', lazy: sp('RepaymentPage') },
-      { path: 'notifications', lazy: sp('NotificationsPage') },
+      { path: 'notifications', lazy: async () => ({ Component: (await import('@/features/student/pages/NotificationsPage')).default }) },
     ],
   },
 

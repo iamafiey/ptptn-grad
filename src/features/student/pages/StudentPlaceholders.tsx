@@ -18,15 +18,6 @@ const PAGES: Record<string, { title: I18nKey; phase: number; plan: LocalizedText
       { en: 'Skill snapshot with a gap callout, keep learning, repayment standing.' },
     ],
   },
-  profile: {
-    title: 'student.profile.title',
-    phase: 2,
-    plan: [
-      { en: 'AI summary, skills grouped by category, activities timeline linked to skills.' },
-      { en: '“See as employer” anonymised view and “Download my skill CV”.' },
-    ],
-  },
-  cv: { title: 'student.cv.title', phase: 2, plan: [{ en: 'Print-ready skill CV (anonymised or named) and a shareable link.' }] },
   opportunities: {
     title: 'student.opportunities.title',
     phase: 3,
@@ -65,8 +56,6 @@ export function StudentPlaceholder({ page }: { page: keyof typeof PAGES }) {
 }
 
 export const HomePage = () => <StudentPlaceholder page="home" />
-export const ProfilePage = () => <StudentPlaceholder page="profile" />
-export const CvPage = () => <StudentPlaceholder page="cv" />
 export const OpportunitiesPage = () => <StudentPlaceholder page="opportunities" />
 export const LearnPage = () => <StudentPlaceholder page="learn" />
 export const GapPage = () => <StudentPlaceholder page="gap" />

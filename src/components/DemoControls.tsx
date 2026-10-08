@@ -5,7 +5,8 @@ import { SegmentedControl } from '@/components/ui/SegmentedControl'
 import { Select } from '@/components/ui/Select'
 import { useT } from '@/i18n'
 import { cn } from '@/lib/cn'
-import { getPersona, listPersonas } from '@/services/demo'
+import { listPersonas } from '@/services/demo'
+import { studentHomePath } from '@/services/students'
 import { OFFICER_ROLES, useDemo, type AppRole, type PersonaId } from '@/state/DemoProvider'
 import type { Lang } from '@/types/domain'
 
@@ -20,13 +21,13 @@ export function DemoControls({ onDone, compact }: { onDone?: () => void; compact
 
   const switchRole = (r: AppRole) => {
     setRole(r)
-    navigate(r === 'agency' ? '/a/home' : getPersona(personaId).homePath)
+    navigate(r === 'agency' ? '/a/home' : studentHomePath(personaId))
     onDone?.()
   }
 
   const switchPersona = (p: PersonaId) => {
     setPersonaId(p)
-    if (role === 'student') navigate(getPersona(p).homePath)
+    if (role === 'student') navigate(studentHomePath(p))
     onDone?.()
   }
 

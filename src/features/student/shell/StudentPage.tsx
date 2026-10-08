@@ -9,6 +9,7 @@ import { useT } from '@/i18n'
 import { cn } from '@/lib/cn'
 import { getPersona } from '@/services/demo'
 import { useDemo } from '@/state/DemoProvider'
+import { useStudent } from '../useStudent'
 import { useStudentShell } from './context'
 
 /**
@@ -22,6 +23,7 @@ export function StudentPage({ title, heading, eyebrow, wash, children }: { title
   const { openSettings, openDemo } = useStudentShell()
   const progress = useCollapseProgress(null)
   const persona = getPersona(personaId)
+  const strength = useStudent().data?.strength.pct ?? 0
 
   return (
     <div className={cn('relative pb-32 lg:pb-16')}>
@@ -31,7 +33,7 @@ export function StudentPage({ title, heading, eyebrow, wash, children }: { title
         progress={progress}
         leading={
           <button onClick={openSettings} aria-label={t('student.openSettings')} className="rounded-circle">
-            <Avatar initials={persona.initials} strength={persona.profileStrength} size={36} label={t('settings.profileStrength', { pct: persona.profileStrength })} />
+            <Avatar initials={persona.initials} strength={strength} size={36} label={t('settings.profileStrength', { pct: strength })} />
           </button>
         }
         trailing={

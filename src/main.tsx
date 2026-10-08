@@ -4,6 +4,7 @@ import { RouterProvider } from 'react-router/dom'
 import { registerSW } from 'virtual:pwa-register'
 import { I18nProvider } from '@/i18n'
 import { DemoProvider } from '@/state/DemoProvider'
+import { ToastProvider } from '@/components/ui/Toast'
 import { router } from '@/router'
 import '@/styles/globals.css'
 
@@ -19,7 +20,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <I18nProvider>
       <DemoProvider>
-        <RouterProvider router={router} />
+        <ToastProvider>
+          <RouterProvider router={router} />
+        </ToastProvider>
       </DemoProvider>
     </I18nProvider>
   </StrictMode>,

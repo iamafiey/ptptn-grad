@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Bell, Eye, Languages, ShieldCheck } from 'lucide-react'
 import { Sheet } from '@/components/ui/Sheet'
 import { Toggle } from '@/components/ui/Field'
@@ -7,7 +6,9 @@ import { SegmentedControl } from '@/components/ui/SegmentedControl'
 import { Avatar } from '@/components/ui/Rings'
 import { useT } from '@/i18n'
 import { getPersona } from '@/services/demo'
+import { setVisibility } from '@/services/students'
 import { useDemo } from '@/state/DemoProvider'
+import { useStudent } from '../useStudent'
 import type { Lang } from '@/types/domain'
 
 /** Settings live under the avatar: language, visibility, notifications, data and privacy. */
@@ -15,17 +16,19 @@ export function SettingsSheet({ open, onClose }: { open: boolean; onClose: () =>
   const { t, lang, setLang } = useT()
   const { personaId } = useDemo()
   const persona = getPersona(personaId)
-  // Visibility is wired to the student record in Phase 2; local for now.
-  const [visible, setVisible] = useState(true)
+  const { data } = useStudent()
+  const strength = data?.strength.pct ?? 0
+  const visible = data?.student.visibility.partnersCanFind ?? true
+  const setVisible = (on: boolean) => setVisibility(personaId, on)
 
   return (
     <Sheet open={open} onClose={onClose} title={t('settings.title')} closeLabel={t('action.close')}>
       <div className="flex items-center gap-4">
-        <Avatar initials={persona.initials} strength={persona.profileStrength} size={64} label={t('settings.profileStrength', { pct: persona.profileStrength })} />
+        <Avatar initials={persona.initials} strength={strength} size={64} label={t('settings.profileStrength', { pct: strength })} />
         <div className="min-w-0">
           <p className="t-subheading">{persona.fullName}</p>
           <p className="t-caption font-normal text-ink-2">
-            {persona.institution} · {t('settings.profileStrength', { pct: persona.profileStrength })}
+            {persona.institution} · {t('settings.profileStrength', { pct: strength })}
           </p>
         </div>
       </div>

@@ -37,6 +37,10 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - `src/state/DemoProvider.tsx`: workspace role, persona, officer role, programme settings, `seed` (bumps on Reset demo; stores should reseed from it).
 - Routes are declared in `src/router.tsx` with `lazy` imports so each workspace is its own chunk.
 - Translated strings may contain one `<em>…</em>` accent; render them with `<Rich text={t(key)} />`.
+- Mock backend: `src/services/db.ts` holds mutable demo state (`readDb`/`writeDb`/`resetDb`). Read data in components with `useAsync(() => service(...), deps)`; it refetches after any `writeDb`. `useStudent()` gives the current persona's live record.
+- A full page reload reseeds the demo data (by design; nothing critical is in localStorage). Tests and demos should navigate in-app.
+- When logic must act on just-written data (e.g. guards right after a write), read the store synchronously via a service (e.g. `hasSkills(id)`) instead of hook data, which may be one fetch behind.
+- Chips never wrap. Use `<Note>` for sentence-length signal messages.
 
 ## Scripts
 - `npm run icons`: re-render the PWA PNGs from `public/icons/icon.svg`.

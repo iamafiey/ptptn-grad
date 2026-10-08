@@ -1,6 +1,6 @@
 import type { ID, LocalizedText } from '@/types/domain'
 
-// The three demo students (BUILD_PLAN.md §7). Full records arrive in Phase 2.
+// The three demo students (BUILD_PLAN.md §7): switcher metadata. Full records live in data/students.ts.
 export interface DemoPersona {
   id: ID
   fullName: string
@@ -8,9 +8,6 @@ export interface DemoPersona {
   initials: string
   institution: string
   state: LocalizedText
-  /** Where the student app opens for this persona. */
-  homePath: string
-  profileStrength: number
 }
 
 export const personas: DemoPersona[] = [
@@ -21,8 +18,6 @@ export const personas: DemoPersona[] = [
     initials: 'NA',
     institution: 'UiTM Shah Alam',
     state: { en: 'Mid-onboarding', ms: 'Sedang mendaftar' },
-    homePath: '/s/onboarding/activities',
-    profileStrength: 35,
   },
   {
     id: 'hafiz',
@@ -31,8 +26,6 @@ export const personas: DemoPersona[] = [
     initials: 'MH',
     institution: 'UKM',
     state: { en: 'Visible · grace period · 2 invitations', ms: 'Boleh dilihat · tempoh tangguh · 2 jemputan' },
-    homePath: '/s/home',
-    profileStrength: 82,
   },
   {
     id: 'kavitha',
@@ -41,7 +34,5 @@ export const personas: DemoPersona[] = [
     initials: 'KR',
     institution: 'UTHM',
     state: { en: 'Behind · benefits paused', ms: 'Tertunggak · manfaat digantung' },
-    homePath: '/s/home',
-    profileStrength: 74,
   },
 ]

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 480" font-family="Inter, Arial, sans-serif">
+  <rect width="360" height="480" fill="#ffffff"/>
+  <text x="180" y="40" font-size="13" font-weight="700" fill="#17140f" text-anchor="middle">ACADEMIC TRANSCRIPT</text>
+  <text x="180" y="58" font-size="9" fill="#6b645a" text-anchor="middle">Transkrip Akademik · Sample</text>
+  <line x1="24" y1="74" x2="336" y2="74" stroke="#ece8e0"/>
+  <g font-size="9" fill="#6b645a"><text x="24" y="94">CODE</text><text x="90" y="94">COURSE</text><text x="300" y="94">GRADE</text></g>
+  <g fill="#ece8e0">
+    <rect x="24" y="106" width="44" height="7" rx="3"/><rect x="90" y="106" width="170" height="7" rx="3"/><rect x="300" y="106" width="16" height="7" rx="3"/>
+    <rect x="24" y="126" width="44" height="7" rx="3"/><rect x="90" y="126" width="150" height="7" rx="3"/><rect x="300" y="126" width="16" height="7" rx="3"/>
+    <rect x="24" y="146" width="44" height="7" rx="3"/><rect x="90" y="146" width="180" height="7" rx="3"/><rect x="300" y="146" width="16" height="7" rx="3"/>
+    <rect x="24" y="166" width="44" height="7" rx="3"/><rect x="90" y="166" width="130" height="7" rx="3"/><rect x="300" y="166" width="16" height="7" rx="3"/>
+    <rect x="24" y="186" width="44" height="7" rx="3"/><rect x="90" y="186" width="160" height="7" rx="3"/><rect x="300" y="186" width="16" height="7" rx="3"/>
+    <rect x="24" y="206" width="44" height="7" rx="3"/><rect x="90" y="206" width="140" height="7" rx="3"/><rect x="300" y="206" width="16" height="7" rx="3"/>
+  </g>
+  <line x1="24" y1="230" x2="336" y2="230" stroke="#ece8e0"/>
+  <text x="24" y="252" font-size="10" fill="#17140f">CGPA</text><rect x="70" y="244" width="40" height="9" rx="3" fill="#d9d3c7"/>
+  <text x="24" y="460" font-size="9" fill="#a39c91">Sample evidence · fictional · prototype only</text>
+</svg>

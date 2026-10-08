@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router'
 import { readPref } from '@/lib/storage'
-import { getPersona } from '@/services/demo'
+import { studentHomePath } from '@/services/students'
 import { PERSONA_IDS } from '@/state/demoConstants'
 
 // Each workspace loads in its own chunk.
@@ -22,7 +22,7 @@ const ap = (page: AgencyPageId): RouteObject['lazy'] => async () => {
 function RootRedirect() {
   const role = readPref('role', ['student', 'agency'] as const, 'student')
   const persona = readPref('persona', PERSONA_IDS, 'hafiz')
-  return <Navigate to={role === 'agency' ? '/a/home' : getPersona(persona).homePath} replace />
+  return <Navigate to={role === 'agency' ? '/a/home' : studentHomePath(persona)} replace />
 }
 
 export const router = createBrowserRouter([
@@ -49,8 +49,8 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="home" replace /> },
       { path: 'home', lazy: sp('HomePage') },
-      { path: 'profile', lazy: sp('ProfilePage') },
-      { path: 'profile/cv', lazy: sp('CvPage') },
+      { path: 'profile', lazy: async () => ({ Component: (await import('@/features/student/pages/ProfilePage')).default }) },
+      { path: 'profile/cv', lazy: async () => ({ Component: (await import('@/features/student/pages/CvPage')).default }) },
       { path: 'opportunities', lazy: sp('OpportunitiesPage') },
       { path: 'learn', lazy: sp('LearnPage') },
       { path: 'learn/gap/:skillId', lazy: sp('GapPage') },

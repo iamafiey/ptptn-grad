@@ -5,7 +5,7 @@ import { Chip } from '@/components/ui/Chip'
 import { SegmentedControl } from '@/components/ui/SegmentedControl'
 import { Select } from '@/components/ui/Select'
 import { useT } from '@/i18n'
-import { getPersona } from '@/services/demo'
+import { studentHomePath } from '@/services/students'
 import { OFFICER_ROLES, useDemo, type AppRole } from '@/state/DemoProvider'
 
 /** Role badge + picker, global search, notifications, BM/EN, and the Student | Agency toggle. */
@@ -16,7 +16,7 @@ export function AgencyHeader({ onMenu }: { onMenu: () => void }) {
 
   const switchRole = (r: AppRole) => {
     setRole(r)
-    if (r === 'student') navigate(getPersona(personaId).homePath)
+    if (r === 'student') navigate(studentHomePath(personaId))
   }
 
   return (

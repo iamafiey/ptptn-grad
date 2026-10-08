@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/Card'
 import { SegmentedControl } from '@/components/ui/SegmentedControl'
 import { IconTile } from '@/components/ui/Tiles'
 import { useT } from '@/i18n'
-import { getPersona } from '@/services/demo'
+import { studentHomePath } from '@/services/students'
 import { useDemo, type AppRole } from '@/state/DemoProvider'
 import { canSee, sectionForPath } from '../nav'
 import { AgencyHeader } from './AgencyHeader'
@@ -63,7 +63,7 @@ export default function AgencyShell() {
                     value="agency"
                     onChange={(r) => {
                       setRole(r)
-                      if (r === 'student') navigate(getPersona(personaId).homePath)
+                      if (r === 'student') navigate(studentHomePath(personaId))
                     }}
                     options={[
                       { value: 'student', label: t('demo.workspace.student') },

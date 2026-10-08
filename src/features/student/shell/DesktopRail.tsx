@@ -4,12 +4,14 @@ import { useT } from '@/i18n'
 import { cn } from '@/lib/cn'
 import { getPersona } from '@/services/demo'
 import { useDemo } from '@/state/DemoProvider'
+import { useStudent } from '../useStudent'
 
 /** ≥1024px: frosted left rail replaces the floating tab bar. */
 export function DesktopRail({ active, onSelect, onOpenSettings }: { active: StudentTab | null; onSelect: (t: StudentTab) => void; onOpenSettings: () => void }) {
   const { t } = useT()
   const { personaId } = useDemo()
   const persona = getPersona(personaId)
+  const strength = useStudent().data?.strength.pct ?? 0
 
   return (
     <aside className="glass fixed inset-y-3 left-3 z-40 hidden w-[232px] flex-col rounded-card p-3 lg:flex">
@@ -40,7 +42,7 @@ export function DesktopRail({ active, onSelect, onOpenSettings }: { active: Stud
         </ul>
       </nav>
       <button onClick={onOpenSettings} className="flex items-center gap-3 rounded-control p-2 text-left hover:bg-surface-muted">
-        <Avatar initials={persona.initials} strength={persona.profileStrength} size={40} label={t('settings.profileStrength', { pct: persona.profileStrength })} />
+        <Avatar initials={persona.initials} strength={strength} size={40} label={t('settings.profileStrength', { pct: strength })} />
         <span className="min-w-0">
           <span className="block truncate t-body-strong">{persona.fullName}</span>
           <span className="block t-caption font-normal text-ink-2">{t('settings.title')}</span>

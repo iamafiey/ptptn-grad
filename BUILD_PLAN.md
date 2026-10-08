@@ -9,7 +9,7 @@ A clickable, demo-ready prototype for a client pitch to PTPTN. It has no backend
 
 If this plan and the specs disagree, the specs win.
 
-**Status:** Phases 1a and 1b done. Next: Phase 2 (student onboarding, AI skill translation, skill profile).
+**Status:** Phases 1–2 done. Next: Phase 3 (student Home and Opportunities).
 
 ---
 
@@ -20,7 +20,7 @@ If this plan and the specs disagree, the specs win.
 | 0 | Specs read, build plan | ✅ Approved |
 | 1a | Scaffold, PWA, tokens, `/styleguide` | ✅ Approved |
 | 1b | Shells for both roles, role switcher, navigation, i18n | ✅ Done |
-| 2 | Student onboarding, AI translation reveal, skill profile | ⬜ |
+| 2 | Student onboarding, AI translation reveal, skill profile | ✅ Done |
 | 3 | Student Home and Opportunities (Partner roles, Open jobs, Job search log) | ⬜ |
 | 4 | Student Learn, Repayment standing and tier states | ⬜ |
 | 5 | Agency Home, queues, evidence verification, partner role approvals | ⬜ |
@@ -46,6 +46,13 @@ If this plan and the specs disagree, the specs win.
   - Every route in §2 exists as a placeholder naming its phase. Each workspace loads in its own chunk.
   - i18n: shell, navigation, roles, page titles and onboarding titles in EN and BM.
   - Checks: typecheck, lint and build pass. 14 screenshots (390/360/1024/1440, both roles, EN/BM) with no console errors or overflow. `scripts/smoke.mjs` passes 8 navigation checks.
+- **2 (onboarding, AI translation, skill profile).**
+  - Data: 40-skill taxonomy in 6 categories with rubrics and BM names (`data/taxonomy.ts`); full records for the three personas (`data/students.ts`); evidence placeholders (certificate, letter, transcript, photo).
+  - Mock backend: `services/db.ts` (in-memory, reseeded by Reset demo) and `hooks/useAsync` (refetches after writes).
+  - AI (`services/skillTranslation.ts`): deterministic extract → map (34-rule table) → score (rubric gates) → explain, with staged progress and a presenter "Skip". It reproduces the spec's worked example. Add evidence → re-score (certificate or letter lifts one level; a photo raises confidence only).
+  - Onboarding: all 10 steps built. Sign-in (MyDigital ID or IC + account + OTP sheet), PDPA consent with terms sheet, record confirm/edit, transcript upload/sample/university pull (setting-driven), guided activity composer with example fill and strength cost, preferences, translating, reveal, review (hide, lower, dispute, add missing at Foundation), go visible with employer preview. Progress is saved as the student moves.
+  - Profile: strength ring, editable AI summary, skills by category or level, skill sheet (evidence, rubric checks, confidence, lower, hide, dispute, add evidence → re-score), timeline linked to skills, how-it-works with model/rubric/taxonomy versions, See as employer (`toEmployerView`), skill CV (named or anonymised, print to PDF, copy link).
+  - Checks: typecheck, lint and build pass. 17 screenshots at 390/360/1440 in EN and BM with no console errors or overflow. Smoke test: 23 checks covering Nurul's full onboarding, a Hafiz re-score and Reset demo.
 
 ---
 

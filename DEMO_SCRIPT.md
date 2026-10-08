@@ -58,7 +58,7 @@ A timed walkthrough of the clickable prototype: three students, then the agency 
    - **Verify**. Open **Rekabina Elektrik** (Kavitha) → **Reject with reason** → pick a reason → **Confirm**.
 4. **Home → Undo** on a recent action shows that every action is logged and reversible within the session.
 
-## 5. Agency: governance, the two-person rule and repayment tiers (2:30)
+## 5. Agency: governance, the two-person rule and collections (2:30)
 
 1. Officer role **Partnership manager** → **Partners → Talent Partners**. Commitments are tracked and flagged: *Behind on roles*, *Slow to respond*.
    - Open **Seri Mutiara → Pause** (reason: *Behind on committed roles*). Its roles disappear from students at once.
@@ -66,8 +66,8 @@ A timed walkthrough of the clickable prototype: three students, then the agency 
    - **Submit for second approval**. The drafter can't approve their own change.
    - Switch to **Super admin** → **Approve and publish**.
 3. **Students → Skill disputes** → Hafiz's **Process improvement** → **Correct and re-score**. Hafiz is notified.
-4. Officer role **Collection liaison** → **Repayment tiers → Overrides** → **OV-5101** (Kavitha's bank receipt) → **Grant 14 days** → **Confirm**.
-   - Talking point: *repayment details are visible only to the collection liaison and super admin. Other roles see a tier badge only.*
+4. Officer role **Collection liaison** → **Collections → Overrides** → **OV-5101** (Kavitha's bank receipt) → **Grant 14 days** → **Confirm**.
+   - Talking point: *repayment details are visible only to collections staff and the super admin. Other roles see a tier badge only.*
 
 ## 6. Back to the students: the round trip (0:45)
 
@@ -85,10 +85,19 @@ A timed walkthrough of the clickable prototype: three students, then the agency 
 
 ## If you have more time
 
+- **Collections and customer service** (about 2:00, start from a fresh Reset demo):
+  1. Officer role **Collection liaison** → **Collections**. The overview shows on-time share, Watch and High counts, today's work, borrowers past due and a fairness check by institution type.
+  2. **Borrowers → High risk → S-24087** (Kavitha). The early-warning panel explains the score: missed August payment, 53 days past due, job search 2 of 4. Talking point: *the score orders the work; it never changes a tier, and the student never sees it.*
+  3. **Offer a way back → Request a restructured plan**.
+  4. **Student → Demo → Kavitha → Repayment**: the offer appears under **From PTPTN**. **Talk to us → Request a callback → Request callback**.
+  5. **Agency → Customer service agent → Collections → Service desk** → Kavitha's **Callback** case. The AI assist summarises the account and drafts a reply. **Use draft 1 → Send reply**, then **Resolve case**.
+  6. **Student → Kavitha → Repayment → Accept → Demo: simulate sync confirmed**. She's back in good standing; in the agency her follow-up plan shows *On track: no follow-up plan*.
+  7. **Collection liaison → Collections → Follow-up plans** → edit a plan → **Submit for approval**, then approve as **Super admin** (two-person rule).
+
 - **Settings → Programme settings** (Super admin): every open decision from the specs is a live setting (SLAs, salary floor, retention, thresholds). Change one and save; it's audited.
 - **Settings → Safety → Pause all partner outreach**: students see a notice on Partner roles. **Send to all students** sends a scam warning to every student's notifications.
 - **Settings → Audit log**: search for "Revealed" after opening a student record and revealing the name.
 - **Partners → Portal feeds**: switch KerjaKini to **Link-out**. Students get a curated link instead of feed listings.
-- **Repayment tiers → Tier rules → Propose a change**: flip *Grace period counts as*, see 9,120 students move A → B, submit, then approve as Super admin.
+- **Collections → Tier rules → Propose a change**: flip *Grace period counts as*, see 9,120 students move A → B, submit, then approve as Super admin.
 - **BM**: every screen switches to Bahasa Melayu (Demo → Language, or **BM** in the agency header).
 - **Dark mode**: Demo → Appearance → Dark, or the moon button in the agency header.

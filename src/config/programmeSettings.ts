@@ -9,6 +9,7 @@ export type TierBCourses = 'freePlusPreviews' | 'freeOnly'
 export type UniversitySource = 'uploadOnly' | 'integration'
 export type TaxonomySource = 'own' | 'alignedNational'
 export type PortalMode = 'feed' | 'linkOut'
+export type ContactChannel = 'inApp' | 'sms' | 'email' | 'whatsapp'
 
 export interface ProgrammeSettings {
   tierB: { partnerRoles: TierBPartnerRoles; earlyAccessDays: number; courses: TierBCourses }
@@ -30,6 +31,17 @@ export interface ProgrammeSettings {
   roles: { merged: string[][] }
   retention: { profileMonths: number; evidenceMonths: number; auditMonths: number }
   ai: { lowConfidenceThreshold: number; agreementAlertThreshold: number }
+  /** Collections: early-warning thresholds and contact rules (docs/collections-flow.md). */
+  collections: {
+    watchThreshold: number
+    highThreshold: number
+    contactCapPerWeek: number
+    quietHours: { start: number; end: number }
+    channels: ContactChannel[]
+    dpdBuckets: [number, number, number]
+    agentsSeeAmounts: boolean
+    planApproval: 'twoPerson' | 'single'
+  }
   student: { visibilityStartsFinalSemester: boolean }
 }
 
@@ -57,9 +69,21 @@ export const DEFAULT_SETTINGS: ProgrammeSettings = {
     lowConfidence: 5,
     tierOverrides: 1,
     courseSubmissions: 5,
+    earlyWarning: 2,
+    serviceDesk: 1,
   },
   roles: { merged: [] },
   retention: { profileMonths: 24, evidenceMonths: 60, auditMonths: 84 },
   ai: { lowConfidenceThreshold: 0.6, agreementAlertThreshold: 90 },
+  collections: {
+    watchThreshold: 40,
+    highThreshold: 70,
+    contactCapPerWeek: 3,
+    quietHours: { start: 9, end: 20 },
+    channels: ['inApp', 'sms', 'email'],
+    dpdBuckets: [30, 60, 90],
+    agentsSeeAmounts: true,
+    planApproval: 'twoPerson',
+  },
   student: { visibilityStartsFinalSemester: true },
 }

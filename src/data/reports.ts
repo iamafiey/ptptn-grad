@@ -3,12 +3,13 @@ import type { LocalizedText, OfficerRole } from '@/types/domain'
 // Programme-level aggregates for the 7 reports and the cohort view (fictional, fixed seed).
 // Counts are for the whole programme; report filters scale them deterministically.
 
-export type ReportId = 'employment' | 'jobSearch' | 'repayment' | 'partnerHealth' | 'skillsLearning' | 'aiQuality' | 'operations'
+export type ReportId = 'employment' | 'jobSearch' | 'repayment' | 'collections' | 'partnerHealth' | 'skillsLearning' | 'aiQuality' | 'operations'
 
 export const REPORT_DEFS: { id: ReportId; audience: OfficerRole[]; cadence: 'weekly' | 'monthly' }[] = [
   { id: 'employment', audience: ['leadershipViewer', 'programmeOfficer'], cadence: 'monthly' },
   { id: 'jobSearch', audience: ['leadershipViewer', 'programmeOfficer'], cadence: 'monthly' },
   { id: 'repayment', audience: ['leadershipViewer', 'collectionLiaison'], cadence: 'monthly' },
+  { id: 'collections', audience: ['leadershipViewer', 'collectionLiaison'], cadence: 'monthly' },
   { id: 'partnerHealth', audience: ['partnershipManager'], cadence: 'weekly' },
   { id: 'skillsLearning', audience: ['learningManager'], cadence: 'monthly' },
   { id: 'aiQuality', audience: ['aiGovernanceLead', 'leadershipViewer'], cadence: 'monthly' },
@@ -34,6 +35,8 @@ export const MONTHLY = {
   autoVerifyAccuracy: [97.1, 97.4, 97.0, 97.6, 97.8, 97.5, 97.9, 98.0, 97.7, 97.8, 97.6, 97.3],
   disputes: [180, 172, 160, 191, 204, 199, 210, 214, 220, 231, 236, 249],
   handled: [5210, 5480, 4930, 5920, 6340, 6610, 6880, 7120, 7390, 7660, 7940, 8210],
+  onTime: [89.4, 89.6, 88.9, 89.2, 89.7, 90.1, 90.3, 90.6, 90.9, 91.1, 90.8, 91.4],
+  promiseKept: [58, 59, 57, 60, 61, 62, 63, 63, 65, 66, 66, 68],
   slaHit: [93.2, 94.0, 92.1, 93.8, 94.4, 94.9, 95.1, 94.6, 95.3, 95.0, 94.2, 93.5],
 }
 

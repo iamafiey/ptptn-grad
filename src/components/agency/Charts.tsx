@@ -97,7 +97,7 @@ export function TrendChart<T extends Record<string, unknown>>({ data, x, y, labe
 export function StackedBars<T extends Record<string, unknown>>({ data, x, series, height = 220 }: { data: T[]; x: keyof T; series: { key: keyof T; label: string; color: string }[]; height?: number }) {
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -12 }} barCategoryGap="28%">
+      <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }} barCategoryGap="28%">
         <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
         <XAxis dataKey={x as string} tick={AXIS} tickLine={false} axisLine={false} interval="preserveStartEnd" minTickGap={24} />
         <YAxis tick={AXIS} tickLine={false} axisLine={false} width={44} />

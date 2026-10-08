@@ -16,6 +16,8 @@ import type { OfficerRole } from '@/types/domain'
 export interface AgencyNavItem {
   path: string
   label: I18nKey
+  /** Narrows the section's roles for this item (and every path under it). */
+  roles?: OfficerRole[]
 }
 
 export interface AgencySection {
@@ -25,6 +27,8 @@ export interface AgencySection {
   icon: LucideIcon
   roles: OfficerRole[] | 'all'
   items?: AgencyNavItem[]
+  /** Extra path prefixes that belong to this section (e.g. tier pages under Collections). */
+  match?: string[]
 }
 
 // docs/admin-dashboard-flow.md §Navigation — each role sees only its sections.
@@ -82,16 +86,21 @@ export const AGENCY_SECTIONS: AgencySection[] = [
     ],
   },
   {
-    id: 'tiers',
-    path: '/a/tiers',
-    label: 'agency.nav.tiers',
+    id: 'collections',
+    path: '/a/collections',
+    label: 'agency.nav.collections',
     icon: Scale,
-    roles: ['collectionLiaison', 'superAdmin'],
+    roles: ['collectionLiaison', 'customerServiceAgent', 'superAdmin', 'leadershipViewer'],
+    match: ['/a/tiers'],
     items: [
-      { path: '/a/tiers', label: 'agency.nav.tierRules' },
-      { path: '/a/tiers/sync', label: 'agency.nav.sync' },
-      { path: '/a/tiers/overrides', label: 'agency.nav.overrides' },
-      { path: '/a/tiers/distribution', label: 'agency.nav.distribution' },
+      { path: '/a/collections', label: 'agency.nav.colOverview', roles: ['collectionLiaison', 'superAdmin', 'leadershipViewer'] },
+      { path: '/a/collections/borrowers', label: 'agency.nav.borrowers', roles: ['collectionLiaison', 'customerServiceAgent', 'superAdmin'] },
+      { path: '/a/collections/plans', label: 'agency.nav.plans', roles: ['collectionLiaison', 'superAdmin'] },
+      { path: '/a/collections/service', label: 'agency.nav.serviceDesk', roles: ['collectionLiaison', 'customerServiceAgent', 'superAdmin'] },
+      { path: '/a/tiers', label: 'agency.nav.tierRules', roles: ['collectionLiaison', 'superAdmin'] },
+      { path: '/a/tiers/sync', label: 'agency.nav.sync', roles: ['collectionLiaison', 'superAdmin'] },
+      { path: '/a/tiers/overrides', label: 'agency.nav.overrides', roles: ['collectionLiaison', 'superAdmin'] },
+      { path: '/a/tiers/distribution', label: 'agency.nav.distribution', roles: ['collectionLiaison', 'superAdmin'] },
     ],
   },
   {
@@ -112,8 +121,26 @@ export function canSee(section: AgencySection, role: OfficerRole) {
   return section.roles === 'all' || section.roles.includes(role)
 }
 
+export function itemsFor(section: AgencySection, role: OfficerRole) {
+  return (section.items ?? []).filter((it) => !it.roles || it.roles.includes(role))
+}
+
+const prefixes = (s: AgencySection) => [s.path, ...(s.match ?? [])]
+const under = (pathname: string, prefix: string) => pathname === prefix || pathname.startsWith(prefix + '/')
+
 /** Queues route to their owning section for access checks. */
 export function sectionForPath(pathname: string): AgencySection | undefined {
   if (pathname.startsWith('/a/queues')) return AGENCY_SECTIONS[0]
-  return [...AGENCY_SECTIONS].sort((a, b) => b.path.length - a.path.length).find((s) => pathname.startsWith(s.path))
+  let best: { s: AgencySection; len: number } | undefined
+  for (const s of AGENCY_SECTIONS) for (const p of prefixes(s)) if (under(pathname, p) && (!best || p.length > best.len)) best = { s, len: p.length }
+  return best?.s
+}
+
+/** Section roles, narrowed by the most specific nav item the path falls under. */
+export function canAccess(pathname: string, role: OfficerRole) {
+  const section = sectionForPath(pathname)
+  if (!section) return true
+  if (!canSee(section, role)) return false
+  const item = [...(section.items ?? [])].sort((a, b) => b.path.length - a.path.length).find((it) => under(pathname, it.path))
+  return !item?.roles || item.roles.includes(role)
 }

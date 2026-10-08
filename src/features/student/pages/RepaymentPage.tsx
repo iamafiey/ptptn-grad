@@ -1,18 +1,22 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { motion, useReducedMotion } from 'motion/react'
-import { ArrowRight, Briefcase, Check, Clock, CreditCard, ExternalLink, FileSignature, Minus, PauseCircle, RefreshCw, Sparkles, Wallet } from 'lucide-react'
+import { ArrowRight, Briefcase, CalendarCheck, Check, Clock, CreditCard, ExternalLink, FileSignature, Inbox, MessageSquare, Minus, PauseCircle, Phone, RefreshCw, Sparkles, Wallet } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card, SunriseCard } from '@/components/ui/Card'
 import { Chip } from '@/components/ui/Chip'
+import { ChipSelect } from '@/components/ui/ChipSelect'
 import { Note } from '@/components/ui/Note'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { Sheet } from '@/components/ui/Sheet'
 import { IconTile } from '@/components/ui/Tiles'
+import { Textarea } from '@/components/ui/Textarea'
+import { useToast } from '@/components/ui/Toast'
 import { useAsync } from '@/hooks/useAsync'
 import { useT } from '@/i18n'
 import { Rich } from '@/i18n/Rich'
 import { formatDate, formatRM } from '@/lib/format'
+import { acceptOffer, getSupport, messagePtptn, promiseToPay, requestCallback } from '@/services/collections'
 import { getRepayment, requestWayBack, simulateSyncConfirmed, type WayBack } from '@/services/repayment'
 import { useDemo } from '@/state/DemoProvider'
 import type { BenefitId } from '@/types/domain'
@@ -25,6 +29,9 @@ const WAYS: { id: WayBack; icon: React.ReactNode }[] = [
   { id: 'salaryDeduction', icon: <Briefcase size={20} strokeWidth={1.5} /> },
   { id: 'restructure', icon: <FileSignature size={20} strokeWidth={1.5} /> },
 ]
+const SLOTS = ['tomorrowAm', 'tomorrowPm', 'fridayAm'] as const
+const PROMISE_DATES = ['2026-10-15', '2026-10-22', '2026-10-31']
+type SupportSheet = 'callback' | 'message' | 'promise'
 
 /** Repayment standing: benefits earned plus a clear way back. Student-only; never shown to employers. */
 export default function RepaymentPage() {
@@ -34,14 +41,30 @@ export default function RepaymentPage() {
   const { settings } = useDemo()
   const { id } = useStudent()
   const { data } = useAsync(() => getRepayment(id, settings), [id, settings])
-  const [sheet, setSheet] = useState<WayBack | 'handoff' | null>(null)
+  const { data: support } = useAsync(() => getSupport(id), [id])
+  const toast = useToast()
+  const [sheet, setSheet] = useState<WayBack | 'handoff' | SupportSheet | null>(null)
   const [busy, setBusy] = useState(false)
+  const [slot, setSlot] = useState<(typeof SLOTS)[number]>('tomorrowAm')
+  const [promiseDate, setPromiseDate] = useState(PROMISE_DATES[0])
+  const [text, setText] = useState('')
 
   if (!data) return <StudentPage title={t('student.repayment.title')}>{null}</StudentPage>
   const { account: a, tier } = data
   const behind = a.status === 'behind' && tier.tier === 'B'
   const missed = a.payments.filter((p) => p.status === 'missed').length
   const statusTone = a.status === 'grace' ? 'info' : behind ? 'attention' : 'done'
+
+  const offers = support?.offers ?? []
+  const cases = support?.cases ?? []
+  const run = async (fn: () => Promise<unknown>, done: string) => {
+    setBusy(true)
+    await fn()
+    setBusy(false)
+    setSheet(null)
+    setText('')
+    toast(done)
+  }
 
   const submitWay = async (kind: WayBack) => {
     setBusy(true)
@@ -94,7 +117,35 @@ export default function RepaymentPage() {
       </Card>
 
       {/* Ways back */}
-      {behind && (
+      {/* Offers from a PTPTN officer: accepting submits the same way back as self-service */}
+      {offers.length > 0 && !data.pendingWayBack && (
+        <section className="space-y-3">
+          <SectionLabel>{t('rep.offer.label')}</SectionLabel>
+          {offers.map((o) => (
+            <Card key={o.id} as="article">
+              <div className="flex items-start gap-3">
+                <IconTile className="bg-info text-info-ink">
+                  <Inbox size={20} strokeWidth={1.5} />
+                </IconTile>
+                <div className="min-w-0">
+                  <p className="t-body-strong">{t(`rep.way.${o.kind}`)}</p>
+                  <p className="t-caption font-normal text-ink-2">{t(`rep.way.${o.kind}Body`)}</p>
+                </div>
+              </div>
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <Button variant="secondary" size="sm" onClick={() => setSheet('message')}>
+                  {t('rep.offer.ask')}
+                </Button>
+                <Button variant="secondary" size="sm" loading={busy} className="border-ink" onClick={() => run(() => acceptOffer(id, o.id), t('rep.offer.accepted'))}>
+                  {t('rep.offer.accept')}
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </section>
+      )}
+
+      {(behind || data.pendingWayBack) && (
         <section className="space-y-3">
           <SectionLabel>{t('rep.waysBack')}</SectionLabel>
           {data.pendingWayBack ? (
@@ -139,6 +190,25 @@ export default function RepaymentPage() {
               </Card>
             ))
           )}
+          {behind && !data.pendingWayBack &&
+            (support?.promise ? (
+              <Note tone="info" icon={<CalendarCheck size={14} strokeWidth={1.5} />}>
+                {t('rep.promise.set', { date: formatDate(support.promise.date, lang, 'long') })}
+              </Note>
+            ) : (
+              <Card as="article">
+                <button onClick={() => setSheet('promise')} className="flex w-full items-center gap-3 text-left">
+                  <IconTile>
+                    <CalendarCheck size={20} strokeWidth={1.5} />
+                  </IconTile>
+                  <span className="min-w-0 flex-1">
+                    <span className="block t-body-strong">{t('rep.promise.title')}</span>
+                    <span className="block t-caption font-normal text-ink-2">{t('rep.promise.body')}</span>
+                  </span>
+                  <ArrowRight size={18} strokeWidth={1.5} className="text-ink-3" aria-hidden />
+                </button>
+              </Card>
+            ))}
         </section>
       )}
 
@@ -174,6 +244,43 @@ export default function RepaymentPage() {
           </Button>
         </Card>
       )}
+
+      {/* Talk to us: callback or message; open requests show their status */}
+      <section className="space-y-3">
+        <SectionLabel>{t('rep.talk.label')}</SectionLabel>
+        {cases.map((c) => {
+          const reply = [...c.messages].reverse().find((m) => m.from === 'agent')
+          return (
+            <Card key={c.id} as="article">
+              <div className="flex items-start justify-between gap-3">
+                <p className="t-body-strong">{c.topic === 'callback' ? t('rep.talk.callbackOpen') : t('rep.talk.messageOpen')}</p>
+                <Chip tone="pending" size="sm">
+                  {t('rep.talk.open')}
+                </Chip>
+              </div>
+              <p className="mt-1 t-caption font-normal text-ink-2">{c.slot ? t('rep.talk.slot', { slot: c.slot }) : t('rep.talk.replyBy')}</p>
+              {reply && <p className="mt-3 rounded-control bg-surface-muted p-3 t-body-sm">{t('rep.talk.reply', { body: reply.body })}</p>}
+            </Card>
+          )
+        })}
+        <Card padded={false} className="divide-y divide-hairline">
+          {(
+            [
+              ['callback', <Phone key="p" size={20} strokeWidth={1.5} />],
+              ['message', <MessageSquare key="m" size={20} strokeWidth={1.5} />],
+            ] as const
+          ).map(([k, icon]) => (
+            <button key={k} onClick={() => setSheet(k)} className="flex w-full items-center gap-3 px-4 py-3 text-left">
+              <IconTile>{icon}</IconTile>
+              <span className="min-w-0 flex-1">
+                <span className="block t-body-strong">{t(`rep.talk.${k}`)}</span>
+                <span className="block t-caption font-normal text-ink-2">{t(`rep.talk.${k}Body`)}</span>
+              </span>
+              <ArrowRight size={18} strokeWidth={1.5} className="text-ink-3" aria-hidden />
+            </button>
+          ))}
+        </Card>
+      </section>
 
       {/* Payments */}
       <section className="space-y-3">
@@ -252,6 +359,55 @@ export default function RepaymentPage() {
           )}
         </Sheet>
       ))}
+      <Sheet
+        open={sheet === 'callback'}
+        onClose={() => setSheet(null)}
+        title={t('rep.talk.callback')}
+        closeLabel={t('action.close')}
+        footer={
+          <Button block loading={busy} onClick={() => run(() => requestCallback(id, t(`rep.slot.${slot}`), text.trim()), t('rep.talk.callbackDone'))}>
+            {t('rep.talk.callbackSubmit')}
+          </Button>
+        }
+      >
+        <p className="t-body text-ink-2">{t('rep.talk.callbackHint')}</p>
+        <div className="mt-4">
+          <ChipSelect label={t('rep.talk.when')} value={[slot]} onChange={(v) => setSlot(v[0] ?? slot)} options={SLOTS.map((x) => ({ value: x, label: t(`rep.slot.${x}`) }))} />
+        </div>
+        <Textarea className="mt-4" label={t('rep.talk.about')} value={text} onChange={(e) => setText(e.target.value)} />
+      </Sheet>
+
+      <Sheet
+        open={sheet === 'message'}
+        onClose={() => setSheet(null)}
+        title={t('rep.talk.message')}
+        closeLabel={t('action.close')}
+        footer={
+          <Button block loading={busy} disabled={text.trim().length < 3} onClick={() => run(() => messagePtptn(id, text.trim()), t('rep.talk.messageDone'))}>
+            {t('rep.talk.send')}
+          </Button>
+        }
+      >
+        <p className="t-body text-ink-2">{t('rep.talk.messageHint')}</p>
+        <Textarea className="mt-4" rows={4} label={t('rep.talk.yourMessage')} value={text} onChange={(e) => setText(e.target.value)} />
+      </Sheet>
+
+      <Sheet
+        open={sheet === 'promise'}
+        onClose={() => setSheet(null)}
+        title={t('rep.promise.title')}
+        closeLabel={t('action.close')}
+        footer={
+          <Button block loading={busy} onClick={() => run(() => promiseToPay(id, promiseDate), t('rep.promise.done'))}>
+            {t('rep.promise.submit')}
+          </Button>
+        }
+      >
+        <p className="t-body text-ink-2">{t('rep.promise.hint', { amount: formatRM(data.missedAmountRM) })}</p>
+        <div className="mt-4">
+          <ChipSelect label={t('rep.promise.by')} value={[promiseDate]} onChange={(v) => setPromiseDate(v[0] ?? promiseDate)} options={PROMISE_DATES.map((d) => ({ value: d, label: formatDate(d, lang, 'long') }))} />
+        </div>
+      </Sheet>
     </StudentPage>
   )
 }

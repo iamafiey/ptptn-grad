@@ -4,7 +4,7 @@ import { Note } from '@/components/ui/Note'
 import { useT } from '@/i18n'
 import type { OfficerRole } from '@/types/domain'
 
-const ALLOWED: OfficerRole[] = ['collectionLiaison', 'superAdmin']
+const ALLOWED: OfficerRole[] = ['collectionLiaison', 'customerServiceAgent', 'superAdmin']
 
 /** Repayment fields render only for the collection liaison and super admin; everyone else sees a lock note. */
 export function RepaymentGate({ role, children, quiet }: { role: OfficerRole; children: ReactNode; quiet?: boolean }) {

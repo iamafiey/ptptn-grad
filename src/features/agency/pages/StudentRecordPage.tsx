@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { ArrowLeft, Eye, MessageSquare, PauseCircle, PlayCircle, RefreshCw } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Eye, MessageSquare, PauseCircle, PlayCircle, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Chip } from '@/components/ui/Chip'
@@ -23,6 +23,7 @@ import { addStudentNote, getStudentRecord, messageStudent, revealIdentity, toggl
 import { AI_VERSIONS, skillById } from '@/services/taxonomy'
 import type { ScoredSkill } from '@/types/domain'
 import type { StudentSeed } from '@/data/students'
+import { canAccess } from '../nav'
 import { AgencyPage } from '../shell/AgencyPage'
 import { STAGE_TONE } from '../tones'
 import { useOfficer } from '../useOfficer'
@@ -165,6 +166,11 @@ export default function StudentRecordPage() {
               <RepaymentGate role={role}>
                 <Note tone="muted">{t('st.repaymentDetail', { status: repayment ? t(`rep.status.${repayment.status}`) : t('rep.status.goodStanding') })}</Note>
               </RepaymentGate>
+              {repayment && canAccess(`/a/collections/borrowers/${studentId}`, role) && (
+                <Link to={`/a/collections/borrowers/${studentId}`} className="mt-3 inline-flex items-center gap-1 t-caption text-ink-2 hover:text-ink">
+                  {t('col.rec.openInCollections')} <ArrowUpRight size={14} strokeWidth={1.5} />
+                </Link>
+              )}
             </div>
           </Card>
 

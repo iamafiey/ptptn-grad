@@ -8,5 +8,6 @@ export const officers: Officer[] = [
   { id: 'off-ai', name: 'Dr. Harith Zulkifli', role: 'aiGovernanceLead', initials: 'HZ' },
   { id: 'off-lm', name: 'Puan Saraswathy Nair', role: 'learningManager', initials: 'SN' },
   { id: 'off-cl', name: 'Encik Faizal Hamdan', role: 'collectionLiaison', initials: 'FH' },
+  { id: 'off-cs', name: 'Cik Aina Roslan', role: 'customerServiceAgent', initials: 'AR' },
   { id: 'off-lv', name: 'Datin Norhayati Osman', role: 'leadershipViewer', initials: 'NO' },
 ]

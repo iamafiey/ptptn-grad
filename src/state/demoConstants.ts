@@ -10,5 +10,6 @@ export const OFFICER_ROLES: OfficerRole[] = [
   'aiGovernanceLead',
   'learningManager',
   'collectionLiaison',
+  'customerServiceAgent',
   'leadershipViewer',
 ]

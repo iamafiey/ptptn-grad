@@ -41,6 +41,8 @@ export const QUEUE_DEFS: QueueDef[] = [
   { id: 'lowConfidence', ownerRole: 'aiGovernanceLead', title: { en: 'Low-confidence profiles', ms: 'Profil keyakinan rendah' }, slaWorkingDays: 5 },
   { id: 'tierOverrides', ownerRole: 'collectionLiaison', title: { en: 'Tier overrides', ms: 'Pengecualian tahap' }, slaWorkingDays: 1 },
   { id: 'courseSubmissions', ownerRole: 'learningManager', title: { en: 'Course submissions', ms: 'Penyerahan kursus' }, slaWorkingDays: 5 },
+  { id: 'earlyWarning', ownerRole: 'collectionLiaison', title: { en: 'Early-warning follow-ups', ms: 'Susulan amaran awal' }, slaWorkingDays: 2 },
+  { id: 'serviceDesk', ownerRole: 'customerServiceAgent', title: { en: 'Service desk cases', ms: 'Kes meja khidmat' }, slaWorkingDays: 1 },
 ]
 
 // ---------------------------------------------------------------- Evidence cases (synthetic)

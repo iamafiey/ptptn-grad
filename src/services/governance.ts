@@ -92,9 +92,9 @@ export function listChanges() {
 }
 
 export async function proposeChange(officer: Officer, req: Omit<ChangeRequest, 'id' | 'drafter' | 'status' | 'createdAt'>) {
-  const id = `CR-${req.kind === 'rubric' ? 'RB' : 'TR'}-${readDb().changeRequests.length + 101}`
+  const id = `CR-${{ rubric: 'RB', tierRules: 'TR', plan: 'FP' }[req.kind]}-${readDb().changeRequests.length + 101}`
   writeDb((d) => d.changeRequests.unshift({ ...req, id, drafter: officer.id, status: 'pendingApproval', createdAt: '2026-10-07' }))
-  logAudit(officer, req.kind === 'rubric' ? 'Drafted rubric change' : 'Drafted tier rule change', req.kind, id, req.title)
+  logAudit(officer, { rubric: 'Drafted rubric change', tierRules: 'Drafted tier rule change', plan: 'Drafted follow-up plan change' }[req.kind], req.kind, id, req.title)
   return delay(id, 250)
 }
 
@@ -108,7 +108,7 @@ export async function approveChange(officer: Officer, id: string) {
     c.approver = officer.id
     c.effectiveAt = c.kind === 'tierRules' ? '2026-10-14' : '2026-10-07'
   })
-  logAudit(officer, cr.kind === 'rubric' ? 'Approved and published rubric change' : 'Approved tier rule change (two-person rule)', cr.kind, id, cr.title)
+  logAudit(officer, { rubric: 'Approved and published rubric change', tierRules: 'Approved tier rule change (two-person rule)', plan: 'Approved follow-up plan change (two-person rule)' }[cr.kind], cr.kind, id, cr.title)
   return delay(readDb().changeRequests.find((c) => c.id === id)!, 300)
 }
 

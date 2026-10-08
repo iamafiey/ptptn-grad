@@ -4,6 +4,7 @@ import { INVITATIONS, PARTNERS, PARTNER_ROLES } from '@/data/partners'
 import { DISPUTES_SEED, FLAGS_SEED, OVERRIDES_SEED, type DisputeCase, type OverrideRequest } from '@/data/agency6'
 import { JOB_LOG_SEED, LOG_EVIDENCE_PREVIEW, NOTIFICATIONS_SEED, REPAYMENT_SEED } from '@/data/jobLog'
 import { COURSES, ENROLMENTS_SEED } from '@/data/courses'
+import { CASES_SEED, PLANS_SEED, type FollowUpPlan, type ServiceCase } from '@/data/collections'
 import { CHAT_FLAGS_SEED, DATA_REQUESTS_SEED, type ChatFlag, type DataRequest } from '@/data/settingsAdmin'
 import { AUDIT_SEED, GENERIC_CASES, PLACEMENTS, buildEvidenceCases, type EvidenceCase, type GenericCase } from '@/data/agency'
 import type { AccountFlag, AppNotification, AuditEntry, Course, Enrolment, Invitation, JobLogEntry, PartnerRole, Placement, RepaymentAccount, TalentPartner } from '@/types/domain'
@@ -42,12 +43,45 @@ interface Db {
   chatFlags: ChatFlag[]
   /** Safety kill switch: all partner outreach paused. */
   outreachPaused: boolean
+  collections: CollectionsState
+}
+
+/** Collections & customer service state (docs/collections-flow.md). */
+export interface CollectionsState {
+  plans: FollowUpPlan[]
+  cases: ServiceCase[]
+  contacts: ContactEvent[]
+  offers: WayBackOffer[]
+  /** Borrowers whose plan an officer paused. */
+  pausedPlans: string[]
+  promises: Record<string, { date: string; at: string }>
+  scoreFlags: { borrowerId: string; by: string; reason: string; at: string }[]
+  /** Plan call tasks already handled. */
+  doneTasks: string[]
+}
+export interface ContactEvent {
+  id: string
+  borrowerId: string
+  at: string
+  kind: 'message' | 'call' | 'offer' | 'promise' | 'case' | 'note'
+  channel?: string
+  text: string
+  by: string
+  outcome?: string
+}
+export interface WayBackOffer {
+  id: string
+  borrowerId: string
+  kind: 'salaryDeduction' | 'restructure' | 'deferment'
+  by: string
+  at: string
+  status: 'sent' | 'accepted'
 }
 
 /** Two-person-rule change (rubric or tier rules): draft → pending approval → published. */
 export interface ChangeRequest {
   id: string
-  kind: 'rubric' | 'tierRules'
+  kind: 'rubric' | 'tierRules' | 'plan'
   title: string
   detail: string
   /** For tier rules: the settings patch to apply on publish. */
@@ -86,6 +120,7 @@ function seed(): Db {
     dataRequests: clone(DATA_REQUESTS_SEED),
     chatFlags: clone(CHAT_FLAGS_SEED),
     outreachPaused: false,
+    collections: { plans: clone(PLANS_SEED), cases: clone(CASES_SEED), contacts: [], offers: [], pausedPlans: [], promises: {}, scoreFlags: [], doneTasks: [] },
   }
 }
 

@@ -15,8 +15,8 @@ import { logAudit } from '@/services/audit'
 import { useDemo } from '@/state/DemoProvider'
 import type { Officer, QueueId } from '@/types/domain'
 
-const QUEUES: QueueId[] = ['evidence', 'placements', 'partnerRoleApprovals', 'partnerApplications', 'portalFeedIssues', 'skillDisputes', 'lowConfidence', 'tierOverrides', 'courseSubmissions']
-const GROUPS = ['sla', 'partners', 'placements', 'jobSeeking', 'records', 'taxonomy', 'retention', 'ai', 'student'] as const
+const QUEUES: QueueId[] = ['evidence', 'placements', 'partnerRoleApprovals', 'partnerApplications', 'portalFeedIssues', 'skillDisputes', 'lowConfidence', 'tierOverrides', 'courseSubmissions', 'earlyWarning', 'serviceDesk']
+const GROUPS = ['sla', 'partners', 'placements', 'jobSeeking', 'records', 'taxonomy', 'retention', 'ai', 'collections', 'student'] as const
 
 /** Every open decision from the specs as a live setting. Saving applies it everywhere and is audited. */
 export function ProgrammeTab({ officer, canEdit }: { officer: Officer; canEdit: boolean }) {
@@ -88,11 +88,48 @@ export function ProgrammeTab({ officer, canEdit }: { officer: Officer; canEdit: 
           <Field label={t('se.ps.agreementAlert')} type="number" min={50} max={100} disabled={!canEdit} value={d.ai.agreementAlertThreshold} onChange={(e) => set('ai', { agreementAlertThreshold: num(e.target.value, d.ai.agreementAlertThreshold) })} />
         </Group>
 
+        <Group title={t('se.ps.g.collections')}>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Field label={t('se.ps.col.watch')} type="number" min={0} max={100} disabled={!canEdit} value={d.collections.watchThreshold} onChange={(e) => set('collections', { watchThreshold: num(e.target.value, d.collections.watchThreshold) })} />
+            <Field label={t('se.ps.col.high')} type="number" min={0} max={100} disabled={!canEdit} value={d.collections.highThreshold} onChange={(e) => set('collections', { highThreshold: num(e.target.value, d.collections.highThreshold) })} />
+            <Field label={t('se.ps.col.cap')} type="number" min={1} max={7} disabled={!canEdit} value={d.collections.contactCapPerWeek} onChange={(e) => set('collections', { contactCapPerWeek: num(e.target.value, d.collections.contactCapPerWeek) })} />
+            <Field
+              label={t('se.ps.col.quiet')}
+              type="number"
+              min={0}
+              max={23}
+              disabled={!canEdit}
+              value={d.collections.quietHours.end}
+              onChange={(e) => set('collections', { quietHours: { ...d.collections.quietHours, end: num(e.target.value, d.collections.quietHours.end) } })}
+            />
+          </div>
+          <ChipSelect
+            multiple
+            label={t('se.ps.col.channels')}
+            value={d.collections.channels}
+            onChange={(v) => canEdit && v.length > 0 && set('collections', { channels: v })}
+            options={(['inApp', 'sms', 'email', 'whatsapp'] as const).map((c) => ({ value: c, label: t(`col.channel.${c}`) }))}
+          />
+          <Toggle checked={d.collections.agentsSeeAmounts} onChange={(v) => canEdit && set('collections', { agentsSeeAmounts: v })} label={t('se.ps.col.amounts')} description={t('se.ps.col.amountsHint')} />
+          <Select
+            size="sm"
+            label={t('se.ps.col.approval')}
+            disabled={!canEdit}
+            value={d.collections.planApproval}
+            onChange={(e) => set('collections', { planApproval: e.target.value as ProgrammeSettings['collections']['planApproval'] })}
+            options={[
+              { value: 'twoPerson', label: t('se.ps.col.twoPerson') },
+              { value: 'single', label: t('se.ps.col.single') },
+            ]}
+          />
+        </Group>
+
         <Group title={t('se.ps.g.elsewhere')}>
           <ul className="space-y-2 t-body-sm">
             {(
               [
                 ['/a/tiers', 'se.ps.link.tiers'],
+                ['/a/collections/plans', 'se.ps.link.plans'],
                 ['/a/ai/evidence-rules', 'se.ps.link.evidence'],
                 ['/a/partners/portals', 'se.ps.link.portals'],
               ] as const

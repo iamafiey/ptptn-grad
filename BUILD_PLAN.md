@@ -26,9 +26,18 @@ If this plan and the specs disagree, the specs win.
 | 5 | Agency Home, queues, evidence verification, partner role approvals | ✅ Done |
 | 6 | Agency Partners, Students, AI governance, Tier rules (and Learn catalogue, see §9) | ✅ Done |
 | 7 | Agency Reports, audit log, polish, demo walkthrough script | ✅ Done |
+| 8 | Collections & customer service (`docs/collections-flow.md`) | ✅ Done |
 
 ### Phase log
 
+- **8 (Collections & customer service).** Built to `docs/collections-flow.md`:
+  - New officer role *Customer service agent*; the old *Repayment tiers* section is now **Collections** (Overview, Borrowers, Follow-up plans, Service desk, plus the tier pages). Nav items carry their own roles (`canAccess`).
+  - Deterministic early-warning score (`services/collections.ts`, `earlywarn-0.3`) with reasons, mitigating signals, confidence and a "Doesn't look right?" flag. It orders work only; it never changes tiers.
+  - Segments with follow-up plans that run within quiet hours and a weekly contact cap; plan edits use the two-person rule (or a single approver, a setting).
+  - Service desk with an AI assist (summary, next step, editable drafts). Agents see amounts for borrowers on their open cases (a setting).
+  - Student Repayment: officer offers (incl. deferment), promise to pay, Talk to us (callback, message) with case status.
+  - New queues (Early-warning follow-ups, Service desk), a *Collections performance* report and an *Early warning & contact rules* settings group. Consent text names repayment, job-search and app-activity signals.
+  - Checks: typecheck, lint, build, smoke (94 passing); screenshots at 1440, 390 and 360, BM and dark; no overflow at 360.
 - **Client decisions after the 1a review** (these override `docs/visual-direction.md`):
   - Inter only, everywhere: no serif and no Geist. Display headlines are Inter 600 with tight tracking; the accent phrase renders in ink-2 instead of italic serif.
   - Corner radius max 8px: 4px chips, 6px controls, 8px cards, hero, sheets and tab bar. No pill buttons.
@@ -258,6 +267,10 @@ The sidebar sections and their visibility follow the admin spec's navigation tab
 | `/a/ai/rubric` | Rubric change flow: draft → impact preview (up/down/unchanged by institution and programme) → second approver → publish | Rubric change |
 | `/a/ai/evidence-rules` | Evidence checks and the auto-verify confidence threshold (configurable) | Open decision |
 | `/a/ai/quality` | Weekly sample review, AI–reviewer agreement and threshold alert, low-confidence holds, fairness view | AI quality |
+| `/a/collections` | Collections overview: on-time share, Watch/High counts, today's work, past-due trend, segments, fairness check | Collections → Overview |
+| `/a/collections/borrowers(/:id)` | Worklist by early-warning score with saved views; borrower record with payment strip, explained score, plan, actions, timeline | Borrowers |
+| `/a/collections/plans` | Follow-up plans per segment, editor with preview, two-person approval | Follow-up plans |
+| `/a/collections/service` | Service desk: callbacks, messages, plan call tasks, AI assist, reply and resolve | Service desk |
 | `/a/tiers` | Rule table (versioned) → change flow with impact preview → second approver → scheduled effect plus student notice preview | Tier rules |
 | `/a/tiers/sync` | Sync monitor (last sync, records, errors), "no downgrade on missing data" banner | Sync monitor |
 | `/a/tiers/overrides` | Override requests with proof → restore Tier A for N days → auto-expiry | Overrides |

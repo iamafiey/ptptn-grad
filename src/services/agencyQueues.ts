@@ -7,6 +7,7 @@ import { delay } from './delay'
 import { listOpenEvidence } from './evidenceReview'
 import { listPendingRoles } from './roleApprovals'
 import { buildDisputes } from './disputes'
+import { buildBorrowers, earlyWarningQueue, openDeskCases, signalText } from './collections'
 import { skillById } from './taxonomy'
 
 // Agency queues: counts, oldest age and SLA in working days (docs §Admin home).
@@ -77,7 +78,22 @@ export function buildQueueRows(queueId: QueueId, s: ProgrammeSettings): QueueRow
       const age = workingDaysSince(x.openedAt)
       return { id: x.id, queueId, subject: `Student ${x.studentCode}`, reason: { en: `Disputes ${skillById(x.skillId)?.name.en ?? x.skillId} (${x.level})`, ms: `Mempertikaikan ${skillById(x.skillId)?.name.ms ?? x.skillId}` }, ai: { action: 'escalate' as const, confidence: 0.7, rationale: x.aiRationale }, createdAt: x.openedAt, age, sla: slaStatus(age, s.sla.skillDisputes), detail: [], href: `/a/students/disputes?case=${x.id}` }
     })
-  else rows = genericRows(queueId, s)
+  else if (queueId === 'earlyWarning')
+    rows = earlyWarningQueue(s).map((b) => {
+      const createdAt = b.planStartedAt ?? b.lastContactAt ?? TODAY
+      const age = workingDaysSince(createdAt)
+      const top = b.risk.reasons[0]
+      return { id: `EW-${b.code}`, queueId, subject: `Borrower ${b.code}`, reason: top ? signalText(top) : { en: 'High risk', ms: 'Risiko tinggi' }, ai: { action: 'escalate' as const, confidence: b.risk.confidence, rationale: `Score ${b.risk.score}` }, createdAt, age, sla: slaStatus(age, s.sla.earlyWarning), detail: [], href: `/a/collections/borrowers/${b.id}` }
+    })
+  else if (queueId === 'serviceDesk') {
+    const borrowers = buildBorrowers(s)
+    rows = openDeskCases(s).map((c) => {
+      const age = workingDaysSince(c.openedAt)
+      const code = borrowers.find((b) => b.id === c.borrowerId)?.code ?? c.borrowerId
+      const reason: LocalizedText = { callback: { en: 'Callback requested', ms: 'Panggilan balik diminta' }, message: { en: 'Message from borrower', ms: 'Mesej daripada peminjam' }, planCall: { en: 'Follow-up plan call', ms: 'Panggilan pelan susulan' }, paymentQuestion: { en: 'Payment question', ms: 'Soalan bayaran' } }[c.topic]
+      return { id: c.id, queueId, subject: `Borrower ${code}`, reason, createdAt: c.openedAt, age, sla: slaStatus(age, s.sla.serviceDesk), detail: [], href: `/a/collections/service?case=${c.id}` }
+    })
+  } else rows = genericRows(queueId, s)
   return rows.sort((a, b) => b.age - a.age)
 }
 

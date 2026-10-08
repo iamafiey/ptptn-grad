@@ -4,7 +4,7 @@ import { useT } from '@/i18n'
 import { cn } from '@/lib/cn'
 import { getOfficerForRole } from '@/services/demo'
 import { useDemo } from '@/state/DemoProvider'
-import { AGENCY_SECTIONS, canSee, sectionForPath } from '../nav'
+import { AGENCY_SECTIONS, canSee, itemsFor, sectionForPath } from '../nav'
 import { asset } from '@/lib/asset'
 
 /** Frosted sidebar. Sections are filtered by the current officer role; the active section expands. */
@@ -26,10 +26,11 @@ export function Sidebar({ onNavigate, footer }: { onNavigate?: () => void; foote
           {AGENCY_SECTIONS.filter((s) => canSee(s, officerRole)).map((s) => {
             const on = activeSection?.id === s.id
             const Icon = s.icon
+            const items = itemsFor(s, officerRole)
             return (
               <li key={s.id}>
                 <NavLink
-                  to={s.items?.[0].path ?? s.path}
+                  to={items[0]?.path ?? s.path}
                   onClick={onNavigate}
                   className={cn(
                     'flex h-10 items-center gap-3 rounded-control px-3 t-body-sm font-medium transition-colors',
@@ -39,9 +40,9 @@ export function Sidebar({ onNavigate, footer }: { onNavigate?: () => void; foote
                   <Icon size={18} strokeWidth={1.5} aria-hidden />
                   {t(s.label)}
                 </NavLink>
-                {on && s.items && (
+                {on && items.length > 0 && (
                   <ul className="mb-2 mt-1 space-y-0.5 border-l border-hairline pl-3 ml-5">
-                    {s.items.map((it) => (
+                    {items.map((it) => (
                       <li key={it.path}>
                         <NavLink
                           to={it.path}

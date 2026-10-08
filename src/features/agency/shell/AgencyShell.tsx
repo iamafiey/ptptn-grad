@@ -8,7 +8,7 @@ import { IconTile } from '@/components/ui/Tiles'
 import { useT } from '@/i18n'
 import { studentHomePath } from '@/services/students'
 import { useDemo, type AppRole } from '@/state/DemoProvider'
-import { canSee, sectionForPath } from '../nav'
+import { canAccess } from '../nav'
 import { AgencyHeader } from './AgencyHeader'
 import { Sidebar } from './Sidebar'
 
@@ -34,8 +34,7 @@ export default function AgencyShell() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const [drawer, setDrawer] = useState(false)
-  const section = sectionForPath(pathname)
-  const allowed = !section || canSee(section, officerRole)
+  const allowed = canAccess(pathname, officerRole)
 
   return (
     <div className="min-h-dvh bg-canvas t-body-sm">

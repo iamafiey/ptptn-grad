@@ -1,3 +1,4 @@
+import { DPD_TREND, PLAN_RESULTS, SEGMENT_NAMES, SEGMENT_ORDER } from '@/data/collections'
 import type { ProgrammeSettings } from '@/config/programmeSettings'
 import { AGREEMENT_WEEKLY, FAIRNESS_INSTITUTION } from '@/data/agency6'
 import { COHORT_BASE, COHORT_CURVES, INSTITUTION_SHARE, MONTHLY, MONTHS, PORTAL_SHARE, REPAYMENT_START, REPORT_DEFS, STATE_SHARE, type ReportId } from '@/data/reports'
@@ -152,6 +153,36 @@ export function buildReport(id: ReportId, f: ReportFilters, settings: ProgrammeS
           title: 'rp.t.repaymentStart',
           columns: ['ai.q.col.group', 'ai.q.col.students', 'rp.col.started', 'rp.k.deferments'],
           rows: REPAYMENT_START.map((g) => [g.group, n(g.students), `${r(g.started * 100, g.group.en)}%`, n(g.deferments)]),
+        },
+      }
+    }
+    case 'collections': {
+      const pastDue31 = (i: number) => DPD_TREND[i].b2 + DPD_TREND[i].b3
+      const segs = SEGMENT_ORDER.filter((x) => PLAN_RESULTS[x].paidWithin30 > 0)
+      return {
+        id,
+        cadence,
+        kpis: [
+          { label: 'rp.k.onTime', value: r(last(MONTHLY.onTime), 'ot'), previous: r(prev(MONTHLY.onTime), 'ot'), format: 'percent', better: 'up' },
+          { label: 'rp.k.pastDue31', value: n(pastDue31(11)), previous: n(pastDue31(10)), format: 'number', better: 'down' },
+          { label: 'rp.k.promiseKept', value: r(last(MONTHLY.promiseKept), 'pk'), previous: r(prev(MONTHLY.promiseKept), 'pk'), format: 'percent', better: 'up' },
+          { label: 'rp.k.recoveries', value: n(last(MONTHLY.recoveries)), previous: n(prev(MONTHLY.recoveries)), format: 'number', better: 'up' },
+        ],
+        chart: {
+          title: 'rp.c.pastDue',
+          kind: 'stacked',
+          data: series(f, { b1: DPD_TREND.map((x) => x.b1), b2: DPD_TREND.map((x) => x.b2), b3: DPD_TREND.map((x) => x.b3) }, k),
+          series: [
+            { key: 'b1', label: 'rp.s.dpd1' },
+            { key: 'b2', label: 'rp.s.dpd2' },
+            { key: 'b3', label: 'rp.s.dpd3' },
+          ],
+          format: 'number',
+        },
+        table: {
+          title: 'rp.t.planResults',
+          columns: ['col.col.segment', 'rp.col.entered', 'rp.col.paid30', 'rp.col.rate'],
+          rows: segs.map((x) => [SEGMENT_NAMES[x], n(PLAN_RESULTS[x].entered), n(PLAN_RESULTS[x].paidWithin30), `${r((PLAN_RESULTS[x].paidWithin30 / PLAN_RESULTS[x].entered) * 100, x)}%`]),
         },
       }
     }

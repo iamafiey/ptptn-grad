@@ -17,7 +17,7 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 
 ## Hard constraints
 - Repayment data never reaches job/employer UI: those components get `RoleAccess` only. No "arrears", no amounts on Home or job screens.
-- Agency repayment fields render only for collection liaison and super admin (`RepaymentGate`).
+- Agency repayment fields render only for collection liaison, customer service agent and super admin (`RepaymentGate`); agents see amounts only when `settings.collections.agentsSeeAmounts`.
 - Employer views go through `toEmployerView()` until a student accepts contact.
 - Fictional data only; masked ICs; no scraping or real portal calls.
 
@@ -51,6 +51,7 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - Course thumbnails: 16:9 illustrations in `public/thumbnails/<courseId>.svg` (`default.svg` for new courses), resolved with `courseThumb()` from `services/courses`. `CourseCard` has `layout="full"` (sections) and `"tile"` (the Browse grid).
 - Profile skills: category tabs + search over compact `SkillRow`s (category illustration from `categoryThumb()`, `public/skill-categories/<categoryId>.svg`); tapping a row opens the skill sheet. The skill CV button is sticky above the tab bar.
 - Theme: `useDemo().theme` (`system`/`light`/`dark`, in memory) toggles `.dark` on `<html>`. Screenshot dark mode with `"dark": true` in a shots spec.
+- Collections (`docs/collections-flow.md`): all logic in `services/collections.ts` (score, segments, plans, service desk, student support); data in `data/collections.ts`. The score only orders work: never let it change tiers, benefits or anything student-facing. Gate amounts with `seesAmounts()` (`features/agency/collections/access.ts`). Nav items can narrow section roles (`roles` on the item); gate routes with `canAccess(pathname, role)`.
 - Charts: use `components/agency/Charts.tsx` (`ChartCard` with table view, `TrendChart`, `StackedBars`) and only `--series-1/2/3` (validated palette). Single series: no legend. Never dual axes. No tabular numerals on large standalone figures.
 
 ## Scripts
@@ -58,7 +59,7 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - `node scripts/shoot.mjs <url> <out.png> [w] [h] [fullPage 1|0] [js]`: screenshot plus console-error report (needs `vite preview` running).
 - `node scripts/check-overflow.mjs <url> [width]`: reports page-level horizontal scroll and the offending elements.
 - `node scripts/shots.mjs <spec.json>`: batch screenshots with preferences (role, persona, officerRole, lang) and click scripts. Fails on console errors or overflow.
-- `npm run smoke` (`node scripts/smoke.mjs`): click-through navigation checks (81). Extend it with new flows. CI (`.github/workflows/ci.yml`) runs typecheck, lint, build and smoke on every PR.
+- `npm run smoke` (`node scripts/smoke.mjs`): click-through navigation checks (94). Extend it with new flows. CI (`.github/workflows/ci.yml`) runs typecheck, lint, build and smoke on every PR.
 - `DEMO_SCRIPT.md`: the presenter walkthrough; keep its click labels in sync with `en.ts`.
 
 ## Workflow

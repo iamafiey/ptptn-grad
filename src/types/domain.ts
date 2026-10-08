@@ -167,9 +167,9 @@ export type RoleAccess = 'full' | 'locked' | 'hidden';     // the ONLY tier-deri
 export interface AppNotification { id: ID; studentId: ID; type: 'invitation' | 'invitationExpiring' | 'interview' | 'newMatches' | 'rescored' | 'paymentDue' | 'benefits' | 'evidence' | 'threshold'; channel: ('push' | 'sms' | 'email' | 'inApp' | 'digest')[]; body: LocalizedText; at: ISODate; read: boolean; link?: string; }
 
 // ---------- agency ----------
-export type OfficerRole = 'superAdmin' | 'programmeOfficer' | 'partnershipManager' | 'aiGovernanceLead' | 'learningManager' | 'collectionLiaison' | 'leadershipViewer';
+export type OfficerRole = 'superAdmin' | 'programmeOfficer' | 'partnershipManager' | 'aiGovernanceLead' | 'learningManager' | 'collectionLiaison' | 'customerServiceAgent' | 'leadershipViewer';
 export interface Officer { id: ID; name: string; role: OfficerRole; initials: string; }
-export type QueueId = 'evidence' | 'placements' | 'partnerRoleApprovals' | 'partnerApplications' | 'portalFeedIssues' | 'skillDisputes' | 'lowConfidence' | 'tierOverrides' | 'courseSubmissions';
+export type QueueId = 'evidence' | 'placements' | 'partnerRoleApprovals' | 'partnerApplications' | 'portalFeedIssues' | 'skillDisputes' | 'lowConfidence' | 'tierOverrides' | 'courseSubmissions' | 'earlyWarning' | 'serviceDesk';
 export interface QueueDef { id: QueueId; ownerRole: OfficerRole; title: LocalizedText; slaWorkingDays: number; }
 export interface QueueItem {
   id: ID; caseId: string; queueId: QueueId; subjectLabel: string;   // anonymised e.g. "Student S-20418"

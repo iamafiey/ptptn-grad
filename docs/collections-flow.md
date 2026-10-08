@@ -104,10 +104,11 @@ Rules, not black boxes: each borrower falls into one segment, and each segment h
 | --- | --- | --- |
 | On track | Paying on schedule or salary deduction active | None (thank-you at milestones) |
 | Grace · hired | In grace, employment confirmed | Set up repayment early (salary deduction offer) |
-| Grace ending · searching | Grace ends ≤ 60 days, meets job-seeking threshold | Deferment information + job support |
-| Grace ending · inactive | Grace ends ≤ 60 days, below threshold, low activity | Re-engage: job matches, learning, then repayment info |
+| Grace ending · searching | Grace ends ≤ 90 days, meets job-seeking threshold | Deferment information + job support |
+| Grace ending · inactive | Grace ends ≤ 90 days, below threshold, low activity | Re-engage: job matches, learning, then repayment info |
 | Employed · missed payment | Employment confirmed, DPD > 0 | Salary deduction offer → call task |
-| Behind · searching | DPD > 0, meets job-seeking threshold | Restructure or deferment offer |
+| Behind · searching | DPD > 0, at least half the job-seeking threshold | Restructure or deferment offer → call task |
+| Behind · no recent activity | DPD > 0, below half the threshold | Reminder → call task |
 | Unreachable | No successful contact in 60 days | Verify contact details → call task |
 | Restructured · at risk | Restructured plan, payment late | Gentle reminder → call task |
 
@@ -240,10 +241,10 @@ Rules, not black boxes: each borrower falls into one segment, and each segment h
 
 ## Demo walkthrough (how it plays in the pitch)
 
-1. **Collection liaison → Collections overview → High risk.** Kavitha is High. Top reasons: missed August payment, grace ended, no employment confirmed. Mitigating: active job search, 5 of 4 verified. Segment: *Behind · searching*.
+1. **Collection liaison → Collections overview → High risk.** Kavitha is High (score 90). Top reasons: missed the August payment, 53 days past due, job search 2 of 4 for two months. Segment: *Behind · searching*.
 2. **Open her record → Offer a way back → Restructure.** Her plan step is marked done.
 3. **Switch to the student app (Kavitha).** A notification and an offer card are on Repayment. She taps **Talk to us → Request callback**.
-4. **Customer service agent → Service desk.** Kavitha's callback case shows the AI summary and a reply draft in BM. The agent logs "reached · will accept restructure".
+4. **Customer service agent → Service desk.** Kavitha's callback case shows the AI summary and a reply draft in BM. The agent sends a reply from the AI draft and resolves the case as *Way back offered*.
 5. **Kavitha accepts in the app → simulate sync.** She's back in good standing, her plan stops automatically, and recoveries tick up on the overview.
 6. **Hafiz:** in grace and actively searching, so Watch → *Grace ending · searching* → deferment info message.
 7. **Nurul:** Low risk, no plan. Shows that most students are never contacted.

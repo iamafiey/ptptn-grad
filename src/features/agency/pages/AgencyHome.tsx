@@ -22,6 +22,8 @@ const QUEUE_HREF: Partial<Record<string, string>> = {
   partnerRoleApprovals: '/a/partners/approvals',
   placements: '/a/job-search/placements',
   skillDisputes: '/a/students/disputes',
+  earlyWarning: '/a/collections/borrowers?view=high',
+  serviceDesk: '/a/collections/service',
 }
 
 /** Command centre: what needs my action today, and is the programme on track. Queues first. */
@@ -88,7 +90,7 @@ export default function AgencyHome() {
           </dl>
         </SunriseCard>
 
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2">
           {/* Alerts */}
           <section>
             <SectionLabel className="mb-3">{t('ag.home.alerts')}</SectionLabel>

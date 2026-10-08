@@ -7,7 +7,7 @@ import { buildTierView } from './tiers'
 
 // Student-only repayment screen. This is the one student surface allowed to show amounts.
 
-export type WayBack = 'payMissed' | 'salaryDeduction' | 'restructure'
+export type WayBack = 'payMissed' | 'salaryDeduction' | 'restructure' | 'deferment'
 
 export interface RepaymentView {
   account: RepaymentAccount
@@ -58,7 +58,12 @@ export async function simulateSyncConfirmed(studentId: string) {
       a.method = 'restructured'
       a.restructureRequest = { status: 'approved', at: '2026-10-08' }
     }
-    a.status = 'goodStanding'
+    // Deferment pauses instalments for six months; missed months roll into the deferred balance.
+    if (kind === 'deferment' && a.status === 'grace') a.graceEndsAt = '2027-04-07'
+    else {
+      if (kind === 'deferment' && a.nextPayment) a.nextPayment = { ...a.nextPayment, dueAt: '2027-04-07' }
+      a.status = 'goodStanding'
+    }
     a.missedCount = 0
     d.notifications.unshift({ id: `n-restore-${studentId}`, studentId, type: 'benefits', channel: ['push'], body: { en: 'Your benefits are back. Premium roles are unlocked.', ms: 'Manfaat anda telah kembali. Peranan premium kini dibuka.' }, at: '2026-10-08T09:00:00+08:00', read: false, link: '/s/repayment' })
   })

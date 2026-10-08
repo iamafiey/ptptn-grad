@@ -48,7 +48,7 @@ export function AgencyHeader({ onMenu }: { onMenu: () => void }) {
             label={t('demo.officerRole')}
             hideLabel
             size="sm"
-            className="w-48"
+            className="w-48 sm:w-56"
             value={officerRole}
             onChange={(e) => setOfficerRole(e.target.value as typeof officerRole)}
             options={OFFICER_ROLES.map((r) => ({ value: r, label: t(`agency.role.${r}`) }))}

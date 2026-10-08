@@ -55,7 +55,7 @@ Clickable pitch prototype. No backend. Read `BUILD_PLAN.md` for routes, types, p
 - `node scripts/shoot.mjs <url> <out.png> [w] [h] [fullPage 1|0] [js]`: screenshot plus console-error report (needs `vite preview` running).
 - `node scripts/check-overflow.mjs <url> [width]`: reports page-level horizontal scroll and the offending elements.
 - `node scripts/shots.mjs <spec.json>`: batch screenshots with preferences (role, persona, officerRole, lang) and click scripts. Fails on console errors or overflow.
-- `node scripts/smoke.mjs`: click-through navigation checks (79). Extend it with new flows.
+- `npm run smoke` (`node scripts/smoke.mjs`): click-through navigation checks (79). Extend it with new flows. CI (`.github/workflows/ci.yml`) runs typecheck, lint, build and smoke on every PR.
 - `DEMO_SCRIPT.md`: the presenter walkthrough; keep its click labels in sync with `en.ts`.
 
 ## Workflow

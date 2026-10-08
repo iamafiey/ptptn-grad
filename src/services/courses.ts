@@ -140,3 +140,8 @@ export async function completeCourse(studentId: string, courseId: string): Promi
   const after = strongMatches(studentId)
   return delay({ skillId, from: from ?? 'foundation', to, newMatches: Math.max(0, after - before), reason: { en: 'Certificate attached to your skill as verified evidence.', ms: 'Sijil dilampirkan pada kemahiran anda sebagai bukti disahkan.' } }, 1400)
 }
+
+/** URL of a course's thumbnail illustration (default artwork for courses without one). */
+export function courseThumb(course: Pick<Course, 'thumbnail'>) {
+  return asset(course.thumbnail ?? 'thumbnails/default.svg')
+}

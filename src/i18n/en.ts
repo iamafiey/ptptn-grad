@@ -615,6 +615,7 @@ export const en = {
   'learn.previewNote': 'You can take the first module now. The full course is a benefit of good standing.',
   'learn.previewEnd': 'That’s the end of the preview. The full course unlocks with good standing.',
   'learn.locked': 'Full course with good standing',
+  'learn.lockedBadge': 'Locked',
   'learn.lockedNote': 'This course is a good-standing benefit. Free courses stay open to you.',
   'learn.completing': 'Attaching your certificate and re-scoring…',
   'learn.rescored': '{skill}: {from} → {to}',

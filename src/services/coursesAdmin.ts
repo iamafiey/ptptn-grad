@@ -59,6 +59,7 @@ export async function addCourse(officer: Officer, draft: CourseDraft) {
       status: 'live',
       enrolments: 0,
       completionRate: 0,
+      thumbnail: 'thumbnails/default.svg',
     }),
   )
   logAudit(officer, 'Published course', 'course', id, `${draft.title} → ${draft.skillIds.join(', ')}`)

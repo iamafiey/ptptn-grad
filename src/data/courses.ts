@@ -29,6 +29,7 @@ const c = (
   id, providerId, title: { en, ms }, skillIds, levelCap, durationHours, cost, costRM, format, hosted,
   certificate: hosted ? 'PTPTN-recognised certificate' : 'Provider certificate',
   tierAccess, status: 'live', enrolments, completionRate,
+  thumbnail: `thumbnails/${id}.svg`,
 })
 
 export const COURSES: Course[] = [

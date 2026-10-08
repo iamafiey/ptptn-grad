@@ -573,6 +573,7 @@ export const ms: Partial<Record<I18nKey, string>> = {
   'learn.previewNote': 'Anda boleh ambil modul pertama sekarang. Kursus penuh ialah manfaat kedudukan baik.',
   'learn.previewEnd': 'Itu penghujung pratonton. Kursus penuh dibuka dengan kedudukan baik.',
   'learn.locked': 'Kursus penuh dengan kedudukan baik',
+  'learn.lockedBadge': 'Dikunci',
   'learn.lockedNote': 'Kursus ini ialah manfaat kedudukan baik. Kursus percuma kekal terbuka untuk anda.',
   'learn.completing': 'Melampirkan sijil anda dan menilai semula…',
   'learn.rescored': '{skill}: {from} → {to}',

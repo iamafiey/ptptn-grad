@@ -9,7 +9,7 @@ A clickable, demo-ready prototype for a client pitch to PTPTN. It has no backend
 
 If this plan and the specs disagree, the specs win.
 
-**Status:** Phases 1–3 done. Next: Phase 4 (student Learn and Repayment).
+**Status:** Phases 1–4 done (student workspace complete). Next: Phase 5 (agency Home, queues, evidence verification, partner role approvals).
 
 ---
 
@@ -22,7 +22,7 @@ If this plan and the specs disagree, the specs win.
 | 1b | Shells for both roles, role switcher, navigation, i18n | ✅ Done |
 | 2 | Student onboarding, AI translation reveal, skill profile | ✅ Done |
 | 3 | Student Home and Opportunities (Partner roles, Open jobs, Job search log) | ✅ Done |
-| 4 | Student Learn, Repayment standing and tier states | ⬜ |
+| 4 | Student Learn, Repayment standing and tier states | ✅ Done |
 | 5 | Agency Home, queues, evidence verification, partner role approvals | ⬜ |
 | 6 | Agency Partners, Students, AI governance, Tier rules (and Learn catalogue, see §9) | ⬜ |
 | 7 | Agency Reports, audit log, polish, demo walkthrough script | ⬜ |
@@ -69,6 +69,19 @@ If this plan and the specs disagree, the specs win.
     - Log: monthly summary, log sheet with evidence upload or sample and live AI check, entry sheet with extracted fields, checks, confidence, model version, outcome updates and re-upload.
   - Notifications page with an unread dot on the bell.
   - Checks: typecheck, lint and build pass. 20 screenshots with no console errors or overflow. Smoke test: 33 checks, including a hard-constraint check that Kavitha's Home and Opportunities show no repayment amount or "arrears".
+- **4 (Learn and Repayment).**
+  - Learn: in progress (with a 5-day inactivity nudge), recommended for your top 3 gaps (one distinct course each), completed with certificates, browse all (All/Free).
+  - Course sheet: enrol (hosted) or track (external) → module-by-module progress → complete → certificate attached to the skill as verified evidence → re-score. "N new roles now match you" is counted from real before/after matches.
+  - Tier B course access follows each course's `tierAccess` and the `tierB.courses` setting: free stays full, premium is a first-module preview, Tier-A-only is locked.
+  - Gap view: current → target level, "Unlocks N more matches", 2–4 courses (added a free Report writing course so Hafiz's top gap has an option).
+  - Repayment (the only student screen with amounts):
+    - Status with a plain-language meaning; next payment or grace end; method.
+    - Pay now hands off to the official PTPTN channel.
+    - Benefits per tier state: unlocked / free + previews / paused.
+    - Job search counts toward deferment or restructuring; last 6 payments.
+    - Ways back (pay missed, salary deduction, restructure) → pending until sync → demo "simulate sync confirmed" → Tier A restore with the Sunrise celebration and notification.
+  - Tier B paused count: partner roles, profile boost and coaching (courses are partly available) = "3 benefits are paused", per spec.
+  - Checks: typecheck, lint and build pass. 12 screenshots with no console errors or overflow. Smoke test: 42 checks (Tier B preview cap, way back → restore → roles unlocked, gap → course → certificate → re-score).
 
 ---
 

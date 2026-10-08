@@ -39,7 +39,7 @@ export function matchJob(job: Pick<OpenJob, 'skillIds'>, skills: ScoredSkill[]) 
  * The gap that blocks the most matches: a skill the student lacks (or holds below the required level)
  * across partner roles and open jobs. "Unlocks N more matches" counts those listings.
  */
-export function topGap(skills: ScoredSkill[], roles: PartnerRole[], jobs: OpenJob[]) {
+export function rankedGaps(skills: ScoredSkill[], roles: PartnerRole[], jobs: OpenJob[]) {
   const counts = new Map<string, { n: number; target: SkillLevel }>()
   const bump = (id: string, target: SkillLevel) => {
     const cur = counts.get(id)
@@ -55,7 +55,11 @@ export function topGap(skills: ScoredSkill[], roles: PartnerRole[], jobs: OpenJo
     if (m.pct >= 50) for (const d of m.detail) if (!d.met) bump(d.skillId, 'working')
   }
   const mine = new Map(employerVisibleSkills(skills).map((s) => [s.skillId, s.level]))
-  const best = [...counts.entries()].sort((a, b) => b[1].n - a[1].n || a[0].localeCompare(b[0]))[0]
-  if (!best) return null
-  return { skillId: best[0], currentLevel: mine.get(best[0]) ?? null, targetLevel: best[1].target, unlocksMatches: best[1].n }
+  return [...counts.entries()]
+    .sort((a, b) => b[1].n - a[1].n || a[0].localeCompare(b[0]))
+    .map(([skillId, v]) => ({ skillId, currentLevel: mine.get(skillId) ?? null, targetLevel: v.target, unlocksMatches: v.n }))
+}
+
+export function topGap(skills: ScoredSkill[], roles: PartnerRole[], jobs: OpenJob[]) {
+  return rankedGaps(skills, roles, jobs)[0] ?? null
 }

@@ -53,3 +53,14 @@ export function roleAccess(studentId: string, role: PartnerRole, s: ProgrammeSet
   const ageDays = (TODAY.getTime() - new Date(role.postedAt).getTime()) / 86_400_000
   return ageDays >= s.tierB.earlyAccessDays ? 'full' : 'locked'
 }
+
+/**
+ * Course access by tier (spec: Tier B gets free courses plus first-module previews of premium courses).
+ * 'preview' = can start, but only module 1. Driven by each course's tierAccess and the tierB.courses setting.
+ */
+export function courseAccess(studentId: string, course: import('@/types/domain').Course, s: ProgrammeSettings): 'full' | 'preview' | 'locked' {
+  if (getTier(studentId, s) === 'A') return 'full'
+  if (course.cost === 'free' || course.tierAccess === 'all') return 'full'
+  if (course.tierAccess === 'tierAOnly') return 'locked'
+  return s.tierB.courses === 'freePlusPreviews' ? 'preview' : 'locked'
+}

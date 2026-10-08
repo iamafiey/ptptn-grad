@@ -5,13 +5,10 @@ import { PERSONA_IDS } from '@/state/demoConstants'
 
 // Each workspace loads in its own chunk.
 const studentShell = () => import('@/features/student/shell/StudentShell')
-const studentPages = () => import('@/features/student/pages/StudentPlaceholders')
 const onboarding = () => import('@/features/student/onboarding/OnboardingStep')
 const agencyShell = () => import('@/features/agency/shell/AgencyShell')
 const agencyPages = () => import('@/features/agency/pages/AgencyPlaceholders')
 
-type StudentPageName = Exclude<keyof Awaited<ReturnType<typeof studentPages>>, 'StudentPlaceholder'>
-const sp = (name: StudentPageName): RouteObject['lazy'] => async () => ({ Component: (await studentPages())[name] })
 
 type AgencyPageId = import('@/features/agency/pages/AgencyPlaceholders').AgencyPageId
 const ap = (page: AgencyPageId): RouteObject['lazy'] => async () => {
@@ -52,9 +49,9 @@ export const router = createBrowserRouter([
       { path: 'profile', lazy: async () => ({ Component: (await import('@/features/student/pages/ProfilePage')).default }) },
       { path: 'profile/cv', lazy: async () => ({ Component: (await import('@/features/student/pages/CvPage')).default }) },
       { path: 'opportunities', lazy: async () => ({ Component: (await import('@/features/student/pages/OpportunitiesPage')).default }) },
-      { path: 'learn', lazy: sp('LearnPage') },
-      { path: 'learn/gap/:skillId', lazy: sp('GapPage') },
-      { path: 'repayment', lazy: sp('RepaymentPage') },
+      { path: 'learn', lazy: async () => ({ Component: (await import('@/features/student/pages/LearnPage')).default }) },
+      { path: 'learn/gap/:skillId', lazy: async () => ({ Component: (await import('@/features/student/pages/GapPage')).default }) },
+      { path: 'repayment', lazy: async () => ({ Component: (await import('@/features/student/pages/RepaymentPage')).default }) },
       { path: 'notifications', lazy: async () => ({ Component: (await import('@/features/student/pages/NotificationsPage')).default }) },
     ],
   },

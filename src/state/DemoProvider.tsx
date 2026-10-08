@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useMemo, useState, type ReactNo
 import { DEFAULT_SETTINGS, type ProgrammeSettings } from '@/config/programmeSettings'
 import { readPref, writePref } from '@/lib/storage'
 import { resetDb } from '@/services/db'
+import { resetRepaymentDemo } from '@/services/repayment'
 import type { OfficerRole } from '@/types/domain'
 import { OFFICER_ROLES, PERSONA_IDS, type AppRole, type PersonaId } from './demoConstants'
 
@@ -50,6 +51,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   const updateSettings = useCallback((fn: (s: ProgrammeSettings) => ProgrammeSettings) => setSettings(fn), [])
   const resetDemo = useCallback(() => {
     setSettings(DEFAULT_SETTINGS)
+    resetRepaymentDemo()
     resetDb()
     setSeed((s) => s + 1)
   }, [])

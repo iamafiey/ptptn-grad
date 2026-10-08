@@ -43,6 +43,7 @@ export const COURSES: Course[] = [
   c('c-osh', 'teknik-hijau', 'Workplace Safety (OSH) Basics', 'Asas Keselamatan Tempat Kerja (KKP)', ['health-safety'], 'working', 8, 'free', undefined, 'selfPaced', true, 'all', 2750, 0.82),
   c('c-pm', 'bijak-niaga', 'Project Management Basics', 'Asas Pengurusan Projek', ['project-management', 'scheduling'], 'working', 12, 'free', undefined, 'selfPaced', true, 'all', 3010, 0.6),
   c('c-fin', 'bijak-niaga', 'Financial Statements for Beginners', 'Penyata Kewangan untuk Pemula', ['financial-analysis', 'budgeting'], 'working', 10, 'subsidised', 39, 'selfPaced', true, 'tierAFullTierBPreview', 1440, 0.57),
+  c('c-report', 'bijak-niaga', 'Report Writing for the Workplace', 'Penulisan Laporan di Tempat Kerja', ['report-writing'], 'working', 8, 'free', undefined, 'selfPaced', true, 'all', 2380, 0.74),
   c('c-present', 'bijak-niaga', 'Presenting with Confidence', 'Membentang dengan Yakin', ['public-speaking'], 'working', 6, 'free', undefined, 'live', true, 'all', 1880, 0.77),
   c('c-dm', 'cakna-kerjaya', 'Digital Marketing Bootcamp', 'Kem Pemasaran Digital', ['digital-marketing', 'social-media'], 'working', 30, 'paid', 450, 'live', false, 'tierAOnly', 540, 0.36),
   c('c-excel', 'akademi-digital', 'Advanced Excel for Business', 'Excel Lanjutan untuk Perniagaan', ['spreadsheet-modelling'], 'advanced', 10, 'free', undefined, 'selfPaced', true, 'all', 5120, 0.79),

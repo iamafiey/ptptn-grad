@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { Download, Eye, GraduationCap, Pencil, Search, X } from 'lucide-react'
+import { BookOpen, Briefcase, Clock, Download, Eye, FileText, GraduationCap, Info, Laptop, Pencil, Search, Trophy, UsersRound, X, type LucideIcon } from 'lucide-react'
+import { SegmentedControl } from '@/components/ui/SegmentedControl'
 import { Button, IconButton } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Chip } from '@/components/ui/Chip'
@@ -24,6 +25,7 @@ import { SkillSheet } from '../skills/SkillSheet'
 import { statusChip } from '../skills/skillHelpers'
 import { useStudent } from '../useStudent'
 
+const KIND_ICON: Partial<Record<Activity['kind'], LucideIcon>> = { club: UsersRound, partTime: Clock, internship: Briefcase, competition: Trophy, freelance: Laptop, coursework: BookOpen, fyp: FileText }
 const LEVEL_ORDER: SkillLevel[] = ['advanced', 'working', 'foundation']
 
 function fmtMonth(d: string) {
@@ -41,6 +43,8 @@ export default function ProfilePage() {
   const [openSkill, setOpenSkill] = useState<string | null>(null)
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState('')
+  const [view, setView] = useState<'skills' | 'experience'>('skills')
+  const [howOpen, setHowOpen] = useState(false)
 
   const skills = useMemo(() => data?.skills ?? [], [data])
   // Category tabs (only categories the student has skills in), each with its count.
@@ -120,9 +124,27 @@ export default function ProfilePage() {
             <p className="mt-2 t-caption font-normal text-ink-3">{t('profile.summary.ai')}</p>
           </Card>
 
+          <SegmentedControl<'skills' | 'experience'>
+            ariaLabel={t('student.profile.title')}
+            value={view}
+            onChange={setView}
+            options={[
+              { value: 'skills', label: `${t('profile.skills')} · ${skills.length}` },
+              { value: 'experience', label: `${t('profile.experience')} · ${activities.length + 1}` },
+            ]}
+          />
+
           {/* Skills: category tabs + search keep a long list short; rows open the skill sheet to edit. */}
+          {view === 'skills' && (
           <section>
-            <SectionLabel className="mb-3">
+            <SectionLabel
+              className="mb-3"
+              action={
+                <button onClick={() => setHowOpen(true)} className="inline-flex items-center gap-1 rounded-control px-1 t-caption text-ink-2 hover:text-ink">
+                  <Info size={14} strokeWidth={1.5} aria-hidden /> {t('profile.howItWorks')}
+                </button>
+              }
+            >
               {t('profile.skills')} · {skills.length}
             </SectionLabel>
             <label className="relative block">
@@ -166,7 +188,12 @@ export default function ProfilePage() {
               )}
               {groups.map((g) => (
                 <div key={g.id}>
-                  {tab === 'all' && <p className="mb-2 t-caption text-ink-2">{g.label}</p>}
+                  {tab === 'all' && (
+                    <p className="mb-2 flex items-center gap-2 t-caption text-ink-2">
+                      <img src={categoryThumb(g.id)} alt="" className="h-5 w-5 rounded-chip" />
+                      {g.label}
+                    </p>
+                  )}
                   <Card padded={false} className="divide-y divide-hairline overflow-hidden">
                     {g.skills.map((sk) => {
                       const chip = statusChip(sk)
@@ -190,72 +217,62 @@ export default function ProfilePage() {
             </div>
           </section>
 
-          {/* Timeline */}
-          <section>
-            <SectionLabel className="mb-3">{t('profile.timeline')}</SectionLabel>
-            <ol className="relative space-y-3 border-l border-hairline pl-5">
-              <li className="relative">
-                <span className="absolute -left-[25px] top-4 h-2 w-2 rounded-circle bg-ink" aria-hidden />
-                <Card className="flex gap-3">
-                  <IconTile>
+          )}
+
+          {/* Experience: one compact row per item, an icon per kind */}
+          {view === 'experience' && (
+            <section>
+              <Card padded={false} className="divide-y divide-hairline overflow-hidden">
+                <div className="flex gap-3 p-4">
+                  <IconTile className="bg-info text-info-ink">
                     <GraduationCap size={20} strokeWidth={1.5} />
                   </IconTile>
-                  <div className="min-w-0">
-                    <p className="t-caption text-ink-2">{t('profile.education')}</p>
+                  <div className="min-w-0 flex-1">
                     <p className="t-body-strong">{s.programme}</p>
                     <p className="t-caption font-normal text-ink-2">
-                      {s.institution} · {s.graduationYear}
+                      {s.institution} · <span className="tabular">{s.graduationYear}</span>
                     </p>
-                    {data.academic?.finalYearProject && (
-                      <p className="mt-1 t-caption font-normal text-ink-2">
-                        {t('onb.academic.fyp')}: {data.academic.finalYearProject.title}
-                      </p>
-                    )}
+                    {data.academic?.finalYearProject && <p className="mt-1 line-clamp-2 t-caption font-normal text-ink-2">{t('onb.academic.fyp')}: {data.academic.finalYearProject.title}</p>}
                   </div>
-                </Card>
-              </li>
-              {activities.map((a: Activity) => (
-                <li key={a.id} className="relative">
-                  <span className="absolute -left-[25px] top-4 h-2 w-2 rounded-circle bg-ink-3" aria-hidden />
-                  <Card>
-                    <p className="t-caption text-ink-2">
-                      {t(`kind.${a.kind}`)} · <span className="tabular">{fmtMonth(a.startDate)} – {a.endDate ? fmtMonth(a.endDate) : '…'}</span>
-                    </p>
-                    <p className="t-body-strong">{a.role}</p>
-                    <p className="t-caption font-normal text-ink-2">{a.organisation}</p>
-                    {a.skillIds.length > 0 && (
-                      <div className="mt-2 flex flex-wrap gap-1.5">
-                        {a.skillIds.map((sid) => (
-                          <button key={sid} onClick={() => setOpenSkill(sid)} className="rounded-chip">
-                            <Chip tone="muted" size="sm">
-                              {name(sid)}
-                            </Chip>
-                          </button>
-                        ))}
+                </div>
+                {activities.map((a: Activity) => {
+                  const Icon = KIND_ICON[a.kind] ?? Briefcase
+                  return (
+                    <div key={a.id} className="flex gap-3 p-4">
+                      <IconTile>
+                        <Icon size={20} strokeWidth={1.5} />
+                      </IconTile>
+                      <div className="min-w-0 flex-1">
+                        <p className="flex items-baseline justify-between gap-2">
+                          <span className="min-w-0 truncate t-body-strong">{a.role}</span>
+                          <span className="shrink-0 t-caption text-ink-3 tabular">{fmtMonth(a.startDate).split(' ').slice(-1)[0]}</span>
+                        </p>
+                        <p className="truncate t-caption font-normal text-ink-2">
+                          {t(`kind.${a.kind}`)} · {a.organisation}
+                        </p>
+                        {a.skillIds.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            {a.skillIds.slice(0, 2).map((sid) => (
+                              <button key={sid} onClick={() => setOpenSkill(sid)} className="rounded-chip">
+                                <Chip tone="muted" size="sm">
+                                  {name(sid)}
+                                </Chip>
+                              </button>
+                            ))}
+                            {a.skillIds.length > 2 && (
+                              <Chip tone="outline" size="sm">
+                                +{a.skillIds.length - 2}
+                              </Chip>
+                            )}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </Card>
-                </li>
-              ))}
-            </ol>
-          </section>
-
-          {/* How it works */}
-          <Card>
-            <SectionLabel>{t('profile.howItWorks')}</SectionLabel>
-            <ol className="mt-3 space-y-3">
-              {(['extract', 'map', 'score', 'explain'] as const).map((k, i) => (
-                <li key={k} className="flex gap-3">
-                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-control bg-surface-muted t-caption tabular">{i + 1}</span>
-                  <span>
-                    <span className="block t-body-strong">{t(`explain.${k}.title`)}</span>
-                    <span className="block t-caption font-normal text-ink-2">{t(`explain.${k}.body`)}</span>
-                  </span>
-                </li>
-              ))}
-            </ol>
-            <p className="mt-4 t-micro text-ink-3">{t('profile.versions', AI_VERSIONS)}</p>
-          </Card>
+                    </div>
+                  )
+                })}
+              </Card>
+            </section>
+          )}
         </>
       )}
 
@@ -267,6 +284,20 @@ export default function ProfilePage() {
       </div>
 
       <SkillSheet state={data} skill={current} open={!!current} onClose={() => setOpenSkill(null)} />
+      <Sheet open={howOpen} onClose={() => setHowOpen(false)} title={t('profile.howItWorks')} closeLabel={t('action.close')}>
+        <ol className="space-y-4">
+          {(['extract', 'map', 'score', 'explain'] as const).map((k, i) => (
+            <li key={k} className="flex gap-3">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-control bg-surface-muted t-caption tabular">{i + 1}</span>
+              <span>
+                <span className="block t-body-strong">{t(`explain.${k}.title`)}</span>
+                <span className="block t-caption font-normal text-ink-2">{t(`explain.${k}.body`)}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+        <p className="mt-4 t-micro text-ink-3">{t('profile.versions', AI_VERSIONS)}</p>
+      </Sheet>
       <Sheet
         open={editing}
         onClose={() => setEditing(false)}

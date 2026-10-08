@@ -7,12 +7,14 @@ import { Card } from '@/components/ui/Card'
 import { Chip } from '@/components/ui/Chip'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Note } from '@/components/ui/Note'
-import { MatchRing } from '@/components/ui/Rings'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { SegmentedControl } from '@/components/ui/SegmentedControl'
 import { LogoTile } from '@/components/ui/Tiles'
 import { JobLogRow } from '@/components/student/JobLogRow'
-import { PartnerRoleCard } from '@/components/student/PartnerRoleCard'
+import { FamilyFilter } from '@/components/student/FamilyFilter'
+import { OpportunityRow } from '@/components/student/OpportunityRow'
+import { ShowMore } from '@/components/ui/ShowMore'
+import { familyThumb, jobFamily, type JobFamily } from '@/services/jobFamily'
 import { useAsync } from '@/hooks/useAsync'
 import { useT } from '@/i18n'
 import { formatDate, formatRMRange } from '@/lib/format'
@@ -34,6 +36,7 @@ import { statusOf } from '../opportunities/logStatus'
 import { useStudent } from '../useStudent'
 
 type Tab = 'partner' | 'open' | 'log'
+const PAGE = 6
 
 /** Opportunities: Partner roles (premium, tier-gated) · Open jobs (portals) · My job search log. */
 export default function OpportunitiesPage() {
@@ -66,6 +69,10 @@ export default function OpportunitiesPage() {
   const [jobId, setJobId] = useState<string | null>(null)
   const [entryId, setEntryId] = useState<string | null>(null)
   const [logOpen, setLogOpen] = useState<{ entryId?: string } | null>(null)
+  const [roleFamily, setRoleFamily] = useState<JobFamily | 'all'>('all')
+  const [jobFam, setJobFam] = useState<JobFamily | 'all'>('all')
+  const [roleLimit, setRoleLimit] = useState(PAGE)
+  const [jobLimit, setJobLimit] = useState(PAGE)
 
   const setTab = (v: Tab) => setParams({ tab: v }, { replace: true })
   const clearParam = (k: string) => {
@@ -87,7 +94,7 @@ export default function OpportunitiesPage() {
   const thisMonth = (data?.log ?? []).filter((e) => e.appliedAt.startsWith(CURRENT_MONTH))
   const earlier = (data?.log ?? []).filter((e) => !e.appliedAt.startsWith(CURRENT_MONTH))
 
-  const roleCard = (v: PartnerRoleView) => {
+  const roleRow = (v: PartnerRoleView) => {
     const inv = v.invitation
     const badge = inv ? (
       <Chip tone={inv.stage === 'invited' ? 'pending' : inv.origin === 'student' ? 'info' : 'done'} size="sm">
@@ -95,15 +102,14 @@ export default function OpportunitiesPage() {
       </Chip>
     ) : undefined
     return (
-      <PartnerRoleCard
+      <OpportunityRow
         key={v.role.id}
         title={v.role.title}
-        partnerName={v.partner.name}
-        monogram={v.partner.monogram}
-        location={v.role.location}
-        salary={v.role.salaryRM}
+        org={`${v.partner.name} · ${v.role.location}`}
+        meta={formatRMRange(v.role.salaryRM)}
         matchPct={v.matchPct}
-        skills={v.detail.filter((d) => d.met).map((d) => lt(skillById(d.skillId)?.name ?? { en: d.skillId }))}
+        thumb={familyThumb(jobFamily(v.role.title))}
+        monogram={v.partner.monogram}
         access={v.access}
         badge={badge}
         onOpen={() => setRoleId(v.role.id)}
@@ -111,6 +117,13 @@ export default function OpportunitiesPage() {
       />
     )
   }
+  const visibleOthers = others.filter((r) => r.access !== 'hidden' && (roleFamily === 'all' || jobFamily(r.role.title) === roleFamily))
+  const jobs = (data?.jobs ?? []).filter((j) => jobFam === 'all' || jobFamily(j.title) === jobFam)
+  const countBy = <T,>(items: T[], title: (x: T) => string) => items.reduce<Partial<Record<JobFamily, number>>>((m, x) => {
+    const f = jobFamily(title(x))
+    m[f] = (m[f] ?? 0) + 1
+    return m
+  }, {})
 
   const logList = (items: typeof thisMonth) => (
     <Card padded={false} className="divide-y divide-hairline px-3 py-1">
@@ -160,13 +173,19 @@ export default function OpportunitiesPage() {
                 {invitations.length > 0 && (
                   <section className="space-y-3">
                     <SectionLabel>{t('opp.partner.invitations')}</SectionLabel>
-                    {invitations.map(roleCard)}
+                    <Card padded={false} className="divide-y divide-hairline overflow-hidden">
+                      {invitations.map(roleRow)}
+                    </Card>
                   </section>
                 )}
                 <section className="space-y-3">
                   <SectionLabel>{t('opp.partner.matched')}</SectionLabel>
                   {data?.tierB && settings.tierB.partnerRoles === 'earlyAccessWindow' && <Note tone="muted">{t('opp.partner.lockedNote', { days: settings.tierB.earlyAccessDays })}</Note>}
-                  {others.map(roleCard)}
+                  <FamilyFilter counts={countBy(others.filter((r) => r.access !== 'hidden'), (r) => r.role.title)} value={roleFamily} onChange={(f) => { setRoleFamily(f); setRoleLimit(PAGE) }} />
+                  <Card padded={false} className="divide-y divide-hairline overflow-hidden">
+                    {visibleOthers.slice(0, roleLimit).map(roleRow)}
+                  </Card>
+                  <ShowMore remaining={visibleOthers.length - roleLimit} label={t('list.showMore', { count: Math.min(PAGE, visibleOthers.length - roleLimit) })} onClick={() => setRoleLimit((n) => n + PAGE)} />
                   {(data?.hidden ?? 0) > 0 && <Note tone="muted">{t('opp.partner.hiddenNote')}</Note>}
                 </section>
               </>
@@ -175,25 +194,22 @@ export default function OpportunitiesPage() {
           {tab === 'open' && (
             <>
               <p className="t-body text-ink-2">{t('opp.open.lead')}</p>
-              <ul className="space-y-3">
-                {(data?.jobs ?? []).map((j) => (
-                  <li key={j.id}>
-                    <Card as="article">
-                      <button onClick={() => setJobId(j.id)} className="flex w-full items-start gap-3 text-left">
-                        <LogoTile monogram={j.portal.monogram} />
-                        <span className="min-w-0 flex-1">
-                          <span className="block t-subheading">{j.title}</span>
-                          <span className="block t-caption font-normal text-ink-2">
-                            {j.company} · {j.location}
-                          </span>
-                          <span className="mt-1 block t-caption text-ink tabular">{j.salaryRM ? formatRMRange(j.salaryRM) : j.portal.name}</span>
-                        </span>
-                        <MatchRing pct={j.matchPct} label={t('role.match', { pct: j.matchPct })} />
-                      </button>
-                    </Card>
-                  </li>
+              <FamilyFilter counts={countBy(data?.jobs ?? [], (j) => j.title)} value={jobFam} onChange={(f) => { setJobFam(f); setJobLimit(PAGE) }} />
+              <Card padded={false} className="divide-y divide-hairline overflow-hidden" data-list="jobs">
+                {jobs.slice(0, jobLimit).map((j) => (
+                  <OpportunityRow
+                    key={j.id}
+                    title={j.title}
+                    org={`${j.company} · ${j.location}`}
+                    meta={j.salaryRM ? formatRMRange(j.salaryRM) : j.portal.name}
+                    matchPct={j.matchPct}
+                    thumb={familyThumb(jobFamily(j.title))}
+                    monogram={j.portal.monogram}
+                    onOpen={() => setJobId(j.id)}
+                  />
                 ))}
-              </ul>
+              </Card>
+              <ShowMore remaining={jobs.length - jobLimit} label={t('list.showMore', { count: Math.min(PAGE, jobs.length - jobLimit) })} onClick={() => setJobLimit((n) => n + PAGE)} />
               {(data?.linkOut.length ?? 0) > 0 && (
                 <section className="space-y-3">
                   <SectionLabel>{t('opp.open.curated')}</SectionLabel>

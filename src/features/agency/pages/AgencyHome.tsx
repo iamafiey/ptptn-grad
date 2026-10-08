@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router'
-import { AlertTriangle, ArrowRight, Info, RotateCcw } from 'lucide-react'
+import { AlertTriangle, ArrowRight, BadgeCheck, BookOpen, BrainCircuit, BriefcaseBusiness, FileCheck2, Flag, Handshake, Headset, Info, Radar, RotateCcw, Rss, Scale, type LucideIcon } from 'lucide-react'
+import { IconTile } from '@/components/ui/Tiles'
+import { Sparkline } from '@/components/ui/Sparkline'
 import { Button } from '@/components/ui/Button'
 import { Card, SunriseCard } from '@/components/ui/Card'
 import { Chip } from '@/components/ui/Chip'
@@ -16,6 +18,21 @@ import { delay } from '@/services/delay'
 import { useDemo } from '@/state/DemoProvider'
 import { AgencyPage } from '../shell/AgencyPage'
 import { useOfficer } from '../useOfficer'
+
+const ICONS: Record<string, LucideIcon> = {
+  evidence: FileCheck2,
+  placements: BriefcaseBusiness,
+  partnerRoleApprovals: BadgeCheck,
+  partnerApplications: Handshake,
+  portalFeedIssues: Rss,
+  skillDisputes: Flag,
+  lowConfidence: BrainCircuit,
+  tierOverrides: Scale,
+  courseSubmissions: BookOpen,
+  earlyWarning: Radar,
+  serviceDesk: Headset,
+}
+const QUEUE_ICON = Object.fromEntries(Object.entries(ICONS).map(([k, I]) => [k, <I key={k} size={16} strokeWidth={1.5} />]))
 
 const QUEUE_HREF: Partial<Record<string, string>> = {
   evidence: '/a/job-search/evidence',
@@ -48,15 +65,28 @@ export default function AgencyHome() {
                 <Card key={q.def.id} as="article" className="transition-shadow hover:shadow-2">
                   <button onClick={() => navigate(QUEUE_HREF[q.def.id] ?? `/a/queues/${q.def.id}`)} className="block w-full text-left">
                     <div className="flex items-start justify-between gap-3">
-                      <p className="t-body-strong">{lt(q.def.title)}</p>
+                      <span className="flex min-w-0 items-center gap-2.5">
+                        <IconTile size={32}>{QUEUE_ICON[q.def.id]}</IconTile>
+                        <span className="t-body-strong">{lt(q.def.title)}</span>
+                      </span>
                       <SlaChip sla={q.sla} />
                     </div>
-                    <p className="mt-2 t-heading">{formatNumber(q.count)}</p>
-                    <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 t-caption font-normal text-ink-2">
-                      <span>{t('ag.home.oldest', { age: t('ag.ageLong', { count: q.oldest }) })}</span>
-                      {q.overdue > 0 && <span className="text-attention-ink">{t('ag.home.overdue', { count: q.overdue })}</span>}
-                      <span>SLA {q.def.slaWorkingDays === 0 ? lang === 'ms' ? 'hari sama' : 'same day' : t('ag.ageLong', { count: q.def.slaWorkingDays })}</span>
-                    </p>
+                    <div className="mt-3 flex items-end justify-between gap-3">
+                      <p className="t-heading leading-none">{formatNumber(q.count)}</p>
+                      <p className="t-caption font-normal text-ink-2">
+                        {t('ag.home.oldestShort', { age: q.oldest })} · SLA {q.def.slaWorkingDays === 0 ? (lang === 'ms' ? 'hari sama' : 'same day') : t('ag.home.days', { n: q.def.slaWorkingDays })}
+                      </p>
+                    </div>
+                    {/* Share of the queue that is overdue / due today / on time */}
+                    <div className="mt-3 flex h-1.5 gap-0.5 overflow-hidden rounded-sm bg-hairline" role="img" aria-label={t('ag.home.slaBar', { overdue: q.overdue, due: q.dueToday, total: q.count })}>
+                      {q.count > 0 && (
+                        <>
+                          <span className="bg-attention" style={{ width: `${(q.overdue / q.count) * 100}%` }} />
+                          <span className="bg-pending" style={{ width: `${(q.dueToday / q.count) * 100}%` }} />
+                          <span className="flex-1 bg-done" />
+                        </>
+                      )}
+                    </div>
                   </button>
                 </Card>
               ))}
@@ -79,7 +109,10 @@ export default function AgencyHome() {
                   <dt className="t-caption text-ink-2">{lt(k.label)}</dt>
                   {/* Large standalone figures use proportional digits (dataviz guidance). */}
                   <dd className="mt-1 t-heading">{k.format === 'percent' ? `${k.value}%` : formatNumber(k.value)}</dd>
-                  <dd className="mt-1">
+                  <dd className="mt-2">
+                    <Sparkline values={k.trend} label={t('ag.home.trend6', { name: lt(k.label) })} width={120} />
+                  </dd>
+                  <dd className="mt-2">
                     <Chip tone={delta >= 0 ? 'done' : 'attention'} size="sm">
                       {t('ag.home.vsLast', { delta: deltaText })}
                     </Chip>

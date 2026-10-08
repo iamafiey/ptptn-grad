@@ -27,9 +27,18 @@ If this plan and the specs disagree, the specs win.
 | 6 | Agency Partners, Students, AI governance, Tier rules (and Learn catalogue, see §9) | ✅ Done |
 | 7 | Agency Reports, audit log, polish, demo walkthrough script | ✅ Done |
 | 8 | Collections & customer service (`docs/collections-flow.md`) | ✅ Done |
+| 9 | Scannable UI: pictures, glance tiles, rails, shorter lists | ✅ Done |
 
 ### Phase log
 
+- **9 (Scannable UI).** Screens were too text-heavy and long. Pictures and small visuals now carry the facts; long lists are shortened:
+  - Job-family illustrations (`public/job-families/*.svg`, `services/jobFamily.ts`) on every role and job row, with picture filter chips on Opportunities.
+  - Home: a 2×2 glance grid (views, invitations, job-search ring, benefits) replaces three cards; partner roles are a swipeable rail; open jobs show the top 3. 2,697 → ~2,170px.
+  - Opportunities: compact rows, 6 at a time with "Show more". Open jobs 3,918 → ~1,360px; Partner roles 2,532 → ~1,250px.
+  - Learn: recommended and completed courses are rails; Browse shows 6 at a time. 3,729 → ~1,830px.
+  - Profile: Skills | Experience tabs, icon-led experience rows, "How skills are scored" moved to a sheet. 4,322 → ~2,530px.
+  - Repayment: ways back grouped in one card, benefits as an icon grid, job search as a ring, payments as a 6-month strip.
+  - Agency: queue cards get icons and an overdue/due/on-time bar; programme pulse KPIs get sparklines; early-warning reasons show weighted bars.
 - **8 (Collections & customer service).** Built to `docs/collections-flow.md`:
   - New officer role *Customer service agent*; the old *Repayment tiers* section is now **Collections** (Overview, Borrowers, Follow-up plans, Service desk, plus the tier pages). Nav items carry their own roles (`canAccess`).
   - Deterministic early-warning score (`services/collections.ts`, `earlywarn-0.3`) with reasons, mitigating signals, confidence and a "Doesn't look right?" flag. It orders work only; it never changes tiers.

@@ -198,12 +198,12 @@ export const PLACEMENTS: Placement[] = (() => {
 
 // ---------------------------------------------------------------- Home: pulse, alerts
 
-export const PULSE: { id: string; label: LocalizedText; value: number; previous: number; format: 'number' | 'percent' }[] = [
-  { id: 'visible', label: { en: 'Students visible', ms: 'Pelajar boleh dilihat' }, value: 18420, previous: 17345, format: 'number' },
-  { id: 'partners', label: { en: 'Active Talent Partners', ms: 'Rakan Bakat aktif' }, value: 8, previous: 7, format: 'number' },
-  { id: 'verified', label: { en: 'Verified job search entries', ms: 'Rekod carian kerja disahkan' }, value: 6312, previous: 5688, format: 'number' },
-  { id: 'placements', label: { en: 'Placements this month', ms: 'Penempatan bulan ini' }, value: 284, previous: 261, format: 'number' },
-  { id: 'tierA', label: { en: 'Tier A share', ms: 'Bahagian Tahap A' }, value: 81, previous: 79.6, format: 'percent' },
+export const PULSE: { id: string; label: LocalizedText; value: number; previous: number; format: 'number' | 'percent'; trend: number[] }[] = [
+  { id: 'visible', label: { en: 'Students visible', ms: 'Pelajar boleh dilihat' }, value: 18420, previous: 17345, format: 'number', trend: [14200, 15100, 15900, 16600, 17345, 18420] },
+  { id: 'partners', label: { en: 'Active Talent Partners', ms: 'Rakan Bakat aktif' }, value: 8, previous: 7, format: 'number', trend: [5, 5, 6, 7, 7, 8] },
+  { id: 'verified', label: { en: 'Verified job search entries', ms: 'Rekod carian kerja disahkan' }, value: 6312, previous: 5688, format: 'number', trend: [4210, 4630, 4990, 5320, 5688, 6312] },
+  { id: 'placements', label: { en: 'Placements this month', ms: 'Penempatan bulan ini' }, value: 284, previous: 261, format: 'number', trend: [198, 214, 232, 247, 261, 284] },
+  { id: 'tierA', label: { en: 'Tier A share', ms: 'Bahagian Tahap A' }, value: 81, previous: 79.6, format: 'percent', trend: [77.2, 77.9, 78.4, 79.1, 79.6, 81] },
 ]
 
 export const ALERTS: (Alert & { roles: OfficerRole[] })[] = [

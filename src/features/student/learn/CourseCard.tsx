@@ -37,7 +37,7 @@ export function CourseCard({ course, onOpen, note, layout = 'full' }: { course: 
 
   if (layout === 'tile')
     return (
-      <Card as="article" padded={false} className="overflow-hidden">
+      <Card as="article" padded={false} className="h-full overflow-hidden">
         <button onClick={onOpen} className="flex h-full w-full flex-col text-left">
           <CourseThumb course={course} />
           <div className="flex flex-1 flex-col gap-1 p-3">
@@ -46,6 +46,7 @@ export function CourseCard({ course, onOpen, note, layout = 'full' }: { course: 
             <p className="mt-auto pt-1 t-caption text-ink-2">
               {costLabel(t, course)} · {t('learn.hours', { count: course.durationHours })}
             </p>
+            {note && <p className="line-clamp-2 pt-1 t-caption text-ink">{note}</p>}
           </div>
         </button>
       </Card>
